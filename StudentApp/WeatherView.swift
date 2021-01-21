@@ -75,6 +75,7 @@ struct WeatherView: View {
         return Color.orange
     }
     
+    // changes the temp ring color 
     func changeTempRingColor() -> LinearGradient {
         if (weatherData.main.temp - 273.15) * 1.8 + 32 < 40 {
             return LinearGradient(gradient: Gradient(colors: [Color.lightGreen, Color.lightBlue]), startPoint: .topLeading, endPoint: .bottomTrailing)
