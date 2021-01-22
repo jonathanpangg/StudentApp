@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct WeatherView: View {
+    @ObservedObject var screen: Screen
+    @Environment(\.colorScheme) var colorScheme
     let key                  = "4e28fd44172171a9678306f1648809fa"
     @State var weatherData   = WeatherData()
     @State var statusImage   = ""
     @State var location      = ""
-    @ObservedObject var screen: Screen
-    @Environment(\.colorScheme) var colorScheme
     
     // gets default location
     func setGeocodingData() {
@@ -140,6 +140,31 @@ struct WeatherView: View {
                     .frame(width: UIScreen.main.bounds.width / 4 * 3)
             }
             Spacer()
+            HStack {
+                Image(systemName: "cloud.sun.fill")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: UIScreen.main.bounds.width / 10, height: UIScreen.main.bounds.width / 10)
+                    .padding()
+                    .offset(x: UIScreen.main.bounds.width / 64 * 3)
+                    .onTapGesture {
+                        withAnimation {
+                            screen.currentScreen = 0
+                        }
+                    }
+                Spacer()
+                Image(systemName: "bag")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: UIScreen.main.bounds.width / 10, height: UIScreen.main.bounds.width / 10)
+                    .padding()
+                    .offset(x: UIScreen.main.bounds.width / 64 * -3)
+                    .onTapGesture {
+                        withAnimation {
+                            screen.currentScreen = 1
+                        }
+                    }
+            }
         }
         .onAppear(perform: setGeocodingData)
         // Locks the screen so it is only in portrait
