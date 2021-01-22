@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		938B37F125BA387600395BE2 /* FoodData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938B37F025BA387600395BE2 /* FoodData.swift */; };
+		938B37F625BA38DE00395BE2 /* FoodView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938B37F525BA38DE00395BE2 /* FoodView.swift */; };
 		93D381B725B8EA3000BA98AC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D381B625B8EA3000BA98AC /* AppDelegate.swift */; };
 		93D381B925B8EA3000BA98AC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D381B825B8EA3000BA98AC /* SceneDelegate.swift */; };
 		93D381BB25B8EA3000BA98AC /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D381BA25B8EA3000BA98AC /* ContentView.swift */; };
@@ -40,6 +42,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		938B37F025BA387600395BE2 /* FoodData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodData.swift; sourceTree = "<group>"; };
+		938B37F525BA38DE00395BE2 /* FoodView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodView.swift; sourceTree = "<group>"; };
 		93D381B325B8EA3000BA98AC /* StudentApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StudentApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		93D381B625B8EA3000BA98AC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		93D381B825B8EA3000BA98AC /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -112,6 +116,8 @@
 				93D381B625B8EA3000BA98AC /* AppDelegate.swift */,
 				93D381B825B8EA3000BA98AC /* SceneDelegate.swift */,
 				93D381BA25B8EA3000BA98AC /* ContentView.swift */,
+				938B37F025BA387600395BE2 /* FoodData.swift */,
+				938B37F525BA38DE00395BE2 /* FoodView.swift */,
 				93D381EC25B8EA7C00BA98AC /* GeocodingData.swift */,
 				93D381F125B8EA9100BA98AC /* Screen.swift */,
 				93D381F625B8EAA200BA98AC /* WeatherData.swift */,
@@ -284,8 +290,10 @@
 				93D381B725B8EA3000BA98AC /* AppDelegate.swift in Sources */,
 				93D381B925B8EA3000BA98AC /* SceneDelegate.swift in Sources */,
 				93D381F725B8EAA200BA98AC /* WeatherData.swift in Sources */,
+				938B37F125BA387600395BE2 /* FoodData.swift in Sources */,
 				93D381BB25B8EA3000BA98AC /* ContentView.swift in Sources */,
 				93D381BE25B8EA3000BA98AC /* StudentApp.xcdatamodeld in Sources */,
+				938B37F625BA38DE00395BE2 /* FoodView.swift in Sources */,
 				93D381ED25B8EA7C00BA98AC /* GeocodingData.swift in Sources */,
 				93D381F225B8EA9100BA98AC /* Screen.swift in Sources */,
 				93D381FC25B8EAAB00BA98AC /* WeatherView.swift in Sources */,
