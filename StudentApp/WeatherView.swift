@@ -14,13 +14,13 @@ struct WeatherView: View {
     @State var location      = ""
     @ObservedObject var screen: Screen
     @Environment(\.colorScheme) var colorScheme
-    // 698c43ba2eefbce9d798d13c1e6acc2f
+    
     // gets default location
     func setGeocodingData() {
         guard let url = URL(string: "http://ip-api.com/json") else { return }
         var request = URLRequest(url: url)
         request.allHTTPHeaderFields = [
-            "application/json": "Content-Type",
+            "Content-Type": "application/json"
         ]
         URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data else { return }

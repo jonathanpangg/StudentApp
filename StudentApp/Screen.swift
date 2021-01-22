@@ -8,5 +8,5 @@
 import SwiftUI
 
 class Screen: ObservableObject {
-    @Published var currentScreen = 0
+    @Published var currentScreen = 1
 }

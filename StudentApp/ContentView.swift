@@ -12,8 +12,8 @@ struct ContentView: View {
     
     var body: some View {
         switch screen.currentScreen {
-        case 0:
-            WeatherView(screen: screen)
+        case 1:
+            FoodView(screen: screen)
         default:
             WeatherView(screen: screen)
         }
