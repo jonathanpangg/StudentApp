@@ -85,6 +85,7 @@ struct FoodView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 16.0, style: .continuous))
                     .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)) ,radius: 10, x: 6, y: 4)
                     .frame(width: UIScreen.main.bounds.width / 8 * 3)
+                    .padding()
                     .offset(x: UIScreen.main.bounds.width / 64 * 3)
                 Spacer()
                 TextField("Radius: ", text: $radius, onCommit: getLocation)
@@ -94,6 +95,7 @@ struct FoodView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 16.0, style: .continuous))
                     .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)) ,radius: 10, x: 6, y: 4)
                     .frame(width: UIScreen.main.bounds.width / 8 * 3)
+                    .padding()
                     .offset(x: UIScreen.main.bounds.width / 64 * -3)
             }
             Form {
