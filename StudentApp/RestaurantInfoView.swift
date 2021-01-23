@@ -24,5 +24,10 @@ struct RestaurantInfoView: View {
             }
             Spacer()
         }
+        .onAppear {
+            AppDelegate.orientationLock = UIInterfaceOrientationMask.portrait
+            UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
+            UIViewController.attemptRotationToDeviceOrientation()
+        }
     }
 }
