@@ -16,37 +16,74 @@ struct WeatherView: View {
     
     // gets weather data
     func getData() {
-        let query = "\(pass.location)&appid=\(key)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
-        guard let url = URL(string: "https://api.openweathermap.org/data/2.5/weather?q=\(String(describing: query))") else { return }
-        var request = URLRequest(url: url)
-        request.allHTTPHeaderFields = [
-            "application/json": "Content-Type",
-            "Authorization": key
-        ]
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            guard let data = data else { return }
-            if let decoded = try? JSONDecoder().decode(WeatherData.self, from: data) {
-                DispatchQueue.main.async {
-                    weatherData = decoded
-                    switch decoded.weather[0].main {
-                    case "Thunderstorm":
-                        statusImage = "cloud.bolt.rain.fill"
-                    case "Drizzle":
-                        statusImage = "cloud.drizzle.fill"
-                    case "Rain":
-                        statusImage = "cloud.heavyrain.fill"
-                    case "Snow":
-                        statusImage = "snow"
-                    case "Atmosphere":
-                        statusImage = "smoke.fill"
-                    case "Clear":
-                        statusImage = "sun.max.fill"
-                    default:
-                        statusImage = "cloud.fill"
+        if pass.location == "" {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.10) {
+                let query = "\(pass.location)&appid=\(key)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+                guard let url = URL(string: "https://api.openweathermap.org/data/2.5/weather?q=\(String(describing: query))") else { return }
+                var request = URLRequest(url: url)
+                request.allHTTPHeaderFields = [
+                    "application/json": "Content-Type",
+                    "Authorization": key
+                ]
+                URLSession.shared.dataTask(with: request) { data, response, error in
+                    guard let data = data else { return }
+                    if let decoded = try? JSONDecoder().decode(WeatherData.self, from: data) {
+                        DispatchQueue.main.async {
+                            weatherData = decoded
+                            switch decoded.weather[0].main {
+                            case "Thunderstorm":
+                                statusImage = "cloud.bolt.rain.fill"
+                            case "Drizzle":
+                                statusImage = "cloud.drizzle.fill"
+                            case "Rain":
+                                statusImage = "cloud.heavyrain.fill"
+                            case "Snow":
+                                statusImage = "snow"
+                            case "Atmosphere":
+                                statusImage = "smoke.fill"
+                            case "Clear":
+                                statusImage = "sun.max.fill"
+                            default:
+                                statusImage = "cloud.fill"
+                            }
+                        }
+                    }
+                }.resume()
+            }
+        }
+        else {
+            let query = "\(pass.location)&appid=\(key)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+            guard let url = URL(string: "https://api.openweathermap.org/data/2.5/weather?q=\(String(describing: query))") else { return }
+            var request = URLRequest(url: url)
+            request.allHTTPHeaderFields = [
+                "application/json": "Content-Type",
+                "Authorization": key
+            ]
+            URLSession.shared.dataTask(with: request) { data, response, error in
+                guard let data = data else { return }
+                if let decoded = try? JSONDecoder().decode(WeatherData.self, from: data) {
+                    DispatchQueue.main.async {
+                        weatherData = decoded
+                        switch decoded.weather[0].main {
+                        case "Thunderstorm":
+                            statusImage = "cloud.bolt.rain.fill"
+                        case "Drizzle":
+                            statusImage = "cloud.drizzle.fill"
+                        case "Rain":
+                            statusImage = "cloud.heavyrain.fill"
+                        case "Snow":
+                            statusImage = "snow"
+                        case "Atmosphere":
+                            statusImage = "smoke.fill"
+                        case "Clear":
+                            statusImage = "sun.max.fill"
+                        default:
+                            statusImage = "cloud.fill"
+                        }
                     }
                 }
-            }
-        }.resume()
+            }.resume()
+        }
     }
     
     // changes the temperature color
@@ -112,7 +149,6 @@ struct WeatherView: View {
                     .padding()
                 }
             }
-            
             
             // Location
             HStack {

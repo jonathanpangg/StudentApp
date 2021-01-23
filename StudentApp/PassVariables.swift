@@ -11,6 +11,7 @@ class Pass: ObservableObject {
     @Published var currentScreen: Int = 0
     @Published var location: String   = ""
     
+    // sets default location
     func setGeocodingData() {
         guard let url               = URL(string: "http://ip-api.com/json") else { return }
         var request                 = URLRequest(url: url)

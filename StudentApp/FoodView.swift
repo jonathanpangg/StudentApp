@@ -15,6 +15,7 @@ struct FoodView: View {
     @State var radius       = "1609.35"
     let key                 = "698c43ba2eefbce9d798d13c1e6acc2f"
     
+    // gets the location data
     func getLocation() {
         let query                   = pass.location.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         guard let url               = URL(string: "https://developers.zomato.com/api/v2.1/locations?query=\(query)") else { return }
@@ -33,6 +34,7 @@ struct FoodView: View {
         }.resume()
     }
     
+    // gets food data
     func getFoodData() {
         guard let url               = URL(string: "https://developers.zomato.com/api/v2.1/search?entity_id=\(locationData.locationSuggestions[0].entityID)&entity_type=\(locationData.locationSuggestions[0].entityType)&radius=\(radius)") else { return }
         var request                 = URLRequest(url: url)
