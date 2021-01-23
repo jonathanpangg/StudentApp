@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct ContentView: View {
-    @ObservedObject var screen = Screen()
+    @ObservedObject var screen       = Screen()
+    // @ObservedObject var passRestData = PassRestaurant()
     
     var body: some View {
         switch screen.currentScreen {

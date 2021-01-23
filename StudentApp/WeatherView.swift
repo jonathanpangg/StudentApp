@@ -165,6 +165,7 @@ struct WeatherView: View {
                         }
                     }
             }
+            .frame(height: UIScreen.main.bounds.height / 16)
         }
         .onAppear(perform: setGeocodingData)
         // Locks the screen so it is only in portrait

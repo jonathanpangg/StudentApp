@@ -9,6 +9,7 @@ import SwiftUI
 
 struct RestaurantInfoView: View {
     @ObservedObject var screen: Screen
+    // @ObservedObject var passRestData: PassRestaurant
     
     var body: some View {
         VStack {
@@ -22,6 +23,10 @@ struct RestaurantInfoView: View {
                     .offset(x: UIScreen.main.bounds.width / 64 * 3, y: UIScreen.main.bounds.width / 64 * 3)
                 Spacer()
             }
+            // Form {
+                // Text("\(passRestData.rest.url)")
+                // Text("\(passRestData.rest.phoneNumbers)")
+            // }
             Spacer()
         }
         .onAppear {
