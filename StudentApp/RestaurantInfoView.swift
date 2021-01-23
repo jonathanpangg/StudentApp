@@ -8,17 +8,14 @@
 import SwiftUI
 
 struct RestaurantInfoView: View {
-    @ObservedObject var screen: Screen
-    // @ObservedObject var passRestData: PassRestaurant
+    @ObservedObject var pass: Pass
     
     var body: some View {
         VStack {
             HStack {
                 Image(systemName: "chevron.left")
                     .onTapGesture {
-                        withAnimation {
-                            screen.currentScreen = 1
-                        }
+                        pass.currentScreen = 1
                     }
                     .offset(x: UIScreen.main.bounds.width / 64 * 3, y: UIScreen.main.bounds.width / 64 * 3)
                 Spacer()

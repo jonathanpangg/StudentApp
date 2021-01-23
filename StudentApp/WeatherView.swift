@@ -8,32 +8,15 @@
 import SwiftUI
 
 struct WeatherView: View {
-    @ObservedObject var screen: Screen
+    @ObservedObject var pass: Pass
     @Environment(\.colorScheme) var colorScheme
     let key                  = "4e28fd44172171a9678306f1648809fa"
     @State var weatherData   = WeatherData()
     @State var statusImage   = ""
-    @State var location      = ""
-    
-    // gets default location
-    func setGeocodingData() {
-        guard let url = URL(string: "http://ip-api.com/json") else { return }
-        var request = URLRequest(url: url)
-        request.allHTTPHeaderFields = [
-            "Content-Type": "application/json"
-        ]
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            guard let data = data else { return }
-            if let decoded = try? JSONDecoder().decode(GeocodingData.self, from: data) {
-                location = decoded.city
-                getData()
-            }
-        }.resume()
-    }
     
     // gets weather data
     func getData() {
-        let query = "\(location)&appid=\(key)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+        let query = "\(pass.location)&appid=\(key)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         guard let url = URL(string: "https://api.openweathermap.org/data/2.5/weather?q=\(String(describing: query))") else { return }
         var request = URLRequest(url: url)
         request.allHTTPHeaderFields = [
@@ -43,22 +26,24 @@ struct WeatherView: View {
         URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data else { return }
             if let decoded = try? JSONDecoder().decode(WeatherData.self, from: data) {
-                weatherData = decoded
-                switch decoded.weather[0].main {
-                case "Thunderstorm":
-                    statusImage = "cloud.bolt.rain.fill"
-                case "Drizzle":
-                    statusImage = "cloud.drizzle.fill"
-                case "Rain":
-                    statusImage = "cloud.heavyrain.fill"
-                case "Snow":
-                    statusImage = "snow"
-                case "Atmosphere":
-                    statusImage = "smoke.fill"
-                case "Clear":
-                    statusImage = "sun.max.fill"
-                default:
-                    statusImage = "cloud.fill"
+                DispatchQueue.main.async {
+                    weatherData = decoded
+                    switch decoded.weather[0].main {
+                    case "Thunderstorm":
+                        statusImage = "cloud.bolt.rain.fill"
+                    case "Drizzle":
+                        statusImage = "cloud.drizzle.fill"
+                    case "Rain":
+                        statusImage = "cloud.heavyrain.fill"
+                    case "Snow":
+                        statusImage = "snow"
+                    case "Atmosphere":
+                        statusImage = "smoke.fill"
+                    case "Clear":
+                        statusImage = "sun.max.fill"
+                    default:
+                        statusImage = "cloud.fill"
+                    }
                 }
             }
         }.resume()
@@ -131,7 +116,7 @@ struct WeatherView: View {
             
             // Location
             HStack {
-                TextField("Location: ", text: $location, onCommit: getData)
+                TextField("Location: ", text: $pass.location, onCommit: getData)
                     .multilineTextAlignment(.center)
                     .font(.system(size: UIScreen.main.bounds.width / 64 * 5, weight: .bold))
                     .background(colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black)
@@ -148,9 +133,7 @@ struct WeatherView: View {
                     .padding()
                     .offset(x: UIScreen.main.bounds.width / 64 * 3)
                     .onTapGesture {
-                        withAnimation {
-                            screen.currentScreen = 0
-                        }
+                        pass.currentScreen = 0
                     }
                 Spacer()
                 Image(systemName: "bag")
@@ -160,14 +143,12 @@ struct WeatherView: View {
                     .padding()
                     .offset(x: UIScreen.main.bounds.width / 64 * -3)
                     .onTapGesture {
-                        withAnimation {
-                            screen.currentScreen = 1
-                        }
+                        pass.currentScreen = 1
                     }
             }
             .frame(height: UIScreen.main.bounds.height / 16)
         }
-        .onAppear(perform: setGeocodingData)
+        .onAppear(perform: getData)
         // Locks the screen so it is only in portrait
         .onAppear {
             AppDelegate.orientationLock = UIInterfaceOrientationMask.portrait

@@ -8,32 +8,15 @@
 import SwiftUI
 
 struct FoodView: View {
-    @ObservedObject var screen: Screen
+    @ObservedObject var pass: Pass
     @Environment(\.colorScheme) var colorScheme
     @State var locationData = LocationData()
     @State var foodData     = FoodData()
-    @State var location     = ""
-    @State var radius       = ""
+    @State var radius       = "1609.35"
     let key                 = "698c43ba2eefbce9d798d13c1e6acc2f"
     
-    func setGeocodingData() {
-        guard let url = URL(string: "http://ip-api.com/json") else { return }
-        var request = URLRequest(url: url)
-        request.allHTTPHeaderFields = [
-            "Content-Type": "application/json"
-        ]
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            guard let data = data else { return }
-            if let decoded = try? JSONDecoder().decode(GeocodingData.self, from: data) {
-                location = decoded.city
-                radius   = "1609.35"
-                getLocation()
-            }
-        }.resume()
-    }
-    
     func getLocation() {
-        let query                   = location.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+        let query                   = pass.location.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         guard let url               = URL(string: "https://developers.zomato.com/api/v2.1/locations?query=\(query)") else { return }
         var request                 = URLRequest(url: url)
         request.httpMethod          = "GET"
@@ -78,7 +61,7 @@ struct FoodView: View {
         ZStack {
             VStack {
                 HStack {
-                    TextField("Location: ", text: $location, onCommit: getLocation)
+                    TextField("Location: ", text: $pass.location, onCommit: getLocation)
                         .multilineTextAlignment(.center)
                         .font(.system(size: UIScreen.main.bounds.width / 64 * 3, weight: .bold))
                         .background(colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black)
@@ -110,9 +93,7 @@ struct FoodView: View {
                             VStack {
                                 Tile(getArray(foodData.restaurants ?? [])[index], UIScreen.main.bounds.width / 8 * 3, UIScreen.main.bounds.width / 8 * 3, colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black)
                                     .onLongPressGesture {
-                                        withAnimation {
-                                            screen.currentScreen = 2
-                                        }
+                                        pass.currentScreen = 2
                                     }
                                     .padding()
                             }
@@ -127,9 +108,7 @@ struct FoodView: View {
                         .padding()
                         .offset(x: UIScreen.main.bounds.width / 64 * 3)
                         .onTapGesture {
-                            withAnimation {
-                                screen.currentScreen = 0
-                            }
+                            pass.currentScreen = 0
                         }
                     Spacer()
                     Image(systemName: "bag")
@@ -139,15 +118,13 @@ struct FoodView: View {
                         .padding()
                         .offset(x: UIScreen.main.bounds.width / 64 * -3)
                         .onTapGesture {
-                            withAnimation {
-                                screen.currentScreen = 1
-                            }
+                            pass.currentScreen = 1
                         }
                 }
                 .frame(height: UIScreen.main.bounds.height / 16)
             }
         }
-        .onAppear(perform: setGeocodingData)
+        .onAppear(perform: getLocation)
         .onAppear {
             AppDelegate.orientationLock = UIInterfaceOrientationMask.portrait
             UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
