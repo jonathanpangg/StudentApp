@@ -61,10 +61,7 @@ struct FoodView: View {
         URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data else { return }
             if let decoded = try? JSONDecoder().decode(FoodData.self, from: data) {
-                DispatchQueue.main.async {
-                    // print((try? JSONSerialization.jsonObject(with: data, options: []))!)
-                    foodData = decoded
-                }
+                foodData = decoded
             }
         }.resume()
     }
@@ -107,7 +104,7 @@ struct FoodView: View {
                     .frame(width: UIScreen.main.bounds.width)
                     .padding()
                     
-                ScrollView {
+                ScrollView(.vertical) {
                     LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
                         ForEach(0..<getArray(foodData.restaurants ?? []).count, id: \.self) { index in
                             VStack {
