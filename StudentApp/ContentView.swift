@@ -14,6 +14,8 @@ struct ContentView: View {
         switch screen.currentScreen {
         case 1:
             FoodView(screen: screen)
+        case 2:
+            RestaurantInfoView(screen: screen)
         default:
             WeatherView(screen: screen)
         }

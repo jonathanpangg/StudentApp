@@ -7,6 +7,15 @@
 
 import SwiftUI
 
+func Tile(_ message: String, _ width: CGFloat, _ height: CGFloat, _ background: Color) -> some View {
+    Text(message)
+        .font(.system(size: 14))
+        .frame(width: width, height: height)
+        .background(background)
+        .clipShape(RoundedRectangle(cornerRadius: 16.0, style: .continuous))
+        .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)) ,radius: 10, x: 6, y: 4)
+}
+
 struct LocationData: Codable {
     let locationSuggestions: [LocationSuggestion]
     let status: String
@@ -70,12 +79,10 @@ struct FoodData: Codable {
     }
 }
 
-// MARK: - RestaurantElement
 struct RestaurantElement: Codable {
     let restaurant: RestaurantRestaurant
 }
 
-// MARK: - RestaurantRestaurant
 struct RestaurantRestaurant: Codable {
     let r: R
     let apikey: Apikey
@@ -148,12 +155,10 @@ struct RestaurantRestaurant: Codable {
     }
 }
 
-// MARK: - AllReviews
 struct AllReviews: Codable {
     let reviews: [Review]
 }
 
-// MARK: - Review
 struct Review: Codable {
     let review: [JSONAny]
 }
@@ -166,7 +171,6 @@ enum Currency: String, Codable {
     case empty = "$"
 }
 
-// MARK: - Location
 struct Location: Codable {
     let address, locality: String
     let city: City
@@ -192,7 +196,6 @@ enum MezzoProvider: String, Codable {
     case other = "OTHER"
 }
 
-// MARK: - R
 struct R: Codable {
     let resID: Int
     let isGroceryStore: Bool
@@ -205,12 +208,10 @@ struct R: Codable {
     }
 }
 
-// MARK: - HasMenuStatus
 struct HasMenuStatus: Codable {
     let delivery, takeaway: Int
 }
 
-// MARK: - UserRating
 struct UserRating: Codable {
     let aggregateRating: String
     let ratingText: RatingText
@@ -232,7 +233,6 @@ enum RatingColor: String, Codable {
     case the5Ba829 = "5BA829"
 }
 
-// MARK: - RatingObj
 struct RatingObj: Codable {
     let title: Title
     let bgColor: BgColor
@@ -243,7 +243,6 @@ struct RatingObj: Codable {
     }
 }
 
-// MARK: - BgColor
 struct BgColor: Codable {
     let type: TypeEnum
     let tint: String
@@ -253,7 +252,6 @@ enum TypeEnum: String, Codable {
     case lime = "lime"
 }
 
-// MARK: - Title
 struct Title: Codable {
     let text: String
 }
@@ -262,8 +260,6 @@ enum RatingText: String, Codable {
     case excellent = "Excellent"
     case veryGood = "Very Good"
 }
-
-// MARK: - Encode/decode helpers
 
 class JSONNull: Codable, Hashable {
 

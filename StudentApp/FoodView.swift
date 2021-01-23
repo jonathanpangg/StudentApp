@@ -98,9 +98,21 @@ struct FoodView: View {
                     .padding()
                     .offset(x: UIScreen.main.bounds.width / 64 * -3)
             }
-            Form {
-                ForEach(getArray(foodData.restaurants), id: \.self) { element in
-                    Text(element)
+            Text("Restaurants")
+                .font(.system(size: UIScreen.main.bounds.width / 64 * 4, weight: .bold))
+            ScrollView {
+                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
+                    ForEach(0..<getArray(foodData.restaurants).count, id: \.self) { index in
+                        VStack {
+                            Tile(getArray(foodData.restaurants)[index], UIScreen.main.bounds.width / 8 * 3, UIScreen.main.bounds.width / 8 * 3, colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black)
+                                .onLongPressGesture {
+                                    withAnimation {
+                                        screen.currentScreen = 2
+                                    }
+                                }
+                                .padding()
+                        }
+                    }
                 }
             }
             HStack {
