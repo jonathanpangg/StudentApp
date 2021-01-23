@@ -60,7 +60,6 @@ struct FoodView: View {
         ]
         URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data else { return }
-            // print(try? JSONSerialization.jsonObject(with: data, options: []))
             if let decoded = try? JSONDecoder().decode(FoodData.self, from: data) {
                 foodData = decoded
             }
@@ -70,63 +69,82 @@ struct FoodView: View {
     func getArray(_ array: [RestaurantElement]) -> [String] {
         var list = [String]()
         for i in array {
-            list.append("\(i.restaurant.name)")
+            list.append("\(String(describing: i.restaurant!.name ?? ""))")
         }
         return list
     }
     
     var body: some View {
-        VStack {
-            HStack {
-                TextField("Location: ", text: $location, onCommit: getLocation)
-                    .multilineTextAlignment(.center)
-                    .font(.system(size: UIScreen.main.bounds.width / 64 * 3, weight: .bold))
-                    .background(colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black)
-                    .clipShape(RoundedRectangle(cornerRadius: 16.0, style: .continuous))
-                    .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)) ,radius: 10, x: 6, y: 4)
-                    .frame(width: UIScreen.main.bounds.width / 8 * 3)
-                    .padding()
-                    .offset(x: UIScreen.main.bounds.width / 64 * 3)
-                Spacer()
-                TextField("Radius: ", text: $radius, onCommit: getLocation)
-                    .multilineTextAlignment(.center)
-                    .font(.system(size: UIScreen.main.bounds.width / 64 * 3, weight: .bold))
-                    .background(colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black)
-                    .clipShape(RoundedRectangle(cornerRadius: 16.0, style: .continuous))
-                    .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)) ,radius: 10, x: 6, y: 4)
-                    .frame(width: UIScreen.main.bounds.width / 8 * 3)
-                    .padding()
-                    .offset(x: UIScreen.main.bounds.width / 64 * -3)
-            }
-            Form {
-                ForEach(getArray(foodData.restaurants), id: \.self) { element in
-                    Text(element)
+        ZStack {
+            VStack {
+                HStack {
+                    TextField("Location: ", text: $location, onCommit: getLocation)
+                        .multilineTextAlignment(.center)
+                        .font(.system(size: UIScreen.main.bounds.width / 64 * 3, weight: .bold))
+                        .background(colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black)
+                        .clipShape(RoundedRectangle(cornerRadius: 16.0, style: .continuous))
+                        .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)) ,radius: 10, x: 6, y: 4)
+                        .frame(width: UIScreen.main.bounds.width / 8 * 3)
+                        .padding()
+                        .offset(x: UIScreen.main.bounds.width / 64 * 3)
+                    Spacer()
+                    TextField("Radius: ", text: $radius, onCommit: getLocation)
+                        .multilineTextAlignment(.center)
+                        .font(.system(size: UIScreen.main.bounds.width / 64 * 3, weight: .bold))
+                        .background(colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black)
+                        .clipShape(RoundedRectangle(cornerRadius: 16.0, style: .continuous))
+                        .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)) ,radius: 10, x: 6, y: 4)
+                        .frame(width: UIScreen.main.bounds.width / 8 * 3)
+                        .padding()
+                        .offset(x: UIScreen.main.bounds.width / 64 * -3)
                 }
-            }
-            HStack {
-                Image(systemName: "cloud.sun.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: UIScreen.main.bounds.width / 10, height: UIScreen.main.bounds.width / 10)
+                Tile("Restaurants", UIScreen.main.bounds.width / 2, UIScreen.main.bounds.height / 32, colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black, UIScreen.main.bounds.width / 16, .bold)
+                    .clipShape(RoundedRectangle(cornerRadius: 16.0, style: .continuous))
+                    .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)) ,radius: 10, x: 6, y: 4)
+                    .frame(width: UIScreen.main.bounds.width)
                     .padding()
-                    .offset(x: UIScreen.main.bounds.width / 64 * 3)
-                    .onTapGesture {
-                        withAnimation {
-                            screen.currentScreen = 0
+                    
+                ScrollView(.vertical) {
+                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
+                        ForEach(0..<getArray(foodData.restaurants ?? []).count, id: \.self) { index in
+                            VStack {
+                                Tile(getArray(foodData.restaurants ?? [])[index], UIScreen.main.bounds.width / 8 * 3, UIScreen.main.bounds.width / 8 * 3, colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black)
+                                    .onLongPressGesture {
+                                        withAnimation {
+                                            screen.currentScreen = 2
+                                        }
+                                    }
+                                    .padding()
+                            }
                         }
                     }
-                Spacer()
-                Image(systemName: "bag")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: UIScreen.main.bounds.width / 10, height: UIScreen.main.bounds.width / 10)
-                    .padding()
-                    .offset(x: UIScreen.main.bounds.width / 64 * -3)
-                    .onTapGesture {
-                        withAnimation {
-                            screen.currentScreen = 1
+                }
+                HStack {
+                    Image(systemName: "cloud.sun.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: UIScreen.main.bounds.width / 10, height: UIScreen.main.bounds.width / 10)
+                        .padding()
+                        .offset(x: UIScreen.main.bounds.width / 64 * 3)
+                        .onTapGesture {
+                            withAnimation {
+                                screen.currentScreen = 0
+                            }
                         }
-                    }
+                    Spacer()
+                    Image(systemName: "bag")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: UIScreen.main.bounds.width / 10, height: UIScreen.main.bounds.width / 10)
+                        .padding()
+                        .offset(x: UIScreen.main.bounds.width / 64 * -3)
+                        .onTapGesture {
+                            withAnimation {
+                                screen.currentScreen = 1
+                            }
+                        }
+                }
+                .frame(height: UIScreen.main.bounds.height / 16)
             }
         }
         .onAppear(perform: setGeocodingData)

@@ -7,6 +7,16 @@
 
 import SwiftUI
 
+func Tile(_ message: String, _ width: CGFloat, _ height: CGFloat, _ background: Color, _ fontSize: CGFloat = 14, _ fontWeight: Font.Weight = .regular) -> some View {
+    Text(message)
+        .multilineTextAlignment(.center)
+        .font(.system(size: fontSize, weight: fontWeight))
+        .frame(width: width, height: height)
+        .background(background)
+        .clipShape(RoundedRectangle(cornerRadius: 16.0, style: .continuous))
+        .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)) ,radius: 10, x: 6, y: 4)
+}
+
 struct LocationData: Codable {
     let locationSuggestions: [LocationSuggestion]
     let status: String
@@ -52,8 +62,8 @@ struct LocationSuggestion: Codable {
 }
     
 struct FoodData: Codable {
-    let resultsFound, resultsStart, resultsShown: Int
-    let restaurants: [RestaurantElement]
+    let resultsFound, resultsStart, resultsShown: Int?
+    let restaurants: [RestaurantElement]?
 
     enum CodingKeys: String, CodingKey {
         case resultsFound = "results_found"
@@ -70,203 +80,96 @@ struct FoodData: Codable {
     }
 }
 
-// MARK: - RestaurantElement
 struct RestaurantElement: Codable {
-    let restaurant: RestaurantRestaurant
+    let restaurant: RestaurantRestaurant?
 }
 
-// MARK: - RestaurantRestaurant
 struct RestaurantRestaurant: Codable {
-    let r: R
-    let apikey: Apikey
-    let id, name: String
-    let url: String
-    let location: Location
-    let switchToOrderMenu: Int
-    let cuisines, timings: String
-    let averageCostForTwo, priceRange: Int
-    let currency: Currency
-    let highlights: [String]
-    let offers: [JSONAny]
-    let opentableSupport, isZomatoBookRes: Int
-    let mezzoProvider: MezzoProvider
-    let isBookFormWebView: Int
-    let bookFormWebViewURL, bookAgainURL: String
-    let thumb: String
-    let userRating: UserRating
-    let allReviewsCount: Int
-    let photosURL: String
-    let photoCount: Int
-    let menuURL: String
-    let featuredImage: String
-    let medioProvider: Bool
-    let hasOnlineDelivery, isDeliveringNow: Int
-    let storeType: String
-    let includeBogoOffers: Bool
-    let deeplink: String
-    let isTableReservationSupported, hasTableBooking: Int
-    let eventsURL: String
-    let phoneNumbers: String
-    let allReviews: AllReviews
-    let establishment: [String]
-    let establishmentTypes: [JSONAny]
-
-    enum CodingKeys: String, CodingKey {
-        case r = "R"
-        case apikey, id, name, url, location
-        case switchToOrderMenu = "switch_to_order_menu"
-        case cuisines, timings
-        case averageCostForTwo = "average_cost_for_two"
-        case priceRange = "price_range"
-        case currency, highlights, offers
-        case opentableSupport = "opentable_support"
-        case isZomatoBookRes = "is_zomato_book_res"
-        case mezzoProvider = "mezzo_provider"
-        case isBookFormWebView = "is_book_form_web_view"
-        case bookFormWebViewURL = "book_form_web_view_url"
-        case bookAgainURL = "book_again_url"
-        case thumb
-        case userRating = "user_rating"
-        case allReviewsCount = "all_reviews_count"
-        case photosURL = "photos_url"
-        case photoCount = "photo_count"
-        case menuURL = "menu_url"
-        case featuredImage = "featured_image"
-        case medioProvider = "medio_provider"
-        case hasOnlineDelivery = "has_online_delivery"
-        case isDeliveringNow = "is_delivering_now"
-        case storeType = "store_type"
-        case includeBogoOffers = "include_bogo_offers"
-        case deeplink
-        case isTableReservationSupported = "is_table_reservation_supported"
-        case hasTableBooking = "has_table_booking"
-        case eventsURL = "events_url"
-        case phoneNumbers = "phone_numbers"
-        case allReviews = "all_reviews"
-        case establishment
-        case establishmentTypes = "establishment_types"
-    }
+    let R: R?
+    let apikey: String?
+    let id, name: String?
+    let url: String?
+    let location: Location?
+    let switch_to_order_menu: Int?
+    let cuisines, timings: String?
+    let average_cost_for_two, price_range: Int?
+    let currency: String?
+    let highlights: [String]?
+    let offers: [JSONAny]?
+    let opentable_support, is_zomato_book_res: Int?
+    let mezzo_provider: String?
+    let is_book_form_web_view: Int?
+    let book_form_web_view_url, book_again_url: String?
+    let thumb: String?
+    let user_rating: UserRating?
+    let all_reviews_count: Int?
+    let photos_url: String?
+    let photo_count: Int?
+    let menu_url: String?
+    let featured_image: String?
+    let medio_provider: Bool?
+    let has_online_delivery, is_delivering_now: Int?
+    let store_type: String?
+    let include_bogo_offers: Bool?
+    let deeplink: String?
+    let is_table_reservation_supported, has_table_booking: Int?
+    let events_url: String?
+    let phone_numbers: String?
+    let all_reviews: AllReviews?
+    let establishment: [String]?
+    let establishment_types: [JSONAny]?
 }
 
-// MARK: - AllReviews
 struct AllReviews: Codable {
     let reviews: [Review]
 }
 
-// MARK: - Review
 struct Review: Codable {
     let review: [JSONAny]
 }
 
-enum Apikey: String, Codable {
-    case the698C43Ba2Eefbce9D798D13C1E6Acc2F = "698c43ba2eefbce9d798d13c1e6acc2f"
-}
-
-enum Currency: String, Codable {
-    case empty = "$"
-}
-
-// MARK: - Location
 struct Location: Codable {
-    let address, locality: String
-    let city: City
-    let cityID: Int
-    let latitude, longitude, zipcode: String
-    let countryID: Int
-    let localityVerbose: String
-
-    enum CodingKeys: String, CodingKey {
-        case address, locality, city
-        case cityID = "city_id"
-        case latitude, longitude, zipcode
-        case countryID = "country_id"
-        case localityVerbose = "locality_verbose"
-    }
+    let address, locality: String?
+    let city: String?
+    let city_id: Int?
+    let latitude, longitude, zipcode: String?
+    let country_id: Int?
+    let locality_verbose: String?
 }
 
-enum City: String, Codable {
-    case newYorkCity = "New York City"
-}
-
-enum MezzoProvider: String, Codable {
-    case other = "OTHER"
-}
-
-// MARK: - R
 struct R: Codable {
-    let resID: Int
-    let isGroceryStore: Bool
-    let hasMenuStatus: HasMenuStatus
-
-    enum CodingKeys: String, CodingKey {
-        case resID = "res_id"
-        case isGroceryStore = "is_grocery_store"
-        case hasMenuStatus = "has_menu_status"
-    }
+    let res_id: Int?
+    let is_grocery_store: Bool?
+    let has_menu_status: HasMenuStatus?
 }
 
-// MARK: - HasMenuStatus
 struct HasMenuStatus: Codable {
-    let delivery, takeaway: Int
+    let delivery, takeaway: Int?
 }
 
-// MARK: - UserRating
 struct UserRating: Codable {
-    let aggregateRating: String
-    let ratingText: RatingText
-    let ratingColor: RatingColor
-    let ratingObj: RatingObj
-    let votes: Int
-
-    enum CodingKeys: String, CodingKey {
-        case aggregateRating = "aggregate_rating"
-        case ratingText = "rating_text"
-        case ratingColor = "rating_color"
-        case ratingObj = "rating_obj"
-        case votes
-    }
+    let aggregate_rating: String?
+    let rating_text: String?
+    let rating_color: String?
+    let rating_obj: RatingObj?
+    let votes: Int?
 }
 
-enum RatingColor: String, Codable {
-    case the3F7E00 = "3F7E00"
-    case the5Ba829 = "5BA829"
-}
-
-// MARK: - RatingObj
 struct RatingObj: Codable {
     let title: Title
-    let bgColor: BgColor
-
-    enum CodingKeys: String, CodingKey {
-        case title
-        case bgColor = "bg_color"
-    }
+    let bg_color: BgColor
 }
 
-// MARK: - BgColor
 struct BgColor: Codable {
-    let type: TypeEnum
-    let tint: String
+    let type: String?
+    let tint: String?
 }
 
-enum TypeEnum: String, Codable {
-    case lime = "lime"
-}
-
-// MARK: - Title
 struct Title: Codable {
-    let text: String
+    let text: String?
 }
-
-enum RatingText: String, Codable {
-    case excellent = "Excellent"
-    case veryGood = "Very Good"
-}
-
-// MARK: - Encode/decode helpers
 
 class JSONNull: Codable, Hashable {
-
     public static func == (lhs: JSONNull, rhs: JSONNull) -> Bool {
         return true
     }
@@ -311,7 +214,6 @@ class JSONCodingKey: CodingKey {
 }
 
 class JSONAny: Codable {
-
     let value: Any
 
     static func decodingError(forCodingPath codingPath: [CodingKey]) -> DecodingError {
