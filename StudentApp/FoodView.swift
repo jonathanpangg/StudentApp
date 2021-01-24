@@ -12,6 +12,7 @@ struct FoodView: View {
     @Environment(\.colorScheme) var colorScheme
     @State var locationData = LocationData()
     @State var radius       = "1609.35"
+    @State var pressed      = false
     let key                 = "698c43ba2eefbce9d798d13c1e6acc2f"
     
     // gets the location data
@@ -95,12 +96,14 @@ struct FoodView: View {
                     LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
                         ForEach(0..<getArray(pass.foodData.restaurants ?? []).count, id: \.self) { index in
                             VStack {
-                                Tile(getArray(pass.foodData.restaurants ?? [])[index], UIScreen.main.bounds.width / 8 * 3, UIScreen.main.bounds.width / 8 * 3, colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black)
-                                    .onLongPressGesture {
-                                        pass.index = index
-                                        pass.currentScreen = 2
-                                    }
-                                    .padding()
+                                ZStack {
+                                    Tile(getArray(pass.foodData.restaurants ?? [])[index], UIScreen.main.bounds.width / 8 * 3, UIScreen.main.bounds.width / 8 * 3, colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black)
+                                        .onLongPressGesture {
+                                            pass.index = index
+                                            pass.currentScreen = 2
+                                        }
+                                        .padding()
+                                }
                             }
                         }
                     }
@@ -110,21 +113,18 @@ struct FoodView: View {
                         .resizable()
                         .scaledToFit()
                         .frame(width: UIScreen.main.bounds.width / 10, height: UIScreen.main.bounds.width / 10)
-                        .padding()
                         .offset(x: UIScreen.main.bounds.width / 64 * 3)
                         .onTapGesture {
                             pass.currentScreen = 0
                         }
+                        .padding()
                     Spacer()
                     Image(systemName: "bag")
                         .resizable()
                         .scaledToFit()
                         .frame(width: UIScreen.main.bounds.width / 10, height: UIScreen.main.bounds.width / 10)
-                        .padding()
                         .offset(x: UIScreen.main.bounds.width / 64 * -3)
-                        .onTapGesture {
-                            pass.currentScreen = 1
-                        }
+                        .padding()
                 }
                 .frame(height: UIScreen.main.bounds.height / 16)
             }

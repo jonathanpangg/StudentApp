@@ -135,17 +135,6 @@ struct WeatherView: View {
         return Color.orange
     }
     
-    // changes the temp ring color 
-    func changeTempRingColor() -> LinearGradient {
-        if (weatherData.main.temp - 273.15) * 1.8 + 32 < 40 {
-            return LinearGradient(gradient: Gradient(colors: [Color.lightGreen, Color.lightBlue]), startPoint: .topLeading, endPoint: .bottomTrailing)
-        }
-        else if (weatherData.main.temp - 273.15) * 1.8 + 32 < 80 {
-            return LinearGradient(gradient: Gradient(colors: [Color.orange, Color.lightGreen]), startPoint: .topLeading, endPoint: .bottomTrailing)
-        }
-        return LinearGradient(gradient: Gradient(colors: [Color.red, Color.orange]), startPoint: .topLeading, endPoint: .bottomTrailing)
-    }
-    
     var body: some View {
         VStack {
             ZStack {
@@ -153,9 +142,10 @@ struct WeatherView: View {
                     // temperature
                     ZStack {
                         Circle()
-                            .trim(from: 0, to: 0.75)
-                            .stroke(changeTempRingColor(), style: StrokeStyle(lineWidth: 7.5, lineCap: .round, lineJoin: .round))
-                            .rotation3DEffect(Angle(degrees: 135), axis: (0, 0, 1))
+                            .stroke(lineWidth: 0)
+                            .background(colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black)
+                            .clipShape(Circle())
+                            .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)) ,radius: 10, x: 6, y: 4)
                             .frame(width: UIScreen.main.bounds.width / 5, height: UIScreen.main.bounds.width / 5)
                         Text("\((weatherData.main.temp - 273.15) * 1.8 + 32, specifier: "%.0f")°F")
                             .foregroundColor(changeTempColor())
@@ -167,7 +157,10 @@ struct WeatherView: View {
                     // weather condition image
                     ZStack {
                         Circle()
-                            .stroke(lineWidth: 5)
+                            .stroke(lineWidth: 0)
+                            .background(colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black)
+                            .clipShape(Circle())
+                            .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)) ,radius: 10, x: 6, y: 4)
                             .frame(width: UIScreen.main.bounds.width / 5, height: UIScreen.main.bounds.width / 5)
                         Image(systemName: statusImage)
                             .resizable()
@@ -180,7 +173,10 @@ struct WeatherView: View {
                     // wind speed
                     ZStack {
                         Circle()
-                            .stroke(lineWidth: 5)
+                            .stroke(lineWidth: 0)
+                            .background(colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black)
+                            .clipShape(Circle())
+                            .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)) ,radius: 10, x: 6, y: 4)
                             .frame(width: UIScreen.main.bounds.width / 5, height: UIScreen.main.bounds.width / 5)
                         Text("\(weatherData.wind.speed * 2.237, specifier: "%.0f") mph")
                     }
@@ -215,21 +211,20 @@ struct WeatherView: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: UIScreen.main.bounds.width / 10, height: UIScreen.main.bounds.width / 10)
-                    .padding()
                     .offset(x: UIScreen.main.bounds.width / 64 * 3)
-                    .onTapGesture {
-                        pass.currentScreen = 0
-                    }
+                    .padding()
                 Spacer()
                 Image(systemName: "bag")
                     .resizable()
                     .scaledToFit()
                     .frame(width: UIScreen.main.bounds.width / 10, height: UIScreen.main.bounds.width / 10)
-                    .padding()
-                    .offset(x: UIScreen.main.bounds.width / 64 * -3)
                     .onTapGesture {
-                        pass.currentScreen = 1
+                        withAnimation {
+                            pass.currentScreen = 1
+                        }
                     }
+                    .offset(x: UIScreen.main.bounds.width / 64 * -3)
+                    .padding()
             }
             .frame(height: UIScreen.main.bounds.height / 16)
         }

@@ -23,7 +23,9 @@ struct RestaurantInfoView: View {
             HStack {
                 Image(systemName: "chevron.left")
                     .onTapGesture {
-                        pass.currentScreen = 1
+                        withAnimation {
+                            pass.currentScreen = 1
+                        }
                     }
                 Spacer()
             }
