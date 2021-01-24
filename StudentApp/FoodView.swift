@@ -10,61 +10,76 @@ import MapKit
 
 struct MapView: UIViewRepresentable {
     @ObservedObject var pass: Pass
-    @State var location = ""
-    @State var lat: String
-    @State var long: String
+    @State var centerCoordinate = CLLocationCoordinate2D()
+    let key                     = "HTOE33374XRLAUSKODNCW7K1M6KFLQ0T" // "83cc2d19d4484cff977bc3987256dad0"
     
-    func reverseLocation() {
-        guard let url = URL(string: "https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=\(lat)&longitude=\(long)&localityLanguage=en") else { return }
-        var request = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10.0)
-        request.httpMethod = "GET"
+    init(_ pass: Pass) {
+        self.pass = pass
+        setGeocodingData()
+    }
+    
+    func setGeocodingData() {
+        guard let url               = URL(string: "http://ip-api.com/json") else { return }
+        var request                 = URLRequest(url: url)
+        request.allHTTPHeaderFields = [
+            "Content-Type": "application/json"
+        ]
         URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data else { return }
-            if let decoded = try? JSONDecoder().decode(CityData.self, from: data) {
+            if let decoded = try? JSONDecoder().decode(GeocodingData.self, from: data) {
                 DispatchQueue.main.async {
-                    pass.location = decoded.principalSubdivision
+                    pass.location = decoded.city
+                    centerCoordinate.latitude = decoded.lat
+                    centerCoordinate.longitude = decoded.lon
                 }
             }
         }.resume()
     }
     
+    // https://api.opencagedata.com/geocode/v1/json?q=\(lat)%2C+\(long)&key=\(key)&pretty=1"
+    
     func makeUIView(context: UIViewRepresentableContext<MapView>) -> MKMapView {
         let mapView = MKMapView()
         mapView.delegate = context.coordinator
-        let annotation = MKPointAnnotation()
-        annotation.title = location
-        annotation.coordinate = CLLocationCoordinate2D(latitude: Double(lat) ?? 0, longitude: Double(long) ?? 0)
-        mapView.addAnnotation(annotation)
         return mapView
     }
-
-    func updateUIView(_ view: MKMapView, context: UIViewRepresentableContext<MapView>) {
-        reverseLocation()
-    }
+    
+    func updateUIView(_ view: MKMapView, context: UIViewRepresentableContext<MapView>) { }
     
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
     }
-}
 
-class Coordinator: NSObject, MKMapViewDelegate {
-    var parent: MapView
-
-    init(_ parent: MapView) {
-        self.parent = parent
-    }
-    
-    func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
-        if Int(parent.lat) ?? 0 != Int(mapView.centerCoordinate.latitude) && Int(parent.long) ?? 0 != Int(mapView.centerCoordinate.longitude) {
-            parent.lat  = "\(mapView.centerCoordinate.latitude)"
-            parent.long = "\(mapView.centerCoordinate.longitude)"
+    class Coordinator: NSObject, MKMapViewDelegate {
+        var parent: MapView
+        
+        init(_ parent: MapView) {
+            self.parent = parent
         }
-    }
-    
-    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        let view = MKPinAnnotationView(annotation: annotation, reuseIdentifier: nil)
-        view.canShowCallout = true
-        return view
+        
+        func reverseLocation() {
+            guard let url = URL(string: "https://api.geodatasource.com/city?key=\(self.parent.key)&format=json&lat=\(self.parent.centerCoordinate.latitude)&lng=\(self.parent.centerCoordinate.longitude)") else { return }
+            var request = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10.0)
+            request.httpMethod = "GET"
+            URLSession.shared.dataTask(with: request) { data, response, error in
+                guard let data = data else { return }
+                if let decoded = try? JSONDecoder().decode(CityData.self, from: data) {
+                    DispatchQueue.main.async {
+                        self.parent.pass.location = decoded.city
+                    }
+                }
+            }.resume()
+        }
+
+        func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
+            if Double(parent.centerCoordinate.latitude) >= Double(mapView.centerCoordinate.latitude) + 5 || Double(parent.centerCoordinate.latitude) <= Double(mapView.centerCoordinate.latitude) - 5 || Double(parent.centerCoordinate.longitude) >= Double(mapView.centerCoordinate.longitude) + 5 || Double(parent.centerCoordinate.longitude) <= Double(mapView.centerCoordinate.longitude) - 5 {
+                DispatchQueue.main.async { [self] in
+                    parent.centerCoordinate = mapView.centerCoordinate
+                    reverseLocation()
+                }
+            }
+            
+        }
     }
 }
 
@@ -160,7 +175,7 @@ struct FoodView: View {
                     .frame(width: UIScreen.main.bounds.width)
                 Spacer()
                 
-                MapView(pass: pass, lat: lat, long: long)
+                MapView(pass)
                     .background(colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black)
                     .clipShape(RoundedRectangle(cornerRadius: 16.0, style: .continuous))
                     .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)), radius: 10, x: 6, y: 4)
