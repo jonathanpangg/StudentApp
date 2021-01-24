@@ -6,15 +6,77 @@
 //
 
 import SwiftUI
+import MapKit
+
+struct MapView: UIViewRepresentable {
+    @ObservedObject var pass: Pass
+    @State var location = ""
+    @State var lat: String
+    @State var long: String
+    
+    func reverseLocation() {
+        guard let url = URL(string: "https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=\(lat)&longitude=\(long)&localityLanguage=en") else { return }
+        var request = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10.0)
+        request.httpMethod = "GET"
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data else { return }
+            if let decoded = try? JSONDecoder().decode(CityData.self, from: data) {
+                DispatchQueue.main.async {
+                    pass.location = decoded.principalSubdivision
+                }
+            }
+        }.resume()
+    }
+    
+    func makeUIView(context: UIViewRepresentableContext<MapView>) -> MKMapView {
+        let mapView = MKMapView()
+        mapView.delegate = context.coordinator
+        let annotation = MKPointAnnotation()
+        annotation.title = location
+        annotation.coordinate = CLLocationCoordinate2D(latitude: Double(lat) ?? 0, longitude: Double(long) ?? 0)
+        mapView.addAnnotation(annotation)
+        return mapView
+    }
+
+    func updateUIView(_ view: MKMapView, context: UIViewRepresentableContext<MapView>) {
+        reverseLocation()
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+}
+
+class Coordinator: NSObject, MKMapViewDelegate {
+    var parent: MapView
+
+    init(_ parent: MapView) {
+        self.parent = parent
+    }
+    
+    func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
+        if Int(parent.lat) ?? 0 != Int(mapView.centerCoordinate.latitude) && Int(parent.long) ?? 0 != Int(mapView.centerCoordinate.longitude) {
+            parent.lat  = "\(mapView.centerCoordinate.latitude)"
+            parent.long = "\(mapView.centerCoordinate.longitude)"
+        }
+    }
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        let view = MKPinAnnotationView(annotation: annotation, reuseIdentifier: nil)
+        view.canShowCallout = true
+        return view
+    }
+}
 
 struct FoodView: View {
     @ObservedObject var pass: Pass
     @Environment(\.colorScheme) var colorScheme
     @State var locationData = LocationData()
-    @State var radius       = "1609.35"
-    @State var pressed      = false
+    @State var radius       = "3218.69"
+    @State var lat          = ""
+    @State var long         = ""
     let key                 = "698c43ba2eefbce9d798d13c1e6acc2f"
-    
+        
     // gets the location data
     func getLocation() {
         let query                   = pass.location.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
@@ -54,10 +116,18 @@ struct FoodView: View {
     }
     
     // returns an array representation
-    func getArray(_ array: [RestaurantElement]) -> [String] {
+    func getArrayName(_ array: [RestaurantElement]) -> [String] {
         var list = [String]()
         for i in array {
             list.append("\(String(describing: i.restaurant!.name ?? ""))")
+        }
+        return list
+    }
+    
+    func getArrayAddress(_ array: [RestaurantElement]) -> [String] {
+        var list = [String]()
+        for i in array {
+            list.append("\(String(describing: i.restaurant!.location?.address ?? ""))")
         }
         return list
     }
@@ -73,7 +143,6 @@ struct FoodView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 16.0, style: .continuous))
                         .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)) ,radius: 10, x: 6, y: 4)
                         .frame(width: UIScreen.main.bounds.width / 16 * 7)
-                        .padding()
                         .offset(x: UIScreen.main.bounds.width / 64 * 2)
                     Spacer()
                     TextField("Radius: ", text: $radius, onCommit: getLocation)
@@ -83,32 +152,33 @@ struct FoodView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 16.0, style: .continuous))
                         .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)) ,radius: 10, x: 6, y: 4)
                         .frame(width: UIScreen.main.bounds.width / 16 * 7)
-                        .padding()
                         .offset(x: UIScreen.main.bounds.width / 64 * -2)
                 }
                 Tile("Restaurants", UIScreen.main.bounds.width / 2, UIScreen.main.bounds.height / 32, colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black, UIScreen.main.bounds.width / 16, .bold)
                     .clipShape(RoundedRectangle(cornerRadius: 16.0, style: .continuous))
                     .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)) ,radius: 10, x: 6, y: 4)
                     .frame(width: UIScreen.main.bounds.width)
-                    .padding()
+                Spacer()
+                
+                MapView(pass: pass, lat: lat, long: long)
+                    .background(colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black)
+                    .clipShape(RoundedRectangle(cornerRadius: 16.0, style: .continuous))
+                    .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)), radius: 10, x: 6, y: 4)
+                    .frame(width: UIScreen.main.bounds.width / 16 * 15)
                     
-                ScrollView(.vertical) {
-                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
-                        ForEach(0..<getArray(pass.foodData.restaurants ?? []).count, id: \.self) { index in
+                ScrollView(.horizontal, showsIndicators: false) {
+                    LazyHGrid(rows: [GridItem(.flexible())]) {
+                        ForEach(0..<getArrayName(pass.foodData.restaurants ?? []).count, id: \.self) { index in
                             VStack {
-                                ZStack {
-                                    Tile(getArray(pass.foodData.restaurants ?? [])[index], UIScreen.main.bounds.width / 8 * 3, UIScreen.main.bounds.width / 8 * 3, colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black)
-                                        .onLongPressGesture {
-                                            pass.index = index
-                                            pass.currentScreen = 2
-                                        }
-                                        .padding()
-                                }
+                                Tile("\(getArrayName(pass.foodData.restaurants ?? [])[index])\n\n\(getArrayAddress(pass.foodData.restaurants ?? [])[index])", UIScreen.main.bounds.width / 16 * 5, UIScreen.main.bounds.width / 16 * 5, colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black)
+                                    .padding()
                             }
                         }
                     }
                 }
-                HStack {
+                Spacer()
+                
+                HStack(alignment: .top) {
                     Image(systemName: "cloud.sun.fill")
                         .resizable()
                         .scaledToFit()
@@ -126,7 +196,8 @@ struct FoodView: View {
                         .offset(x: UIScreen.main.bounds.width / 64 * -3)
                         .padding()
                 }
-                .frame(height: UIScreen.main.bounds.height / 16)
+                .frame(height: UIScreen.main.bounds.height / 64 * 2)
+                .offset(y: UIScreen.main.bounds.height / 256 * 3)
             }
         }
         .onAppear(perform: getLocation)

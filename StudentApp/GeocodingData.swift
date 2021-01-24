@@ -39,20 +39,21 @@ struct GeocodingData: Codable {
 }
 
 struct CityData: Codable {
-    let country, region, city, latitude, longitude, currency_code, currency_name, currency_symbol, sunrise, sunset, time_zone, distance_km: String
+    let latitude, longitude: Double
+    let continent, continentCode: String
+    let countryName, countryCode, principalSubdivision, principalSubdivisionCode: String
+    let city, postcode: String
     
     init() {
-        self.country         = ""
-        self.region          = ""
-        self.city            = ""
-        self.latitude        = ""
-        self.longitude       = ""
-        self.currency_code   = ""
-        self.currency_name   = ""
-        self.currency_symbol = ""
-        self.sunrise         = ""
-        self.sunset          = ""
-        self.time_zone       = ""
-        self.distance_km     = ""
+        self.latitude                 = 0
+        self.longitude                = 0
+        self.continent                = ""
+        self.continentCode            = ""
+        self.countryName              = ""
+        self.countryCode              = ""
+        self.principalSubdivision     = ""
+        self.principalSubdivisionCode = ""
+        self.city                     = ""
+        self.postcode                 = ""
     }
 }

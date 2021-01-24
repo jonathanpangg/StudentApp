@@ -206,7 +206,8 @@ struct WeatherView: View {
                 }
             }
             Spacer()
-            HStack {
+            
+            HStack(alignment: .top) {
                 Image(systemName: "cloud.sun.fill")
                     .resizable()
                     .scaledToFit()
@@ -226,7 +227,8 @@ struct WeatherView: View {
                     .offset(x: UIScreen.main.bounds.width / 64 * -3)
                     .padding()
             }
-            .frame(height: UIScreen.main.bounds.height / 16)
+            .frame(height: UIScreen.main.bounds.height / 64 * 2)
+            .offset(y: UIScreen.main.bounds.height / 256 * 3)
         }
         .onAppear(perform: getData)
         // Locks the screen so it is only in portrait
