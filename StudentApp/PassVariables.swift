@@ -10,6 +10,8 @@ import SwiftUI
 class Pass: ObservableObject {
     @Published var currentScreen: Int = 0
     @Published var location: String   = ""
+    @Published var foodData: FoodData = FoodData()
+    @Published var index: Int         = 0
     
     // sets default location
     func setGeocodingData() {

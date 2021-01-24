@@ -10,6 +10,14 @@ import SwiftUI
 struct RestaurantInfoView: View {
     @ObservedObject var pass: Pass
     
+    func getArray(_ array: [RestaurantElement]) -> [String] {
+        var list = [String]()
+        for i in array {
+            list.append("\(String(describing: i.restaurant!.location?.address ?? ""))")
+        }
+        return list
+    }
+    
     var body: some View {
         VStack {
             HStack {
@@ -17,13 +25,11 @@ struct RestaurantInfoView: View {
                     .onTapGesture {
                         pass.currentScreen = 1
                     }
-                    .offset(x: UIScreen.main.bounds.width / 64 * 3, y: UIScreen.main.bounds.width / 64 * 3)
                 Spacer()
             }
-            // Form {
-                // Text("\(passRestData.rest.url)")
-                // Text("\(passRestData.rest.phoneNumbers)")
-            // }
+            .padding()
+            
+            Text(getArray(pass.foodData.restaurants ?? [])[pass.index])
             Spacer()
         }
         .onAppear {

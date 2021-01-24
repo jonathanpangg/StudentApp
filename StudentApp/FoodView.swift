@@ -11,7 +11,6 @@ struct FoodView: View {
     @ObservedObject var pass: Pass
     @Environment(\.colorScheme) var colorScheme
     @State var locationData = LocationData()
-    @State var foodData     = FoodData()
     @State var radius       = "1609.35"
     let key                 = "698c43ba2eefbce9d798d13c1e6acc2f"
     
@@ -46,11 +45,14 @@ struct FoodView: View {
         URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data else { return }
             if let decoded = try? JSONDecoder().decode(FoodData.self, from: data) {
-                foodData = decoded
+                DispatchQueue.main.async {
+                    pass.foodData = decoded
+                }
             }
         }.resume()
     }
     
+    // returns an array representation
     func getArray(_ array: [RestaurantElement]) -> [String] {
         var list = [String]()
         for i in array {
@@ -91,10 +93,11 @@ struct FoodView: View {
                     
                 ScrollView(.vertical) {
                     LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
-                        ForEach(0..<getArray(foodData.restaurants ?? []).count, id: \.self) { index in
+                        ForEach(0..<getArray(pass.foodData.restaurants ?? []).count, id: \.self) { index in
                             VStack {
-                                Tile(getArray(foodData.restaurants ?? [])[index], UIScreen.main.bounds.width / 8 * 3, UIScreen.main.bounds.width / 8 * 3, colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black)
+                                Tile(getArray(pass.foodData.restaurants ?? [])[index], UIScreen.main.bounds.width / 8 * 3, UIScreen.main.bounds.width / 8 * 3, colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black)
                                     .onLongPressGesture {
+                                        pass.index = index
                                         pass.currentScreen = 2
                                     }
                                     .padding()
