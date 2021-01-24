@@ -37,3 +37,22 @@ struct GeocodingData: Codable {
         self.query           = ""
     }
 }
+
+struct CityData: Codable {
+    let country, region, city, latitude, longitude, currency_code, currency_name, currency_symbol, sunrise, sunset, time_zone, distance_km: String
+    
+    init() {
+        self.country         = ""
+        self.region          = ""
+        self.city            = ""
+        self.latitude        = ""
+        self.longitude       = ""
+        self.currency_code   = ""
+        self.currency_name   = ""
+        self.currency_symbol = ""
+        self.sunrise         = ""
+        self.sunset          = ""
+        self.time_zone       = ""
+        self.distance_km     = ""
+    }
+}

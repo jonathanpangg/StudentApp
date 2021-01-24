@@ -13,12 +13,38 @@ struct WeatherView: View {
     let key                  = "4e28fd44172171a9678306f1648809fa"
     @State var weatherData   = WeatherData()
     @State var statusImage   = ""
+    @State var isCity        = true
+    @State var location      = ""
+    
+    // sets default location
+    func setGeocodingData() {
+        guard let url               = URL(string: "http://ip-api.com/json") else { return }
+        var request                 = URLRequest(url: url)
+        request.allHTTPHeaderFields = [
+            "Content-Type": "application/json"
+        ]
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data else { return }
+            if let decoded = try? JSONDecoder().decode(GeocodingData.self, from: data) {
+                DispatchQueue.main.async {
+                    location = decoded.city
+                    getData()
+                }
+            }
+        }.resume()
+    }
     
     // gets weather data
     func getData() {
+        var query = ""
         if pass.location == "" {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.10) {
-                let query = "\(pass.location)&appid=\(key)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+                if isCity {
+                    query = "\(pass.location)&appid=\(key)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+                }
+                else {
+                    query = "\(location)&appid=\(key)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+                }
                 guard let url = URL(string: "https://api.openweathermap.org/data/2.5/weather?q=\(String(describing: query))") else { return }
                 var request = URLRequest(url: url)
                 request.allHTTPHeaderFields = [
@@ -52,7 +78,12 @@ struct WeatherView: View {
             }
         }
         else {
-            let query = "\(pass.location)&appid=\(key)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+            if isCity {
+                query = "\(pass.location)&appid=\(key)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+            }
+            else {
+                query = "\(location)&appid=\(key)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+            }
             guard let url = URL(string: "https://api.openweathermap.org/data/2.5/weather?q=\(String(describing: query))") else { return }
             var request = URLRequest(url: url)
             request.allHTTPHeaderFields = [
@@ -63,6 +94,7 @@ struct WeatherView: View {
                 guard let data = data else { return }
                 if let decoded = try? JSONDecoder().decode(WeatherData.self, from: data) {
                     DispatchQueue.main.async {
+                        isCity = true
                         weatherData = decoded
                         switch decoded.weather[0].main {
                         case "Thunderstorm":
@@ -82,9 +114,15 @@ struct WeatherView: View {
                         }
                     }
                 }
+                else {
+                    isCity = false
+                    setGeocodingData()
+                }
             }.resume()
         }
     }
+    
+    // gets the city from lat and long
     
     // changes the temperature color
     func changeTempColor() -> Color {
@@ -152,13 +190,24 @@ struct WeatherView: View {
             
             // Location
             HStack {
-                TextField("Location: ", text: $pass.location, onCommit: getData)
-                    .multilineTextAlignment(.center)
-                    .font(.system(size: UIScreen.main.bounds.width / 64 * 5, weight: .bold))
-                    .background(colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black)
-                    .clipShape(RoundedRectangle(cornerRadius: 16.0, style: .continuous))
-                    .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)) ,radius: 10, x: 6, y: 4)
-                    .frame(width: UIScreen.main.bounds.width / 4 * 3)
+                if isCity {
+                    TextField("Location: ", text: $pass.location, onCommit: getData)
+                        .multilineTextAlignment(.center)
+                        .font(.system(size: UIScreen.main.bounds.width / 64 * 4, weight: .bold))
+                        .background(colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black)
+                        .clipShape(RoundedRectangle(cornerRadius: 16.0, style: .continuous))
+                        .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)) ,radius: 10, x: 6, y: 4)
+                        .frame(width: UIScreen.main.bounds.width / 4 * 3)
+                }
+                else {
+                    TextField("Location: ", text: $location, onCommit: getData)
+                        .multilineTextAlignment(.center)
+                        .font(.system(size: UIScreen.main.bounds.width / 64 * 5, weight: .bold))
+                        .background(colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black)
+                        .clipShape(RoundedRectangle(cornerRadius: 16.0, style: .continuous))
+                        .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)) ,radius: 10, x: 6, y: 4)
+                        .frame(width: UIScreen.main.bounds.width / 4 * 3)
+                }
             }
             Spacer()
             HStack {
