@@ -56,3 +56,4 @@ struct CityData: Codable {
         self.distance_km     = ""
     }
 }
+
