@@ -13,12 +13,25 @@ struct MapView: UIViewRepresentable {
     @State var radius           = "3218.69"
     @State var locationData     = LocationData()
     @State var centerCoordinate = CLLocationCoordinate2D()
+    @State var geoData          = [CityData]()
     let geoCodingKey            = "HTOE33374XRLAUSKODNCW7K1M6KFLQ0T" // "83cc2d19d4484cff977bc3987256dad0"
     let foodKey                 = "698c43ba2eefbce9d798d13c1e6acc2f"
     
     init(_ pass: Pass) {
         self.pass = pass
-        setGeocodingData()
+        setData()
+        // setGeocodingData()
+    }
+    
+    func setData() {
+        print("here")
+        if let decoded = try? JSONSerialization.jsonObject(with: Data(jsonGeoData.data(using: .utf8)!), options: []) {
+            print("decoding")
+        }
+        else {
+            print("failed")
+        }
+        print("here")
     }
     
     func setGeocodingData() {
@@ -58,8 +71,6 @@ struct MapView: UIViewRepresentable {
         }.resume()
     }
     
-    // https://api.opencagedata.com/geocode/v1/json?q=\(lat)%2C+\(long)&key=\(key)&pretty=1"
-    
     func makeUIView(context: UIViewRepresentableContext<MapView>) -> MKMapView {
         let mapView = MKMapView()
         mapView.delegate = context.coordinator
@@ -81,6 +92,9 @@ struct MapView: UIViewRepresentable {
             
         // performs reverse geocoding
         func reverseLocation() {
+            // print((try? JSONSerialization.jsonObject(with: Data(jsonGeoData.data(using: .utf8)!), options: []))!)
+            
+            /*
             guard let url = URL(string: "https://api.geodatasource.com/city?key=\(self.parent.geoCodingKey)&format=json&lat=\(self.parent.centerCoordinate.latitude)&lng=\(self.parent.centerCoordinate.longitude)") else { return }
             var request = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10.0)
             request.httpMethod = "GET"
@@ -93,12 +107,12 @@ struct MapView: UIViewRepresentable {
                     }
                 }
             }.resume()
+            */
         }
         
         // gets food data
         func getFoodData() {
             if self.parent.locationData.locationSuggestions.count <= 0 {
-                print(self.parent.locationData)
                 return
             }
             guard let url               = URL(string: "https://developers.zomato.com/api/v2.1/search?entity_id=\(self.parent.locationData.locationSuggestions[0].entityID)&entity_type=\(self.parent.locationData.locationSuggestions[0].entityType)&radius=\(self.parent.radius)") else { return }
@@ -237,7 +251,7 @@ struct FoodView: View {
                     .background(colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black)
                     .clipShape(RoundedRectangle(cornerRadius: 16.0, style: .continuous))
                     .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)), radius: 10, x: 6, y: 4)
-                    .frame(width: UIScreen.main.bounds.width / 16 * 15)
+                    .frame(width: UIScreen.main.bounds.width / 16 * 15, height: UIScreen.main.bounds.height / 16 * 9)
                     
                 ScrollView(.horizontal, showsIndicators: false) {
                     LazyHGrid(rows: [GridItem(.flexible())]) {
@@ -251,7 +265,7 @@ struct FoodView: View {
                 }
                 Spacer()
                 
-                HStack(alignment: .top) {
+                HStack(alignment: .center) {
                     Image(systemName: "cloud.sun.fill")
                         .resizable()
                         .scaledToFit()
@@ -270,7 +284,7 @@ struct FoodView: View {
                         .padding()
                 }
                 .frame(height: UIScreen.main.bounds.height / 64 * 2)
-                .offset(y: UIScreen.main.bounds.height / 256 * 3)
+                .offset(y: UIScreen.main.bounds.height / 256 * -1)
             }
         }
         .onAppear(perform: getLocation)
