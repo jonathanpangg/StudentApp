@@ -45,12 +45,13 @@ struct MapView: UIViewRepresentable {
         self.locationManager.requestAlwaysAuthorization()
         self.locationManager.requestWhenInUseAuthorization()
         if CLLocationManager.locationServicesEnabled() {
-             self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-             self.locationManager.startUpdatingLocation()
+            self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+            self.locationManager.startUpdatingLocation()
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: {
                 if let _ = self.locationManager.location {
-                    let locValue:CLLocationCoordinate2D = self.locationManager.location?.coordinate ?? CLLocationCoordinate2D()
+                    let locValue: CLLocationCoordinate2D = self.locationManager.location?.coordinate ?? CLLocationCoordinate2D()
                     print("CURRENT LOCATION = \(locValue.latitude) \(locValue.longitude)")
+                    print(centerCoordinate)
                     let coordinate = CLLocationCoordinate2D(latitude: locValue.latitude, longitude: locValue.longitude)
                     let span = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
                     let region = MKCoordinateRegion(center: coordinate, span: span)

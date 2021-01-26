@@ -17,7 +17,7 @@ func Tile(_ message: String, _ width: CGFloat, _ height: CGFloat, _ background: 
             .clipShape(RoundedRectangle(cornerRadius: 16.0, style: .continuous))
             .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)), radius: 10, x: 6, y: 4)
         Text(message)
-            .multilineTextAlignment(.center)
+            .multilineTextAlignment(.leading)
             .font(.system(size: fontSize, weight: fontWeight))
             .frame(width: width - width / 16, height: height - height / 16)
             .background(background)
