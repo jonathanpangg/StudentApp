@@ -8,163 +8,21 @@
 import SwiftUI
 import MapKit
 
-struct MapView: UIViewRepresentable {
-    @ObservedObject var pass: Pass
-    @State var radius           = "3218.69"
-    @State var locationData     = LocationData()
-    @State var centerCoordinate = CLLocationCoordinate2D()
-    @State var geoData          = [CityData]()
-    let geoCodingKey            = "HTOE33374XRLAUSKODNCW7K1M6KFLQ0T" // "83cc2d19d4484cff977bc3987256dad0"
-    let foodKey                 = "698c43ba2eefbce9d798d13c1e6acc2f"
-    
-    init(_ pass: Pass) {
-        self.pass = pass
-        setData()
-        // setGeocodingData()
-    }
-    
-    func setData() {
-        print("here")
-        if let decoded = try? JSONSerialization.jsonObject(with: Data(jsonGeoData.data(using: .utf8)!), options: []) {
-            print("decoding")
-        }
-        else {
-            print("failed")
-        }
-        print("here")
-    }
-    
-    func setGeocodingData() {
-        guard let url               = URL(string: "http://ip-api.com/json") else { return }
-        var request                 = URLRequest(url: url)
-        request.allHTTPHeaderFields = [
-            "Content-Type": "application/json"
-        ]
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            guard let data = data else { return }
-            if let decoded = try? JSONDecoder().decode(GeocodingData.self, from: data) {
-                DispatchQueue.main.async {
-                    pass.location = decoded.city
-                    centerCoordinate.latitude = decoded.lat
-                    centerCoordinate.longitude = decoded.lon
-                    getLocation()
-                }
-            }
-        }.resume()
-    }
-    
-    // gets the location data
-    func getLocation() {
-        let query                   = pass.location.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
-        guard let url               = URL(string: "https://developers.zomato.com/api/v2.1/locations?query=\(query)") else { return }
-        var request                 = URLRequest(url: url)
-        request.httpMethod          = "GET"
-        request.allHTTPHeaderFields = [
-            "X-Zomato-API-Key": foodKey,
-            "Content-Type": "application/json"
-        ]
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            guard let data = data else { return }
-            if let decoded = try? JSONDecoder().decode(LocationData.self, from: data) {
-                locationData = decoded
-            }
-        }.resume()
-    }
-    
-    func makeUIView(context: UIViewRepresentableContext<MapView>) -> MKMapView {
-        let mapView = MKMapView()
-        mapView.delegate = context.coordinator
-        return mapView
-    }
-    
-    func updateUIView(_ view: MKMapView, context: UIViewRepresentableContext<MapView>) { }
-    
-    func makeCoordinator() -> Coordinator {
-        Coordinator(self)
-    }
-
-    class Coordinator: NSObject, MKMapViewDelegate {
-        var parent: MapView
-        
-        init(_ parent: MapView) {
-            self.parent = parent
-        }
-            
-        // performs reverse geocoding
-        func reverseLocation() {
-            // print((try? JSONSerialization.jsonObject(with: Data(jsonGeoData.data(using: .utf8)!), options: []))!)
-            
-            /*
-            guard let url = URL(string: "https://api.geodatasource.com/city?key=\(self.parent.geoCodingKey)&format=json&lat=\(self.parent.centerCoordinate.latitude)&lng=\(self.parent.centerCoordinate.longitude)") else { return }
-            var request = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10.0)
-            request.httpMethod = "GET"
-            URLSession.shared.dataTask(with: request) { data, response, error in
-                guard let data = data else { return }
-                if let decoded = try? JSONDecoder().decode(CityData.self, from: data) {
-                    DispatchQueue.main.async {
-                        self.parent.pass.location = decoded.region
-                        self.getFoodData()
-                    }
-                }
-            }.resume()
-            */
-        }
-        
-        // gets food data
-        func getFoodData() {
-            if self.parent.locationData.locationSuggestions.count <= 0 {
-                return
-            }
-            guard let url               = URL(string: "https://developers.zomato.com/api/v2.1/search?entity_id=\(self.parent.locationData.locationSuggestions[0].entityID)&entity_type=\(self.parent.locationData.locationSuggestions[0].entityType)&radius=\(self.parent.radius)") else { return }
-            var request                 = URLRequest(url: url)
-            request.httpMethod          = "GET"
-            request.allHTTPHeaderFields = [
-                "X-Zomato-API-Key": self.parent.foodKey,
-                "Content-Type": "application/json"
-            ]
-            URLSession.shared.dataTask(with: request) { data, response, error in
-                guard let data = data else { return }
-                if let decoded = try? JSONDecoder().decode(FoodData.self, from: data) {
-                    DispatchQueue.main.async {
-                        self.parent.pass.foodData = decoded
-                    }
-                }
-                else {
-                    DispatchQueue.main.async {
-                        self.parent.pass.foodData = FoodData()
-                    }
-                }
-            }.resume()
-        }
-
-
-        func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
-            if Double(self.parent.centerCoordinate.latitude) >= Double(mapView.centerCoordinate.latitude) + 1 || Double(self.parent.centerCoordinate.latitude) <= Double(mapView.centerCoordinate.latitude) - 1 || Double(self.parent.centerCoordinate.longitude) >= Double(mapView.centerCoordinate.longitude) + 1 || Double(self.parent.centerCoordinate.longitude) <= Double(mapView.centerCoordinate.longitude) - 1 {
-                DispatchQueue.main.async {
-                    self.parent.centerCoordinate = mapView.centerCoordinate
-                    self.reverseLocation()
-                    self.parent.getLocation()
-                }
-            }
-        }
-    }
-}
-
 struct FoodView: View {
     @ObservedObject var pass: Pass
     @Environment(\.colorScheme) var colorScheme
     @State var locationData = LocationData()
-    @State var radius       = "3218.69"
-    @State var lat          = ""
-    @State var long         = ""
-    let key                 = "698c43ba2eefbce9d798d13c1e6acc2f"
+    @State var radius = "3218.69"
+    @State var lat = ""
+    @State var long = ""
+    let key = "698c43ba2eefbce9d798d13c1e6acc2f"
         
     // gets the location data
     func getLocation() {
-        let query                   = pass.location.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
-        guard let url               = URL(string: "https://developers.zomato.com/api/v2.1/locations?query=\(query)") else { return }
-        var request                 = URLRequest(url: url)
-        request.httpMethod          = "GET"
+        let query = pass.location.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+        guard let url = URL(string: "https://developers.zomato.com/api/v2.1/locations?query=\(query)") else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
         request.allHTTPHeaderFields = [
             "X-Zomato-API-Key": key,
             "Content-Type": "application/json"
@@ -180,9 +38,9 @@ struct FoodView: View {
     
     // gets food data
     func getFoodData() {
-        guard let url               = URL(string: "https://developers.zomato.com/api/v2.1/search?entity_id=\(locationData.locationSuggestions[0].entityID)&entity_type=\(locationData.locationSuggestions[0].entityType)&radius=\(radius)") else { return }
-        var request                 = URLRequest(url: url)
-        request.httpMethod          = "GET"
+        guard let url = URL(string: "https://developers.zomato.com/api/v2.1/search?entity_id=\(locationData.locationSuggestions[0].entityID)&entity_type=\(locationData.locationSuggestions[0].entityType)&radius=\(radius)") else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
         request.allHTTPHeaderFields = [
             "X-Zomato-API-Key": key,
             "Content-Type": "application/json"
@@ -247,7 +105,7 @@ struct FoodView: View {
                     .frame(width: UIScreen.main.bounds.width)
                 Spacer()
                 
-                MapView(pass)
+                MapView(pass: pass)
                     .background(colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black)
                     .clipShape(RoundedRectangle(cornerRadius: 16.0, style: .continuous))
                     .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)), radius: 10, x: 6, y: 4)
@@ -296,3 +154,26 @@ struct FoodView: View {
     }
 }
 
+extension StringProtocol {
+    func index<S: StringProtocol>(of string: S, options: String.CompareOptions = []) -> Index? {
+        range(of: string, options: options)?.lowerBound
+    }
+    func endIndex<S: StringProtocol>(of string: S, options: String.CompareOptions = []) -> Index? {
+        range(of: string, options: options)?.upperBound
+    }
+    func indices<S: StringProtocol>(of string: S, options: String.CompareOptions = []) -> [Index] {
+        ranges(of: string, options: options).map(\.lowerBound)
+    }
+    func ranges<S: StringProtocol>(of string: S, options: String.CompareOptions = []) -> [Range<Index>] {
+        var result: [Range<Index>] = []
+        var startIndex = self.startIndex
+        while startIndex < endIndex,
+            let range = self[startIndex...]
+                .range(of: string, options: options) {
+                result.append(range)
+                startIndex = range.lowerBound < range.upperBound ? range.upperBound :
+                    index(range.lowerBound, offsetBy: 1, limitedBy: endIndex) ?? endIndex
+        }
+        return result
+    }
+}
