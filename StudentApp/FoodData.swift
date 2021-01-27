@@ -60,7 +60,6 @@ func FoodTile(_ name: String, _ stars: StarRating, _ phoneNumbers: String, _ wid
         }
         .frame(width: width - width / 8, height: height - height / 8)
     }
-    
 }
 
 func FunctionList(_ message: String, textfieldString: Binding<String>, _ width: CGFloat, _ height: CGFloat, _ background: Color, _ fontSize: CGFloat = 14, _ fontWeight: Font.Weight = .regular) -> some View {

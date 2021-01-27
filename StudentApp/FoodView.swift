@@ -122,28 +122,61 @@ struct FoodView: View {
                         Spacer()
                         
                         HStack(alignment: .center) {
-                            Image(systemName: "cloud.sun.fill")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: UIScreen.main.bounds.width / 10, height: UIScreen.main.bounds.width / 10)
-                                .offset(x: UIScreen.main.bounds.width / 64 * 3)
-                                .onTapGesture {
+                            VStack {
+                                Image(systemName: "cloud.sun.fill")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: UIScreen.main.bounds.width / 10, height: UIScreen.main.bounds.width / 10)
+                                Text("Weather")
+                                    .multilineTextAlignment(.center)
+                                    .font(.system(size: 12))
+                            }
+                            .onTapGesture {
+                                withAnimation {
                                     pass.currentScreen = 0
                                 }
-                                .padding()
+                            }
+                            .offset(x: UIScreen.main.bounds.width / 64 * 3)
+                            .padding()
                             Spacer()
-                            Image(systemName: "bag.fill")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: UIScreen.main.bounds.width / 10, height: UIScreen.main.bounds.width / 10)
-                                .offset(x: UIScreen.main.bounds.width / 64 * -3)
-                                .padding()
+                            
+                            VStack {
+                                Image(systemName: "bag.fill")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: UIScreen.main.bounds.width / 10, height: UIScreen.main.bounds.width / 10)
+                                Text("Restaurants")
+                                    .multilineTextAlignment(.center)
+                                    .font(.system(size: 12))
+                            }
+                            .onTapGesture {
+                                withAnimation {
+                                    pass.currentScreen = 1
+                                }
+                            }
+                            .padding()
+                            Spacer()
+                            
+                            VStack {
+                                Image(systemName: "gear")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: UIScreen.main.bounds.width / 10, height: UIScreen.main.bounds.width / 10)
+                                Text("Settings")
+                                    .multilineTextAlignment(.center)
+                                    .font(.system(size: 12))
+                            }
+                            .onTapGesture {
+                                withAnimation {
+                                    pass.currentScreen = 2
+                                }
+                            }
+                            .offset(x: UIScreen.main.bounds.width / 64 * -3)
+                            .padding()
                         }
                         .frame(height: UIScreen.main.bounds.height / 64 * 2)
                         .offset(y: UIScreen.main.bounds.height / 256 * -1)
-
                     }
-                    
                 }
             }
             if listPressed {

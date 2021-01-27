@@ -10,11 +10,36 @@ import SwiftUI
 struct WeatherView: View {
     @ObservedObject var pass: Pass
     @Environment(\.colorScheme) var colorScheme
+    @ObservedObject var mode = ThemeStatus()
     @State var weatherData = WeatherData()
     @State var statusImage = ""
     @State var isCity = true
     @State var location = ""
     let key = "4e28fd44172171a9678306f1648809fa"
+    
+    func getBackground() -> Color {
+        if mode.mode.mode == "Default" {
+            return colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black
+        }
+        else if mode.mode.mode == "Light"{
+            return Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1))
+        }
+        else {
+            return Color.black
+        }
+    }
+    
+    func getForeground() -> Color {
+        if mode.mode.mode == "Default" {
+            return colorScheme != .dark ? Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)): Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1))
+        }
+        else if mode.mode.mode == "Light"{
+            return Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))
+        }
+        else {
+            return Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1))
+        }
+    }
     
     // sets default location
     func setGeocodingData() {
@@ -205,18 +230,21 @@ struct WeatherView: View {
                 HStack {
                     Text("\(getDayOfWeek(Date())) \(getMonth(Date())) \(getDay(Date()))")
                         .font(.headline)
+                        .background(getBackground())
+                        .foregroundColor(getForeground())
                         .padding(.leading)
                     Spacer()
                 }
+                .background(getBackground())
                 ZStack {
                     HStack {
                         // temperature
                         ZStack {
                             Circle()
                                 .stroke(lineWidth: 0)
-                                .background(colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black)
+                                .background(getBackground())
                                 .clipShape(Circle())
-                                .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)) ,radius: 10, x: 6, y: 4)
+                                .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)), radius: 10, x: 6, y: 4)
                                 .frame(width: UIScreen.main.bounds.width / 5, height: UIScreen.main.bounds.width / 5)
                             Text("\((weatherData.main.temp - 273.15) * 1.8 + 32, specifier: "%.0f")°F")
                                 .foregroundColor(changeTempColor())
@@ -229,14 +257,15 @@ struct WeatherView: View {
                         ZStack {
                             Circle()
                                 .stroke(lineWidth: 0)
-                                .background(colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black)
+                                .background(getBackground())
                                 .clipShape(Circle())
-                                .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)) ,radius: 10, x: 6, y: 4)
+                                .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)), radius: 10, x: 6, y: 4)
                                 .frame(width: UIScreen.main.bounds.width / 5, height: UIScreen.main.bounds.width / 5)
                             Image(systemName: statusImage)
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: UIScreen.main.bounds.width / 10, height: UIScreen.main.bounds.width / 10)
+                                .foregroundColor(getForeground())
                         }
                         .padding()
                         Spacer()
@@ -245,11 +274,12 @@ struct WeatherView: View {
                         ZStack {
                             Circle()
                                 .stroke(lineWidth: 0)
-                                .background(colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black)
+                                .background(getBackground())
                                 .clipShape(Circle())
-                                .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)) ,radius: 10, x: 6, y: 4)
+                                .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)), radius: 10, x: 6, y: 4)
                                 .frame(width: UIScreen.main.bounds.width / 5, height: UIScreen.main.bounds.width / 5)
                             Text("\(weatherData.wind.speed * 2.237, specifier: "%.0f") mph")
+                                .foregroundColor(getForeground())
                         }
                         .padding()
                     }
@@ -257,30 +287,70 @@ struct WeatherView: View {
                 Spacer()
                 
                 HStack(alignment: .center) {
-                    Image(systemName: "cloud.sun.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: UIScreen.main.bounds.width / 10, height: UIScreen.main.bounds.width / 10)
-                        .offset(x: UIScreen.main.bounds.width / 64 * 3)
-                        .padding()
-                    Spacer()
-                    Image(systemName: "bag.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: UIScreen.main.bounds.width / 10, height: UIScreen.main.bounds.width / 10)
-                        .onTapGesture {
-                            withAnimation {
-                                pass.currentScreen = 1
-                            }
+                    VStack {
+                        Image(systemName: "cloud.sun.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: UIScreen.main.bounds.width / 10, height: UIScreen.main.bounds.width / 10)
+                            .foregroundColor(getForeground())
+                        Text("Weather")
+                            .multilineTextAlignment(.center)
+                            .font(.system(size: 12))
+                            .foregroundColor(getForeground())
+                    }
+                    .onTapGesture {
+                        withAnimation {
+                            pass.currentScreen = 0
                         }
-                        .offset(x: UIScreen.main.bounds.width / 64 * -3)
-                        .padding()
+                    }
+                    .offset(x: UIScreen.main.bounds.width / 64 * 3)
+                    .padding()
+                    Spacer()
+                    
+                    VStack {
+                        Image(systemName: "bag.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: UIScreen.main.bounds.width / 10, height: UIScreen.main.bounds.width / 10)
+                            .foregroundColor(getForeground())
+                        Text("Restaurants")
+                            .multilineTextAlignment(.center)
+                            .font(.system(size: 12))
+                            .foregroundColor(getForeground())
+                    }
+                    .onTapGesture {
+                        withAnimation {
+                            pass.currentScreen = 1
+                        }
+                    }
+                    .padding()
+                    Spacer()
+                    
+                    VStack {
+                        Image(systemName: "gear")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: UIScreen.main.bounds.width / 10, height: UIScreen.main.bounds.width / 10)
+                            .foregroundColor(getForeground())
+                        Text("Settings")
+                            .multilineTextAlignment(.center)
+                            .font(.system(size: 12))
+                            .foregroundColor(getForeground())
+                    }
+                    .onTapGesture {
+                        withAnimation {
+                            pass.currentScreen = 2
+                        }
+                    }
+                    .offset(x: UIScreen.main.bounds.width / 64 * -3)
+                    .padding()
                 }
+                .background(getBackground())
                 .frame(height: UIScreen.main.bounds.height / 64 * 2)
                 .offset(y: UIScreen.main.bounds.height / 256 * -1)
             }
+            .background(getBackground())
             .onAppear(perform: getData)
-            // Locks the screen so it is only in portrait
             .onAppear {
                 AppDelegate.orientationLock = UIInterfaceOrientationMask.portrait
                 UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
@@ -288,7 +358,6 @@ struct WeatherView: View {
             }
             .navigationTitle(pass.location)
         }
-        
     }
 }
 

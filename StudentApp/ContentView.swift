@@ -15,6 +15,10 @@ struct ContentView: View {
         switch pass.currentScreen {
         case 1:
             FoodView(pass: pass)
+        case 2:
+            SettingView(pass: pass)
+        case 3:
+            ThemeView(pass: pass)
         default:
             WeatherView(pass: pass)
         }
