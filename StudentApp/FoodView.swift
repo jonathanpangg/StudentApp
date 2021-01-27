@@ -69,10 +69,10 @@ struct FoodView: View {
         return list
     }
     
-    func getArrayAddress(_ array: [RestaurantElement]) -> [String] {
+    func getArrayPhoneNumber(_ array: [RestaurantElement]) -> [String] {
         var list = [String]()
         for i in array {
-            list.append("\(String(describing: i.restaurant!.location?.address ?? ""))")
+            list.append("\(String(describing: i.restaurant!.phone_numbers![i.restaurant!.phone_numbers!.startIndex..<(i.restaurant!.phone_numbers?.firstIndex(of: ",") ?? i.restaurant!.phone_numbers!.endIndex)]))")
         }
         return list
     }
@@ -109,7 +109,7 @@ struct FoodView: View {
                                 LazyHGrid(rows: [GridItem(.flexible())]) {
                                     ForEach(0..<getArrayName(pass.foodData.restaurants ?? []).count, id: \.self) { index in
                                         VStack {
-                                            FoodTile("\(getArrayName(pass.foodData.restaurants ?? [])[index])", StarRating(Int(String(format: "%.0f", Double((pass.foodData.restaurants?[index].restaurant?.user_rating?.aggregate_rating!)!)!))!), UIScreen.main.bounds.width / 8 * 3, UIScreen.main.bounds.width / 8 * 3, colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black)
+                                            FoodTile("\(getArrayName(pass.foodData.restaurants ?? [])[index])", StarRating(Int(String(format: "%.0f",  Double((pass.foodData.restaurants?[index].restaurant?.user_rating?.aggregate_rating!)!)!))!), "\(getArrayPhoneNumber(pass.foodData.restaurants ?? [])[index])", UIScreen.main.bounds.width / 8 * 3, UIScreen.main.bounds.width / 8 * 3, colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black)
                                                 .padding()
                                         }
                                     }

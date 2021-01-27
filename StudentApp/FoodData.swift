@@ -28,7 +28,7 @@ struct StarRating: View {
     }
 }
 
-func FoodTile(_ name: String, _ stars: StarRating, _ width: CGFloat, _ height: CGFloat, _ background: Color, _ fontSize: CGFloat = 14, _ fontWeight: Font.Weight = .regular) -> some View {
+func FoodTile(_ name: String, _ stars: StarRating, _ phoneNumbers: String, _ width: CGFloat, _ height: CGFloat, _ background: Color, _ fontSize: CGFloat = 14, _ fontWeight: Font.Weight = .regular) -> some View {
     ZStack {
         Text("")
             .multilineTextAlignment(.leading)
@@ -50,6 +50,13 @@ func FoodTile(_ name: String, _ stars: StarRating, _ width: CGFloat, _ height: C
                 Spacer()
             }
             Spacer()
+            HStack {
+                Spacer()
+                Text(phoneNumbers)
+                    .multilineTextAlignment(.trailing)
+                    .font(.system(size: fontSize, weight: fontWeight))
+                    .background(background)
+            }
         }
         .frame(width: width - width / 8, height: height - height / 8)
     }
