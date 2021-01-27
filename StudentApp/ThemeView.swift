@@ -48,9 +48,7 @@ struct ThemeView: View {
                 }
                 .padding(.leading)
                 .onTapGesture {
-                    withAnimation {
-                        pass.currentScreen = 2
-                    }
+                    pass.currentScreen = 2
                 }
                 ScrollView(.vertical) {
                     HStack {
@@ -71,11 +69,9 @@ struct ThemeView: View {
                         .padding(.trailing)
                     }
                     .onTapGesture {
-                        withAnimation {
-                            mode.mode.mode = "Light"
-                            if let encoded = try? JSONEncoder().encode(mode.mode) {
-                                UserDefaults.standard.set(encoded, forKey: "save")
-                            }
+                        mode.mode.mode = "Light"
+                        if let encoded = try? JSONEncoder().encode(mode.mode) {
+                            UserDefaults.standard.set(encoded, forKey: "save")
                         }
                     }
                     HStack {
@@ -96,11 +92,9 @@ struct ThemeView: View {
                         .padding(.trailing)
                     }
                     .onTapGesture {
-                        withAnimation {
-                            mode.mode.mode = "Dark"
-                            if let encoded = try? JSONEncoder().encode(mode.mode) {
-                                UserDefaults.standard.set(encoded, forKey: "save")
-                            }
+                        mode.mode.mode = "Dark"
+                        if let encoded = try? JSONEncoder().encode(mode.mode) {
+                            UserDefaults.standard.set(encoded, forKey: "save")
                         }
                     }
                     HStack {
@@ -121,11 +115,9 @@ struct ThemeView: View {
                         .padding(.trailing)
                     }
                     .onTapGesture {
-                        withAnimation {
-                            mode.mode.mode = "Default"
-                            if let encoded = try? JSONEncoder().encode(mode.mode) {
-                                UserDefaults.standard.set(encoded, forKey: "save")
-                            }
+                        mode.mode.mode = "Default"
+                        if let encoded = try? JSONEncoder().encode(mode.mode) {
+                            UserDefaults.standard.set(encoded, forKey: "save")
                         }
                     }
                 }

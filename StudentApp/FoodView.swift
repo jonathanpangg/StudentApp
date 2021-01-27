@@ -164,9 +164,7 @@ struct FoodView: View {
                                     .foregroundColor(getForeground())
                             }
                             .onTapGesture {
-                                withAnimation {
-                                    pass.currentScreen = 0
-                                }
+                                pass.currentScreen = 0
                             }
                             .offset(x: UIScreen.main.bounds.width / 64 * 3)
                             .padding()
@@ -184,9 +182,7 @@ struct FoodView: View {
                                     .foregroundColor(getForeground())
                             }
                             .onTapGesture {
-                                withAnimation {
-                                    pass.currentScreen = 1
-                                }
+                                pass.currentScreen = 1
                             }
                             .padding()
                             Spacer()
@@ -203,9 +199,7 @@ struct FoodView: View {
                                     .foregroundColor(getForeground())
                             }
                             .onTapGesture {
-                                withAnimation {
-                                    pass.currentScreen = 2
-                                }
+                                pass.currentScreen = 2
                             }
                             .offset(x: UIScreen.main.bounds.width / 64 * -3)
                             .padding()

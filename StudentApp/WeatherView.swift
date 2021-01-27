@@ -303,15 +303,13 @@ struct WeatherView: View {
                             .scaledToFit()
                             .frame(width: UIScreen.main.bounds.width / 12, height: UIScreen.main.bounds.width / 12)
                             .foregroundColor(getForeground())
-                        Text("Weather")
+                        Text("Weather") 
                             .multilineTextAlignment(.center)
                             .font(.system(size: 12))
                             .foregroundColor(getForeground())
                     }
                     .onTapGesture {
-                        withAnimation {
-                            pass.currentScreen = 0
-                        }
+                        pass.currentScreen = 0
                     }
                     .offset(x: UIScreen.main.bounds.width / 64 * 3)
                     .padding()
@@ -329,9 +327,7 @@ struct WeatherView: View {
                             .foregroundColor(getForeground())
                     }
                     .onTapGesture {
-                        withAnimation {
-                            pass.currentScreen = 1
-                        }
+                        pass.currentScreen = 1
                     }
                     .padding()
                     Spacer()
@@ -348,9 +344,7 @@ struct WeatherView: View {
                             .foregroundColor(getForeground())
                     }
                     .onTapGesture {
-                        withAnimation {
-                            pass.currentScreen = 2
-                        }
+                        pass.currentScreen = 2
                     }
                     .offset(x: UIScreen.main.bounds.width / 64 * -3)
                     .padding()
