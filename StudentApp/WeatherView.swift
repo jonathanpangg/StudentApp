@@ -10,16 +10,16 @@ import SwiftUI
 struct WeatherView: View {
     @ObservedObject var pass: Pass
     @Environment(\.colorScheme) var colorScheme
-    let key                  = "4e28fd44172171a9678306f1648809fa"
-    @State var weatherData   = WeatherData()
-    @State var statusImage   = ""
-    @State var isCity        = true
-    @State var location      = ""
+    @State var weatherData = WeatherData()
+    @State var statusImage = ""
+    @State var isCity = true
+    @State var location = ""
+    let key = "4e28fd44172171a9678306f1648809fa"
     
     // sets default location
     func setGeocodingData() {
-        guard let url               = URL(string: "http://ip-api.com/json") else { return }
-        var request                 = URLRequest(url: url)
+        guard let url = URL(string: "http://ip-api.com/json") else { return }
+        var request = URLRequest(url: url)
         request.allHTTPHeaderFields = [
             "Content-Type": "application/json"
         ]
@@ -264,7 +264,7 @@ struct WeatherView: View {
                         .offset(x: UIScreen.main.bounds.width / 64 * 3)
                         .padding()
                     Spacer()
-                    Image(systemName: "bag")
+                    Image(systemName: "bag.fill")
                         .resizable()
                         .scaledToFit()
                         .frame(width: UIScreen.main.bounds.width / 10, height: UIScreen.main.bounds.width / 10)

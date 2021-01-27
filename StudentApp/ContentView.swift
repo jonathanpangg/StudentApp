@@ -9,14 +9,12 @@ import SwiftUI
 
 struct ContentView: View {
     @ObservedObject var pass = Pass()
-    @State var weatherData   = WeatherData()
+    @State var weatherData = WeatherData()
     
     var body: some View {
         switch pass.currentScreen {
         case 1:
             FoodView(pass: pass)
-        case 2:
-            RestaurantInfoView(pass: pass)
         default:
             WeatherView(pass: pass)
         }

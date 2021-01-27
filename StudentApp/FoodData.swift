@@ -10,7 +10,7 @@ import SwiftUI
 func Tile(_ message: String, _ width: CGFloat, _ height: CGFloat, _ background: Color, _ fontSize: CGFloat = 14, _ fontWeight: Font.Weight = .regular) -> some View {
     ZStack {
         Text("")
-            .multilineTextAlignment(.center)
+            .multilineTextAlignment(.leading)
             .font(.system(size: fontSize, weight: fontWeight))
             .frame(width: width, height: height)
             .background(background)
@@ -25,6 +25,38 @@ func Tile(_ message: String, _ width: CGFloat, _ height: CGFloat, _ background: 
     }
     
 }
+
+func FunctionList(_ message: String, textfieldString: Binding<String>, _ width: CGFloat, _ height: CGFloat, _ background: Color, _ fontSize: CGFloat = 14, _ fontWeight: Font.Weight = .regular) -> some View {
+    ZStack {
+        HStack {
+            Text("")
+                .multilineTextAlignment(.leading)
+                .font(.system(size: fontSize, weight: fontWeight))
+                .frame(width: width, height: height)
+                .background(background)
+                .clipShape(RoundedRectangle(cornerRadius: 16.0, style: .continuous))
+                .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)), radius: 10, x: 6, y: 4)
+            Spacer()
+        }
+        .padding(.leading)
+        
+        HStack(spacing: UIScreen.main.bounds.width / 128) {
+            Text(message)
+                .multilineTextAlignment(.leading)
+                .font(.system(size: fontSize, weight: fontWeight))
+                .frame(height: height - height / 16)
+                .padding(.leading)
+            TextField("", text: textfieldString)
+                .multilineTextAlignment(.leading)
+                .font(.system(size: fontSize, weight: fontWeight))
+                .frame(height: height - height / 16)
+                .keyboardType(.numberPad)
+            Spacer()
+        }
+        .padding(.leading)
+    }
+}
+
 
 struct LocationData: Codable {
     let locationSuggestions: [LocationSuggestion]
@@ -42,10 +74,10 @@ struct LocationData: Codable {
     
     init() {
         self.locationSuggestions = [LocationSuggestion]()
-        self.status              = ""
-        self.hasMore             = 0
-        self.hasTotal            = 0
-        self.userHasAddresses    = false
+        self.status = ""
+        self.hasMore = 0
+        self.hasTotal = 0
+        self.userHasAddresses = false
     }
 }
 
@@ -85,7 +117,7 @@ struct FoodData: Codable {
         self.resultsFound = 0
         self.resultsStart = 0
         self.resultsShown = 0
-        self.restaurants  = [RestaurantElement]()
+        self.restaurants = [RestaurantElement]()
     }
 }
 

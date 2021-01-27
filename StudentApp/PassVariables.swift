@@ -9,14 +9,16 @@ import SwiftUI
 
 class Pass: ObservableObject {
     @Published var currentScreen: Int = 0
-    @Published var location: String   = ""
+    @Published var location: String = ""
+    @Published var lat: Double = 0
+    @Published var lng: Double = 0
     @Published var foodData: FoodData = FoodData()
-    @Published var index: Int         = 0
+    @Published var index: Int = 0
     
     // sets default location
     func setGeocodingData() {
-        guard let url               = URL(string: "http://ip-api.com/json") else { return }
-        var request                 = URLRequest(url: url)
+        guard let url = URL(string: "http://ip-api.com/json") else { return }
+        var request = URLRequest(url: url)
         request.allHTTPHeaderFields = [
             "Content-Type": "application/json"
         ]
@@ -25,6 +27,10 @@ class Pass: ObservableObject {
             if let decoded = try? JSONDecoder().decode(GeocodingData.self, from: data) {
                 DispatchQueue.main.async {
                     self.location = decoded.city
+                    self.lat = decoded.lat
+                    self.lng = decoded.lon
+                    print(self.lat)
+                    print(self.lng)
                 }
             }
         }.resume()

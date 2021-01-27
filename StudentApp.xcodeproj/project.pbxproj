@@ -24,7 +24,6 @@
 		93D381ED25B8EA7C00BA98AC /* GeocodingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D381EC25B8EA7C00BA98AC /* GeocodingData.swift */; };
 		93D381F725B8EAA200BA98AC /* WeatherData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D381F625B8EAA200BA98AC /* WeatherData.swift */; };
 		93D381FC25B8EAAB00BA98AC /* WeatherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D381FB25B8EAAB00BA98AC /* WeatherView.swift */; };
-		93F6707125BBB8FA00433647 /* RestaurantInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93F6707025BBB8FA00433647 /* RestaurantInfoView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,7 +67,6 @@
 		93D381EC25B8EA7C00BA98AC /* GeocodingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeocodingData.swift; sourceTree = "<group>"; };
 		93D381F625B8EAA200BA98AC /* WeatherData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherData.swift; sourceTree = "<group>"; };
 		93D381FB25B8EAAB00BA98AC /* WeatherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherView.swift; sourceTree = "<group>"; };
-		93F6707025BBB8FA00433647 /* RestaurantInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantInfoView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,7 +126,6 @@
 				93483B7F25C08E29008789E3 /* Location.swift */,
 				93483B8425C08E43008789E3 /* MapView.swift */,
 				93C37B3A25BCC86F00D8FB29 /* PassVariables.swift */,
-				93F6707025BBB8FA00433647 /* RestaurantInfoView.swift */,
 				93D381F625B8EAA200BA98AC /* WeatherData.swift */,
 				93D381FB25B8EAAB00BA98AC /* WeatherView.swift */,
 				93D381BF25B8EA3000BA98AC /* Assets.xcassets */,
@@ -302,7 +299,6 @@
 				93D381F725B8EAA200BA98AC /* WeatherData.swift in Sources */,
 				93483B8525C08E43008789E3 /* MapView.swift in Sources */,
 				938B37F125BA387600395BE2 /* FoodData.swift in Sources */,
-				93F6707125BBB8FA00433647 /* RestaurantInfoView.swift in Sources */,
 				93D381BB25B8EA3000BA98AC /* ContentView.swift in Sources */,
 				93D381BE25B8EA3000BA98AC /* StudentApp.xcdatamodeld in Sources */,
 				938B37F625BA38DE00395BE2 /* FoodView.swift in Sources */,

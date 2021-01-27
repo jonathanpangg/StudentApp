@@ -21,39 +21,48 @@ struct GeocodingData: Codable {
     }
     
     init() {
-        self.status          = ""
-        self.country         = ""
-        self.countryCode     = ""
-        self.region          = ""
-        self.regionName      = ""
-        self.city            = ""
-        self.zip             = ""
-        self.lat             = 0
-        self.lon             = 0
-        self.timezone        = ""
-        self.isp             = ""
-        self.org             = ""
+        self.status = ""
+        self.country = ""
+        self.countryCode = ""
+        self.region = ""
+        self.regionName = ""
+        self.city = ""
+        self.zip = ""
+        self.lat = 0
+        self.lon = 0
+        self.timezone = ""
+        self.isp = ""
+        self.org = ""
         self.geocodingDataAs = ""
-        self.query           = ""
+        self.query = ""
     }
 }
 
-struct CityData: Codable {
-    let country, region, city, latitude, longitude, currency_code, currency_name, currency_symbol, sunrise, sunset, time_zone, distance_km: String
+struct RevserGeo: Codable {
+    let location: Locations
+    
+    init() { self.location = Locations() }
+}
+
+struct Locations: Codable {
+    let entity_type: String
+    let entity_id: Int
+    let title, latitude, longitude: String
+    let city_id: Int
+    let city_name: String
+    let country_id: Int
+    let country_name: String
     
     init() {
-        self.country         = ""
-        self.region          = ""
-        self.city            = ""
-        self.latitude        = ""
-        self.longitude       = ""
-        self.currency_code   = ""
-        self.currency_name   = ""
-        self.currency_symbol = ""
-        self.sunrise         = ""
-        self.sunset          = ""
-        self.time_zone       = ""
-        self.distance_km     = ""
+        self.entity_type = ""
+        self.entity_id = 0
+        self.title = ""
+        self.latitude = ""
+        self.longitude = ""
+        self.city_id = 0
+        self.city_name = ""
+        self.country_id = 0
+        self.country_name = ""
+        
     }
 }
-

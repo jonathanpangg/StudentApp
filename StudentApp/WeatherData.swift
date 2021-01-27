@@ -22,19 +22,19 @@ struct WeatherData: Codable {
     let cod: Int
     
     init() {
-        self.coord      = Coord()
-        self.weather    = [Weather]()
-        self.base       = ""
-        self.main       = Main()
+        self.coord = Coord()
+        self.weather = [Weather]()
+        self.base = ""
+        self.main = Main()
         self.visibility = 0
-        self.wind       = Wind()
-        self.clouds     = Clouds()
-        self.dt         = 0
-        self.sys        = Sys()
-        self.timezone   = 0
-        self.id         = 0
-        self.name       = ""
-        self.cod        = 0
+        self.wind = Wind()
+        self.clouds = Clouds()
+        self.dt = 0
+        self.sys = Sys()
+        self.timezone = 0
+        self.id = 0
+        self.name = ""
+        self.cod = 0
     }
 }
 
@@ -68,12 +68,12 @@ struct Main: Codable {
     }
     
     init() {
-        self.temp      = 255.5
+        self.temp = 255.5
         self.feelsLike = 0
-        self.tempMin   = 0
-        self.tempMax   = 0
-        self.pressure  = 0
-        self.humidity  = 0
+        self.tempMin = 0
+        self.tempMax = 0
+        self.pressure = 0
+        self.humidity = 0
     }
 }
 
@@ -83,11 +83,11 @@ struct Sys: Codable {
     let sunrise, sunset: Int
     
     init() {
-        self.type    = 0
-        self.id      = 0
+        self.type = 0
+        self.id = 0
         self.country = ""
         self.sunrise = 0
-        self.sunset  = 0
+        self.sunset = 0
     }
 }
 
@@ -102,10 +102,10 @@ struct Weather: Codable, Hashable {
     }
     
     init() {
-        self.id                 = 0
-        self.main               = ""
+        self.id = 0
+        self.main = ""
         self.weatherDescription = ""
-        self.icon               = ""
+        self.icon = ""
     }
 }
 
@@ -115,6 +115,6 @@ struct Wind: Codable {
     
     init() {
         self.speed = 0
-        self.deg   = 0
+        self.deg = 0
     }
 }
