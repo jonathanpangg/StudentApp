@@ -29,8 +29,6 @@ class Pass: ObservableObject {
                     self.location = decoded.city
                     self.lat = decoded.lat
                     self.lng = decoded.lon
-                    print(self.lat)
-                    print(self.lng)
                 }
             }
         }.resume()

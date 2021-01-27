@@ -6,8 +6,29 @@
 //
 
 import SwiftUI
+// \(getArrayAddress(pass.foodData.restaurants ?? [])[index])
 
-func Tile(_ message: String, _ width: CGFloat, _ height: CGFloat, _ background: Color, _ fontSize: CGFloat = 14, _ fontWeight: Font.Weight = .regular) -> some View {
+struct StarRating: View {
+    var rating: Int
+    
+    init(_ rating: Int) {
+        self.rating = rating
+    }
+    
+    var body: some View {
+        HStack {
+            Spacer()
+            ForEach(1..<6) { number in
+                Image(systemName: "star.fill")
+                    .resizable()
+                    .frame(width: UIScreen.main.bounds.width / 32, height: UIScreen.main.bounds.width / 32)
+                    .foregroundColor(number <= self.rating ? Color.yellow: Color.gray)
+            }
+        }
+    }
+}
+
+func FoodTile(_ name: String, _ stars: StarRating, _ width: CGFloat, _ height: CGFloat, _ background: Color, _ fontSize: CGFloat = 14, _ fontWeight: Font.Weight = .regular) -> some View {
     ZStack {
         Text("")
             .multilineTextAlignment(.leading)
@@ -16,12 +37,21 @@ func Tile(_ message: String, _ width: CGFloat, _ height: CGFloat, _ background: 
             .background(background)
             .clipShape(RoundedRectangle(cornerRadius: 16.0, style: .continuous))
             .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)), radius: 10, x: 6, y: 4)
-        Text(message)
-            .multilineTextAlignment(.leading)
-            .font(.system(size: fontSize, weight: fontWeight))
-            .frame(width: width - width / 16, height: height - height / 16)
-            .background(background)
-            .clipShape(RoundedRectangle(cornerRadius: 16.0, style: .continuous))
+        VStack {
+            HStack() {
+                Spacer()
+                stars
+            }
+            HStack {
+                Text(name)
+                    .multilineTextAlignment(.leading)
+                    .font(.system(size: fontSize, weight: fontWeight))
+                    .background(background)
+                Spacer()
+            }
+            Spacer()
+        }
+        .frame(width: width - width / 8, height: height - height / 8)
     }
     
 }

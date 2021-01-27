@@ -109,7 +109,8 @@ struct FoodView: View {
                                 LazyHGrid(rows: [GridItem(.flexible())]) {
                                     ForEach(0..<getArrayName(pass.foodData.restaurants ?? []).count, id: \.self) { index in
                                         VStack {
-                                            Tile("\(getArrayName(pass.foodData.restaurants ?? [])[index])\n\n\(getArrayAddress(pass.foodData.restaurants ?? [])[index])", UIScreen.main.bounds.width / 16 * 6, UIScreen.main.bounds.width / 16 * 6, colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black)
+                                            FoodTile("\(getArrayName(pass.foodData.restaurants ?? [])[index])", StarRating(Int(String(format: "%.0f", Double((pass.foodData.restaurants?[index].restaurant?.user_rating?.aggregate_rating!)!)!))!), UIScreen.main.bounds.width / 8 * 3, UIScreen.main.bounds.width / 8 * 3, colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black)
+                                                .padding()
                                         }
                                     }
                                 }
