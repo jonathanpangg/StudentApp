@@ -225,8 +225,18 @@ struct WeatherView: View {
     }
     
     var body: some View {
-        NavigationView {
+        ZStack {
+            getBackground()
+                .ignoresSafeArea(.all)
             VStack {
+                HStack {
+                    Text(pass.location)
+                        .font(.system(size: UIScreen.main.bounds.width / 8))
+                        .background(getBackground())
+                        .foregroundColor(getForeground())
+                        .padding(.leading)
+                    Spacer()
+                }
                 HStack {
                     Text("\(getDayOfWeek(Date())) \(getMonth(Date())) \(getDay(Date()))")
                         .font(.headline)
@@ -291,7 +301,7 @@ struct WeatherView: View {
                         Image(systemName: "cloud.sun.fill")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: UIScreen.main.bounds.width / 10, height: UIScreen.main.bounds.width / 10)
+                            .frame(width: UIScreen.main.bounds.width / 12, height: UIScreen.main.bounds.width / 12)
                             .foregroundColor(getForeground())
                         Text("Weather")
                             .multilineTextAlignment(.center)
@@ -311,7 +321,7 @@ struct WeatherView: View {
                         Image(systemName: "bag.fill")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: UIScreen.main.bounds.width / 10, height: UIScreen.main.bounds.width / 10)
+                            .frame(width: UIScreen.main.bounds.width / 12, height: UIScreen.main.bounds.width / 12)
                             .foregroundColor(getForeground())
                         Text("Restaurants")
                             .multilineTextAlignment(.center)
@@ -330,7 +340,7 @@ struct WeatherView: View {
                         Image(systemName: "gear")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: UIScreen.main.bounds.width / 10, height: UIScreen.main.bounds.width / 10)
+                            .frame(width: UIScreen.main.bounds.width / 12, height: UIScreen.main.bounds.width / 12)
                             .foregroundColor(getForeground())
                         Text("Settings")
                             .multilineTextAlignment(.center)
@@ -356,7 +366,6 @@ struct WeatherView: View {
                 UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
                 UIViewController.attemptRotationToDeviceOrientation()
             }
-            .navigationTitle(pass.location)
         }
     }
 }

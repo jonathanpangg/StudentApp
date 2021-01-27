@@ -28,11 +28,12 @@ struct StarRating: View {
     }
 }
 
-func FoodTile(_ name: String, _ stars: StarRating, _ phoneNumbers: String, _ width: CGFloat, _ height: CGFloat, _ background: Color, _ fontSize: CGFloat = 14, _ fontWeight: Font.Weight = .regular) -> some View {
+func FoodTile(_ name: String, _ stars: StarRating, _ phoneNumbers: String, _ width: CGFloat, _ height: CGFloat, _ background: Color, _ foreground: Color, _ fontSize: CGFloat = 14, _ fontWeight: Font.Weight = .regular) -> some View {
     ZStack {
         Text("")
             .multilineTextAlignment(.leading)
             .font(.system(size: fontSize, weight: fontWeight))
+            .foregroundColor(foreground)
             .frame(width: width, height: height)
             .background(background)
             .clipShape(RoundedRectangle(cornerRadius: 16.0, style: .continuous))
@@ -46,6 +47,7 @@ func FoodTile(_ name: String, _ stars: StarRating, _ phoneNumbers: String, _ wid
                 Text(name)
                     .multilineTextAlignment(.leading)
                     .font(.system(size: fontSize, weight: fontWeight))
+                    .foregroundColor(foreground)
                     .background(background)
                 Spacer()
             }
@@ -55,6 +57,7 @@ func FoodTile(_ name: String, _ stars: StarRating, _ phoneNumbers: String, _ wid
                 Text(phoneNumbers)
                     .multilineTextAlignment(.trailing)
                     .font(.system(size: fontSize, weight: fontWeight))
+                    .foregroundColor(foreground)
                     .background(background)
             }
         }
@@ -62,12 +65,13 @@ func FoodTile(_ name: String, _ stars: StarRating, _ phoneNumbers: String, _ wid
     }
 }
 
-func FunctionList(_ message: String, textfieldString: Binding<String>, _ width: CGFloat, _ height: CGFloat, _ background: Color, _ fontSize: CGFloat = 14, _ fontWeight: Font.Weight = .regular) -> some View {
+func FunctionList(_ message: String, textfieldString: Binding<String>, _ width: CGFloat, _ height: CGFloat, _ background: Color, _ foreground: Color, _ fontSize: CGFloat = 14, _ fontWeight: Font.Weight = .regular) -> some View {
     ZStack {
         HStack {
             Text("")
                 .multilineTextAlignment(.leading)
                 .font(.system(size: fontSize, weight: fontWeight))
+                .foregroundColor(foreground)
                 .frame(width: width, height: height)
                 .background(background)
                 .clipShape(RoundedRectangle(cornerRadius: 16.0, style: .continuous))
@@ -80,11 +84,13 @@ func FunctionList(_ message: String, textfieldString: Binding<String>, _ width: 
             Text(message)
                 .multilineTextAlignment(.leading)
                 .font(.system(size: fontSize, weight: fontWeight))
+                .foregroundColor(foreground)
                 .frame(height: height - height / 16)
                 .padding(.leading)
             TextField("", text: textfieldString)
                 .multilineTextAlignment(.leading)
                 .font(.system(size: fontSize, weight: fontWeight))
+                .foregroundColor(foreground)
                 .frame(height: height - height / 16)
                 .keyboardType(.numberPad)
             Spacer()

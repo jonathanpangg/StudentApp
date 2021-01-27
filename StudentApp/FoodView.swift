@@ -11,6 +11,7 @@ import MapKit
 struct FoodView: View {
     @ObservedObject var pass: Pass
     @Environment(\.colorScheme) var colorScheme
+    @ObservedObject var mode = ThemeStatus()
     @State var locationData = RevserGeo()
     @State var radius = "3218.69"
     @State var lat = ""
@@ -18,6 +19,30 @@ struct FoodView: View {
     @State var listPressed = false
     let key = "698c43ba2eefbce9d798d13c1e6acc2f"
         
+    func getBackground() -> Color {
+        if mode.mode.mode == "Default" {
+            return colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black
+        }
+        else if mode.mode.mode == "Light"{
+            return Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1))
+        }
+        else {
+            return Color.black
+        }
+    }
+    
+    func getForeground() -> Color {
+        if mode.mode.mode == "Default" {
+            return colorScheme != .dark ? Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)): Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1))
+        }
+        else if mode.mode.mode == "Light"{
+            return Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))
+        }
+        else {
+            return Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1))
+        }
+    }
+    
     // gets the location data
     func getLocation() {
         guard let url = URL(string: "https://developers.zomato.com/api/v2.1/geocode?lat=\(pass.lat)&lon=\(pass.lng)") else { return }
@@ -79,6 +104,8 @@ struct FoodView: View {
     
     var body: some View {
         ZStack {
+            getBackground()
+                .ignoresSafeArea(.all)
             VStack {
                 HStack {
                     Image(systemName: "list.bullet")
@@ -90,14 +117,17 @@ struct FoodView: View {
                                 listPressed.toggle()
                             }
                         }
+                        .foregroundColor(getForeground())
                     Spacer()
                 }
                 .padding()
                 
                 ZStack {
+                    getBackground()
+                        .ignoresSafeArea(.all)
                     VStack {
                         MapView(pass: pass)
-                            .background(colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black)
+                            .background(getBackground())
                             .clipShape(RoundedRectangle(cornerRadius: 16.0, style: .continuous))
                             .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)), radius: 10, x: 6, y: 4)
                             .frame(width: UIScreen.main.bounds.width / 16 * 15)
@@ -109,7 +139,7 @@ struct FoodView: View {
                                 LazyHGrid(rows: [GridItem(.flexible())]) {
                                     ForEach(0..<getArrayName(pass.foodData.restaurants ?? []).count, id: \.self) { index in
                                         VStack {
-                                            FoodTile("\(getArrayName(pass.foodData.restaurants ?? [])[index])", StarRating(Int(String(format: "%.0f",  Double((pass.foodData.restaurants?[index].restaurant?.user_rating?.aggregate_rating!)!)!))!), "\(getArrayPhoneNumber(pass.foodData.restaurants ?? [])[index])", UIScreen.main.bounds.width / 8 * 3, UIScreen.main.bounds.width / 8 * 3, colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black)
+                                            FoodTile("\(getArrayName(pass.foodData.restaurants ?? [])[index])", StarRating(Int(String(format: "%.0f",  Double((pass.foodData.restaurants?[index].restaurant?.user_rating?.aggregate_rating!)!)!))!), "\(getArrayPhoneNumber(pass.foodData.restaurants ?? [])[index])", UIScreen.main.bounds.width / 8 * 3, UIScreen.main.bounds.width / 8 * 3, getBackground(), getForeground())
                                                 .padding()
                                         }
                                     }
@@ -126,10 +156,12 @@ struct FoodView: View {
                                 Image(systemName: "cloud.sun.fill")
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: UIScreen.main.bounds.width / 10, height: UIScreen.main.bounds.width / 10)
+                                    .frame(width: UIScreen.main.bounds.width / 12, height: UIScreen.main.bounds.width / 12)
+                                    .foregroundColor(getForeground())
                                 Text("Weather")
                                     .multilineTextAlignment(.center)
                                     .font(.system(size: 12))
+                                    .foregroundColor(getForeground())
                             }
                             .onTapGesture {
                                 withAnimation {
@@ -144,10 +176,12 @@ struct FoodView: View {
                                 Image(systemName: "bag.fill")
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: UIScreen.main.bounds.width / 10, height: UIScreen.main.bounds.width / 10)
+                                    .frame(width: UIScreen.main.bounds.width / 12, height: UIScreen.main.bounds.width / 12)
+                                    .foregroundColor(getForeground())
                                 Text("Restaurants")
                                     .multilineTextAlignment(.center)
                                     .font(.system(size: 12))
+                                    .foregroundColor(getForeground())
                             }
                             .onTapGesture {
                                 withAnimation {
@@ -161,10 +195,12 @@ struct FoodView: View {
                                 Image(systemName: "gear")
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: UIScreen.main.bounds.width / 10, height: UIScreen.main.bounds.width / 10)
+                                    .frame(width: UIScreen.main.bounds.width / 12, height: UIScreen.main.bounds.width / 12)
+                                    .foregroundColor(getForeground())
                                 Text("Settings")
                                     .multilineTextAlignment(.center)
                                     .font(.system(size: 12))
+                                    .foregroundColor(getForeground())
                             }
                             .onTapGesture {
                                 withAnimation {
@@ -174,6 +210,7 @@ struct FoodView: View {
                             .offset(x: UIScreen.main.bounds.width / 64 * -3)
                             .padding()
                         }
+                        .background(getBackground())
                         .frame(height: UIScreen.main.bounds.height / 64 * 2)
                         .offset(y: UIScreen.main.bounds.height / 256 * -1)
                     }
@@ -185,7 +222,7 @@ struct FoodView: View {
                         .frame(width: UIScreen.main.bounds.width / 24, height: UIScreen.main.bounds.width / 24)
                         .padding()
                     HStack {
-                        FunctionList("Radius:", textfieldString: $radius, UIScreen.main.bounds.width / 1.5, UIScreen.main.bounds.height / 16, colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black, 16)
+                        FunctionList("Radius:", textfieldString: $radius, UIScreen.main.bounds.width / 1.5, UIScreen.main.bounds.height / 16, getBackground(), getForeground(), 16)
                         Spacer()
                     }
                     Spacer()
