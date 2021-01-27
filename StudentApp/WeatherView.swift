@@ -275,7 +275,7 @@ struct WeatherView: View {
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: UIScreen.main.bounds.width / 10, height: UIScreen.main.bounds.width / 10)
-                                .foregroundColor(getForeground())
+                                .foregroundColor(Color.lightBlue)
                         }
                         .padding()
                         Spacer()
