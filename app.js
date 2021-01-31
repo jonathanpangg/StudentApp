@@ -14,7 +14,6 @@ app.get('/users', (req, res) => {
         dbo.collection('Users').find({}).toArray(function(err, result) {
             if (error) throw error
             res.send(result)
-            console.log(result.id)
             db.close()
         })
     })
@@ -24,9 +23,9 @@ app.get('/users', (req, res) => {
 app.get('/users/id', (req, res) => {
     mongodb.connect(url, function(error, db) {
         if (error) throw error
-        dbo = db.db('StudentApp')
+        var dbo = db.db('StudentApp')
         var query = { firstName: 'Jonathan' }
-        dbo.collection('Users').find(query).toArray(function(error, result) {
+        dbo.collection('Users').find(query).toArray(function(error, result) { 
             if (error) throw error
             res.send(result)
             console.log(result)
@@ -35,19 +34,24 @@ app.get('/users/id', (req, res) => {
     })
 })
 
-app.post('/users/:firstName/:lastName/:email/:password', (req, res) => {
+app.post('/users/:id/:firstName/:lastName/:email/:password', (req, res) => {
     const user = {
+        id: req.body.id,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,
-        password: req.body.password
+        password: req.body.password,
+        // date: req.body.date
     };
     users.push(user)
     res.send(users)
 
-    mongodb.connect(url, function (error, data) {
+    mongodb.connect(url, function (error, db) {
+        if (error) throw error;
         assert.equal(null, error)
-        db.collection('Users').insertOne(user, function(error, result) {
+        var dbo = db.db('StudentApp')
+        dbo.collection('Users').insertOne(user, function(error, result) {
+            if (error) throw error;
             assert.equal(null, error)
             console.log('Item inserted')
             db.close();

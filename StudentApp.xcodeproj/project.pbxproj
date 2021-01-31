@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		93483B8025C08E29008789E3 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483B7F25C08E29008789E3 /* Location.swift */; };
 		93483B8525C08E43008789E3 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483B8425C08E43008789E3 /* MapView.swift */; };
+		9373FAC725C67CBC00AC61C5 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9373FAC625C67CBC00AC61C5 /* LoginView.swift */; };
+		9373FACF25C682C900AC61C5 /* SignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9373FACE25C682C900AC61C5 /* SignupView.swift */; };
 		938B37F125BA387600395BE2 /* FoodData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938B37F025BA387600395BE2 /* FoodData.swift */; };
 		938B37F625BA38DE00395BE2 /* FoodView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938B37F525BA38DE00395BE2 /* FoodView.swift */; };
 		93C37B3B25BCC86F00D8FB29 /* PassVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C37B3A25BCC86F00D8FB29 /* PassVariables.swift */; };
@@ -48,6 +50,8 @@
 /* Begin PBXFileReference section */
 		93483B7F25C08E29008789E3 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		93483B8425C08E43008789E3 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
+		9373FAC625C67CBC00AC61C5 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		9373FACE25C682C900AC61C5 /* SignupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupView.swift; sourceTree = "<group>"; };
 		938B37F025BA387600395BE2 /* FoodData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodData.swift; sourceTree = "<group>"; };
 		938B37F525BA38DE00395BE2 /* FoodView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodView.swift; sourceTree = "<group>"; };
 		93C37B3A25BCC86F00D8FB29 /* PassVariables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassVariables.swift; sourceTree = "<group>"; };
@@ -128,8 +132,10 @@
 				938B37F525BA38DE00395BE2 /* FoodView.swift */,
 				93D381EC25B8EA7C00BA98AC /* GeocodingData.swift */,
 				93483B7F25C08E29008789E3 /* Location.swift */,
+				9373FAC625C67CBC00AC61C5 /* LoginView.swift */,
 				93483B8425C08E43008789E3 /* MapView.swift */,
 				93C37B3A25BCC86F00D8FB29 /* PassVariables.swift */,
+				9373FACE25C682C900AC61C5 /* SignupView.swift */,
 				93C9F91B25C1C34D009B7394 /* SettingView.swift */,
 				93C9F92625C1FCCC009B7394 /* ThemeView.swift */,
 				93D381F625B8EAA200BA98AC /* WeatherData.swift */,
@@ -302,6 +308,7 @@
 				93C37B3B25BCC86F00D8FB29 /* PassVariables.swift in Sources */,
 				93D381B725B8EA3000BA98AC /* AppDelegate.swift in Sources */,
 				93D381B925B8EA3000BA98AC /* SceneDelegate.swift in Sources */,
+				9373FAC725C67CBC00AC61C5 /* LoginView.swift in Sources */,
 				93D381F725B8EAA200BA98AC /* WeatherData.swift in Sources */,
 				93483B8525C08E43008789E3 /* MapView.swift in Sources */,
 				938B37F125BA387600395BE2 /* FoodData.swift in Sources */,
@@ -310,6 +317,7 @@
 				93C9F92725C1FCCC009B7394 /* ThemeView.swift in Sources */,
 				93C9F91C25C1C34D009B7394 /* SettingView.swift in Sources */,
 				938B37F625BA38DE00395BE2 /* FoodView.swift in Sources */,
+				9373FACF25C682C900AC61C5 /* SignupView.swift in Sources */,
 				93D381ED25B8EA7C00BA98AC /* GeocodingData.swift in Sources */,
 				93483B8025C08E29008789E3 /* Location.swift in Sources */,
 				93D381FC25B8EAAB00BA98AC /* WeatherView.swift in Sources */,
