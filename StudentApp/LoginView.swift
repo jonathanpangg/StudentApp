@@ -36,7 +36,3 @@ struct LoginView: View {
         }
     }
 }
-
-struct User: Codable, Hashable {
-    var _id, id, firstName, lastName, username, password, date: String
-}
