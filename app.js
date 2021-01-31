@@ -8,23 +8,28 @@ var users = []
 app.use(express.json())
 
 app.get('/users', (req, res) => {
+    var resultArray = []
     mongodb.connect(url, function (error, db) {
         if (error) throw error;
         var dbo = db.db('StudentApp')
         dbo.collection('Users').find({}).toArray(function(err, result) {
             if (error) throw error
             res.send(result)
+            resultArray = result
+            console.log(resultArray)
             db.close()
         })
     })
 })
 
 // /GET specific user 
-app.get('/users/id', (req, res) => {
+app.get('/users/:firstName/:lastName', (req, res) => {
+    const first = req.params.firstName
+    const last = req.params.lastName
     mongodb.connect(url, function(error, db) {
         if (error) throw error
         var dbo = db.db('StudentApp')
-        var query = { firstName: 'Jonathan' }
+        var query = { firstName: first, lastName: last }
         dbo.collection('Users').find(query).toArray(function(error, result) { 
             if (error) throw error
             res.send(result)
@@ -34,14 +39,14 @@ app.get('/users/id', (req, res) => {
     })
 })
 
-app.post('/users/:id/:firstName/:lastName/:email/:password', (req, res) => {
+app.post('/users/:id/:firstName/:lastName/:username/:password/:date', (req, res) => {
     const user = {
         id: req.body.id,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
-        email: req.body.email,
+        username: req.body.username,
         password: req.body.password,
-        // date: req.body.date
+        date: req.body.date
     };
     users.push(user)
     res.send(users)

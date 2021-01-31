@@ -11,18 +11,11 @@ struct SignupView: View {
     @State var id = UUID()
     @State var firstName = ""
     @State var lastName = ""
-    @State var email = ""
+    @State var username = ""
     @State var password = ""
-    // @State var date = Date()
-
-    func toStringDate(_ date : Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .short
-        return formatter.string(from: date)
-    }
     
     func postUser() {
-        guard let url = URL(string: "http://localhost:1000/users/\(id)/\(firstName)/\(lastName)/\(email)/\(password)") else { return }
+        guard let url = URL(string: "http://localhost:1000/users/\(id)/\(firstName)/\(lastName)/\(username)/\(password)/\(Date().timeIntervalSince1970)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.allHTTPHeaderFields = [
@@ -32,17 +25,19 @@ struct SignupView: View {
             "id": "\(id)",
             "firstName": firstName,
             "lastName": lastName,
-            "email": email,
+            "username": username,
             "password": password,
-            // "date": "\(toStringDate(date))"
+            "date": "\(Date().timeIntervalSince1970)"
         ] 
         guard let encoded = try? JSONEncoder().encode(params) else { return }
         request.httpBody = encoded
         URLSession.shared.dataTask(with: request) { data, response, error in
-            guard let data = data else { return }
-            print(data)
-            if let decoded = try? JSONDecoder().decode([User].self, from: data) {
-                print(decoded)
+            DispatchQueue.main.async {
+                guard let data = data else { return }
+                print(data)
+                if let decoded = try? JSONDecoder().decode([User].self, from: data) {
+                    print(decoded)
+                }
             }
         }.resume()
     }
@@ -51,7 +46,7 @@ struct SignupView: View {
         VStack {
             TextField("First Name: ", text: $firstName)
             TextField("Last Name: ", text: $lastName)
-            TextField("Email: ", text: $email)
+            TextField("username: ", text: $username)
             TextField("Password: ", text: $password)
             Button("Press") {
                 id = UUID()
