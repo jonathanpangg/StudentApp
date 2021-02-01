@@ -2,7 +2,7 @@ var express = require('express')
 var app = express()
 var mongodb = require('mongodb')
 var assert = require('assert')
-var db = require('mongoose')  
+var db = require('/.mongoose')  
 const url = process.env.mongodb_URI || 'mongodb+srv://StudentUsers:Jonathan3388@cluster0.xbzay.mongodb.net/StudentApp?retryWrites=true&w=majority'
 var users = []
 app.use(express.json())
