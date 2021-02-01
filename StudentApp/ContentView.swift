@@ -12,7 +12,6 @@ struct ContentView: View {
     @State var weatherData = WeatherData()
     
     var body: some View {
-        /*
         switch pass.currentScreen {
         case 1:
             FoodView(pass: pass)
@@ -20,12 +19,13 @@ struct ContentView: View {
             SettingView(pass: pass)
         case 3:
             ThemeView(pass: pass)
+        case 4:
+            LoginView(pass: pass)
+        case 5:
+            SignupView(pass: pass)
         default:
             WeatherView(pass: pass)
         }
-        */
-        // LoginView()
-        SignupView()
     }
 }
 
