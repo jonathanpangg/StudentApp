@@ -8,15 +8,12 @@ var users = []
 app.use(express.json())
 
 app.get('/users', (req, res) => {
-    var resultArray = []
     mongodb.connect(url, function (error, db) {
         if (error) throw error;
         var dbo = db.db('StudentApp')
         dbo.collection('Users').find({}).toArray(function(err, result) {
             if (error) throw error
             res.send(result)
-            resultArray = result
-            console.log(resultArray)
             db.close()
         })
     })
