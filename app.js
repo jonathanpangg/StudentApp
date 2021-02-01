@@ -9,7 +9,7 @@ app.use(express.json())
 
 app.get('/', (req, res) => {
     var resultArray = []
-    mongodb.connect(port, function (error, db) {
+    mongodb.connect(url, function (error, db) {
         if (error) throw error;
         var dbo = db.db('StudentApp')
         dbo.collection('Users').find({}).toArray(function(err, result) {
@@ -26,7 +26,7 @@ app.get('/', (req, res) => {
 app.get('/users/:firstName/:lastName', (req, res) => {
     const first = req.params.firstName
     const last = req.params.lastName
-    mongodb.connect(port, function(error, db) {
+    mongodb.connect(url, function(error, db) {
         if (error) throw error
         var dbo = db.db('StudentApp')
         var query = { firstName: first, lastName: last }
@@ -40,7 +40,7 @@ app.get('/users/:firstName/:lastName', (req, res) => {
 })
 
 app.put('/users/:id/:date/:newDate', (req, res) => {
-    mongodb.connect(port, function(error, db) {
+    mongodb.connect(url, function(error, db) {
         if (error) throw error
         var dbo = db.db('StudentApp')
         var query = { date: req.params.date }
@@ -63,7 +63,7 @@ app.post('/users/:id/:firstName/:lastName/:username/:password/:date', (req, res)
         date: req.body.date
     };
 
-    mongodb.connect(port, function (error, db) {
+    mongodb.connect(url, function (error, db) {
         if (error) throw error;
         var dbo = db.db('StudentApp')
         dbo.collection('Users').insertOne(user, function(error, result) {
