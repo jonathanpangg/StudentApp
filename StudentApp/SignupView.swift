@@ -11,6 +11,7 @@ struct SignupView: View {
     @Environment(\.colorScheme) var colorScheme
     @ObservedObject var pass: Pass
     @ObservedObject var mode = ThemeStatus()
+    @ObservedObject var user = joinUser()
     @State var users = [User]()
     @State var id = UUID()
     @State var firstName = ""
@@ -213,7 +214,7 @@ struct SignupView: View {
                                 .stroke(getForeground(), lineWidth: 1)
                                 .frame(width: UIScreen.main.bounds.width / 16 * 12, height: UIScreen.main.bounds.height / 24)
                             HStack {
-                                TextField("", text: $password)
+                                SecureField("", text: $password)
                                     .autocapitalization(.none)
                                     .font(.system(size: 16))
                                     .foregroundColor(getForeground())
@@ -291,7 +292,11 @@ struct SignupView: View {
                             .foregroundColor(getForeground())
                             .onTapGesture {
                                 if verifyUsername() && verifyPassword() {
-                                    pass.currentScreen = 4
+                                    if let encoded = try? JSONEncoder().encode(user.user) {
+                                        UserDefaults.standard.set(encoded, forKey: "saveUser")
+                                    }
+                                    postUser()
+                                    pass.currentScreen = 0
                                 }
                                 else {
                                     alertStatus = true
