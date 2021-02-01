@@ -7,7 +7,7 @@ const url = process.env.mongodb_URI || 'mongodb+srv://StudentUsers:Jonathan3388@
 var users = []
 app.use(express.json())
 
-app.get('/', (req, res) => {
+app.get('/users', (req, res) => {
     var resultArray = []
     mongodb.connect(url, function (error, db) {
         if (error) throw error;
