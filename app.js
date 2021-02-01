@@ -9,7 +9,7 @@ app.use(express.json())
 
 app.get('/users', (req, res) => {
     var resultArray = []
-    mongodb.connect(url, function (error, db) {
+    mongodb.connect(port, function (error, db) {
         if (error) throw error;
         var dbo = db.db('StudentApp')
         dbo.collection('Users').find({}).toArray(function(err, result) {
@@ -25,7 +25,7 @@ app.get('/users', (req, res) => {
 function getUsers() {
     var resultArray = []
     app.get('/users', (req, res) => {
-        mongodb.connect(url, function (error, db) {
+        mongodb.connect(port, function (error, db) {
             if (error) throw error;
             var dbo = db.db('StudentApp')
             dbo.collection('Users').find({}).toArray(function(err, result) {
@@ -42,7 +42,7 @@ function getUsers() {
 app.get('/users/:firstName/:lastName', (req, res) => {
     const first = req.params.firstName
     const last = req.params.lastName
-    mongodb.connect(url, function(error, db) {
+    mongodb.connect(port, function(error, db) {
         if (error) throw error
         var dbo = db.db('StudentApp')
         var query = { firstName: first, lastName: last }
@@ -56,7 +56,7 @@ app.get('/users/:firstName/:lastName', (req, res) => {
 })
 
 app.put('/users/:id/:date/:newDate', (req, res) => {
-    mongodb.connect(url, function(error, db) {
+    mongodb.connect(port, function(error, db) {
         if (error) throw error
         var dbo = db.db('StudentApp')
         var query = { date: req.params.date }
