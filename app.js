@@ -2,7 +2,7 @@ var express = require('express')
 var app = express()
 var mongodb = require('mongodb')
 var assert = require('assert')
-var db = require('./mongoose')
+var db = require('./mongoose')  
 const url = process.env.mongodb_URI || 'mongodb+srv://StudentUsers:Jonathan3388@cluster0.xbzay.mongodb.net/StudentApp?retryWrites=true&w=majority'
 var users = []
 app.use(express.json())
@@ -21,6 +21,22 @@ app.get('/users', (req, res) => {
         })
     })
 })
+
+function getUsers() {
+    var resultArray = []
+    app.get('/users', (req, res) => {
+        mongodb.connect(url, function (error, db) {
+            if (error) throw error;
+            var dbo = db.db('StudentApp')
+            dbo.collection('Users').find({}).toArray(function(err, result) {
+                if (error) throw error
+                resultArray = result
+                db.close()
+            })
+        })
+    })
+    return resultArray
+}
 
 // /GET specific user 
 app.get('/users/:firstName/:lastName', (req, res) => {
@@ -48,12 +64,9 @@ app.post('/users/:id/:firstName/:lastName/:username/:password/:date', (req, res)
         password: req.body.password,
         date: req.body.date
     };
-    users.push(user)
-    res.send(users)
 
     mongodb.connect(url, function (error, db) {
         if (error) throw error;
-        assert.equal(null, error)
         var dbo = db.db('StudentApp')
         dbo.collection('Users').insertOne(user, function(error, result) {
             if (error) throw error;
