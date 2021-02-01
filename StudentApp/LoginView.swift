@@ -11,12 +11,24 @@ struct LoginView: View {
     @Environment(\.colorScheme) var colorScheme
     @ObservedObject var pass: Pass
     @ObservedObject var mode = ThemeStatus()
+    @ObservedObject var join = joinUser()
     @State var users = [User]()
     @State var username = ""
     @State var password = ""
     @State var secure = true
     @State var alertStatus = false
 
+    func autoLog() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            if Double(Date().timeIntervalSince1970) - Double(join.user.date)! > 604800 {
+                pass.currentScreen = 5
+            }
+            else {
+                pass.currentScreen = 0
+            }
+        }
+    }
+    
     func getBackground() -> Color {
         if mode.mode.mode == "Default" {
             return colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black
@@ -160,6 +172,9 @@ struct LoginView: View {
                     }
                     .onTapGesture {
                         if verifyUser() {
+                            if let encoded = try? JSONEncoder().encode(join.user) {
+                                UserDefaults.standard.set(encoded, forKey: "saveUser")
+                            }
                             pass.currentScreen = 0
                         }
                         else {
@@ -175,6 +190,7 @@ struct LoginView: View {
                 UIViewController.attemptRotationToDeviceOrientation()
             }
             .onAppear(perform: getUser)
+            // .onAppear(perform: autoLog)
             .alert(isPresented: $alertStatus) {
                 Alert(title: Text("Unable to Login"), message: Text("Either your username or password is incorrect"), dismissButton: .default(Text("Retry")))
             }

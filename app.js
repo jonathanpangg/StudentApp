@@ -55,6 +55,20 @@ app.get('/users/:firstName/:lastName', (req, res) => {
     })
 })
 
+app.put('/users/:id/:date/:newDate', (req, res) => {
+    mongodb.connect(url, function(error, db) {
+        if (error) throw error
+        var dbo = db.db('StudentApp')
+        var query = { date: req.params.date }
+        var newQuery = { $set: { date: req.params.newDate } }
+        dbo.collection('Users').updateOne(query, newQuery, function(error, result) { 
+            if (error) throw error
+            console.log(result)
+            db.close()
+        })
+    })
+})
+
 app.post('/users/:id/:firstName/:lastName/:username/:password/:date', (req, res) => {
     const user = {
         id: req.body.id,
