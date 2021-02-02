@@ -1,13 +1,14 @@
 var express = require('express')
 var app = express()
-var mongodb = require('mongodb')
+// var mongodb = require('mongodb')
 var assert = require('assert')
-var db = require('./mongoose')  
+// var db = require('./mongoose')  
 const url = process.env.mongodb_URI || 'mongodb+srv://StudentUsers:Jonathan3388@cluster0.xbzay.mongodb.net/StudentApp?retryWrites=true&w=majority'
 var users = []
 app.use(express.json())
 
 app.get('/users', (req, res) => {
+    /*
     mongodb.connect(url, function (error, db) {
         if (error) throw error;
         var dbo = db.db('StudentApp')
@@ -17,6 +18,8 @@ app.get('/users', (req, res) => {
             db.close()
         })
     })
+    */
+   res.send('Hello World')
 })
 
 // /GET specific user 
