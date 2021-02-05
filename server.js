@@ -2,10 +2,12 @@ var express = require('express')
 var app = express()
 var mongodb = require('mongodb')
 var assert = require('assert')
+var cors = require('cors')
 var db = require('./mongoose')  
 const url = process.env.mongodb_URI || 'mongodb+srv://StudentUsers:Jonathan3388@cluster0.xbzay.mongodb.net/StudentApp?retryWrites=true&w=majority'
 var users = []
 app.use(express.json())
+app.use(cors())
 
 app.get('/test', (req, res) => {
     res.send('Hello World')
