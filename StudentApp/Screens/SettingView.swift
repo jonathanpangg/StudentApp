@@ -40,8 +40,8 @@ struct SettingView: View {
         ZStack {
             getBackground()
                 .ignoresSafeArea(.all)
-            VStack {
-                HStack {
+            VStack(alignment: .center) {
+                HStack(alignment: .center) {
                     ZStack {
                         Text("")
                             .multilineTextAlignment(.leading)

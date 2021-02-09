@@ -13,23 +13,13 @@ struct WeatherView: View {
     @Environment(\.colorScheme) var colorScheme
     @ObservedObject var mode = ThemeStatus()
     @State var weatherData = WeatherData()
+    @State var locationData = RevserGeo()
     @State var statusImage = ""
     @State var isCity = true
     @State var location = ""
     @State var message = ""
     let key = "4e28fd44172171a9678306f1648809fa"
-    
-    func getBackground() -> Color {
-        if mode.mode.mode == "Default" {
-            return colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black
-        }
-        else if mode.mode.mode == "Light"{
-            return Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1))
-        }
-        else {
-            return Color.black
-        }
-    }
+    let geoKey = "698c43ba2eefbce9d798d13c1e6acc2f"
     
     func getForeground() -> Color {
         if mode.mode.mode == "Default" {
@@ -43,33 +33,23 @@ struct WeatherView: View {
         }
     }
     
-    // sets default location
-    func setGeocodingData() {
-        guard let url = URL(string: "http://ip-api.com/json") else { return }
-        var request = URLRequest(url: url)
-        request.allHTTPHeaderFields = [
-            "Content-Type": "application/json"
-        ]
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            guard let data = data else { return }
-            if let decoded = try? JSONDecoder().decode(GeocodingData.self, from: data) {
-                DispatchQueue.main.async {
-                    location = decoded.city
-                    getData()
-                }
-            }
-        }.resume()
+    func getBackground() -> Color {
+        if mode.mode.mode == "Default" {
+            return colorScheme != .dark ? Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)): Color.black
+        }
+        else if mode.mode.mode == "Light"{
+            return Color(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1))
+        }
+        else {
+            return Color.black
+        }
     }
     
-    // changes the temperature color
-    func changeTempColor() -> Color {
-        if (weatherData.main.temp - 273.15) * 1.8 + 32 < 40 {
-            return Color(#colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1))
-        }
-        else if (weatherData.main.temp - 273.15) * 1.8 + 32 < 80 {
-            return Color.yellow
-        }
-        return Color(#colorLiteral(red: 0.9411764741, green: 0.4980392158, blue: 0.3529411852, alpha: 1))
+    // returns the day
+    func getDay(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        return String(formatter.string(from: date)[formatter.string(from: date).index(after: formatter.string(from: date).firstIndex(of: "/")!)..<(formatter.string(from: date).lastIndex(of: "/") ?? formatter.string(from: date).endIndex)])
     }
     
     // returns the day of the week
@@ -131,56 +111,81 @@ struct WeatherView: View {
         }
     }
     
-    // returns the day
-    func getDay(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .short
-        return String(formatter.string(from: date)[formatter.string(from: date).index(after: formatter.string(from: date).firstIndex(of: "/")!)..<(formatter.string(from: date).lastIndex(of: "/") ?? formatter.string(from: date).endIndex)])
+    // changes the temperature color
+    func changeTempColor() -> Color {
+        if (weatherData.main.temp - 273.15) * 1.8 + 32 < 40 {
+            return Color(#colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1))
+        }
+        else if (weatherData.main.temp - 273.15) * 1.8 + 32 < 80 {
+            return Color.yellow
+        }
+        return Color(#colorLiteral(red: 0.9411764741, green: 0.4980392158, blue: 0.3529411852, alpha: 1))
+    }
+    
+    // gets the location data
+    func getLocation() {
+        DispatchQueue.main.async {
+            guard let url = URL(string: "https://developers.zomato.com/api/v2.1/geocode?lat=\(pass.lat)&lon=\(pass.lng)") else { return }
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET"
+            request.allHTTPHeaderFields = [
+                "X-Zomato-API-Key": geoKey,
+                "Content-Type": "application/json"
+            ]
+            URLSession.shared.dataTask(with: request) { data, response, error in
+                guard let data = data else { return }
+                if let decoded = try? JSONDecoder().decode(RevserGeo.self, from: data) {
+                    DispatchQueue.main.async {
+                        location = decoded.location.city_name
+                        pass.location = location
+                        getData()
+                    }
+                }
+            }.resume()
+        }
     }
     
     // gets weather data
     func getData() {
         var query = ""
         if pass.location == "" {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.10) {
-                if isCity {
-                    query = "\(pass.location)&appid=\(key)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
-                }
-                else {
-                    query = "\(location)&appid=\(key)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
-                }
-                guard let url = URL(string: "https://api.openweathermap.org/data/2.5/weather?q=\(String(describing: query))") else { return }
-                var request = URLRequest(url: url)
-                request.allHTTPHeaderFields = [
-                    "application/json": "Content-Type",
-                    "Authorization": key
-                ]
-                URLSession.shared.dataTask(with: request) { data, response, error in
-                    guard let data = data else { return }
-                    if let decoded = try? JSONDecoder().decode(WeatherData.self, from: data) {
-                        DispatchQueue.main.async {
-                            weatherData = decoded
-                            setNotification()
-                            switch decoded.weather[0].main {
-                            case "Thunderstorm":
-                                statusImage = "cloud.bolt.rain.fill"
-                            case "Drizzle":
-                                statusImage = "cloud.drizzle.fill"
-                            case "Rain":
-                                statusImage = "cloud.heavyrain.fill"
-                            case "Snow":
-                                statusImage = "snow"
-                            case "Atmosphere":
-                                statusImage = "smoke.fill"
-                            case "Clear":
-                                statusImage = "sun.max.fill"
-                            default:
-                                statusImage = "cloud.fill"
-                            }
+            if isCity {
+                query = "\(pass.location)&appid=\(key)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+            }
+            else {
+                query = "\(location)&appid=\(key)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+            }
+            guard let url = URL(string: "https://api.openweathermap.org/data/2.5/weather?q=\(String(describing: query))") else { return }
+            var request = URLRequest(url: url)
+            request.allHTTPHeaderFields = [
+                "application/json": "Content-Type",
+                "Authorization": key
+            ]
+            URLSession.shared.dataTask(with: request) { data, response, error in
+                guard let data = data else { return }
+                if let decoded = try? JSONDecoder().decode(WeatherData.self, from: data) {
+                    DispatchQueue.main.async {
+                        weatherData = decoded
+                        setNotification()
+                        switch decoded.weather[0].main {
+                        case "Thunderstorm":
+                            statusImage = "cloud.bolt.rain.fill"
+                        case "Drizzle":
+                            statusImage = "cloud.drizzle.fill"
+                        case "Rain":
+                            statusImage = "cloud.heavyrain.fill"
+                        case "Snow":
+                            statusImage = "snow"
+                        case "Atmosphere":
+                            statusImage = "smoke.fill"
+                        case "Clear":
+                            statusImage = "sun.max.fill"
+                        default:
+                            statusImage = "cloud.fill"
                         }
                     }
-                }.resume()
-            }
+                }
+            }.resume()
         }
         else {
             if isCity {
@@ -222,7 +227,7 @@ struct WeatherView: View {
                 }
                 else {
                     isCity = false
-                    setGeocodingData()
+                    getLocation()
                 }
             }.resume()
         }
@@ -279,6 +284,8 @@ struct WeatherView: View {
     
     var body: some View {
         ZStack {
+            MapView(pass: pass)
+                .hidden()
             getBackground()
                 .ignoresSafeArea(.all)
             VStack {
@@ -407,7 +414,7 @@ struct WeatherView: View {
                 .offset(y: UIScreen.main.bounds.height / 256 * -1)
             }
             .background(getBackground())
-            .onAppear(perform: getData)
+            .onAppear(perform: getLocation)
             .onAppear {
                 AppDelegate.orientationLock = UIInterfaceOrientationMask.portrait
                 UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")

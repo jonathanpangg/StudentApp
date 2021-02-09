@@ -108,9 +108,9 @@ struct FoodView: View {
                 .ignoresSafeArea(.all)
             VStack {
                 HStack {
-                    Image(systemName: "list.bullet")
+                    Image(systemName: "line.horizontal.3")
                         .resizable()
-                        .frame(width: UIScreen.main.bounds.width / 24, height: UIScreen.main.bounds.width / 24)
+                        .frame(width: UIScreen.main.bounds.width / 20, height: UIScreen.main.bounds.width / 24)
                         .scaledToFit()
                         .onTapGesture {
                             withAnimation {
