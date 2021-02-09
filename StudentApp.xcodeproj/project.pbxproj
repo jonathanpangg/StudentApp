@@ -104,6 +104,34 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		932DE79D25D2F7520005B5FA /* Screens */ = {
+			isa = PBXGroup;
+			children = (
+				938B37F525BA38DE00395BE2 /* FoodView.swift */,
+				9373FAC625C67CBC00AC61C5 /* LoginView.swift */,
+				93483B8425C08E43008789E3 /* MapView.swift */,
+				93C9F91B25C1C34D009B7394 /* SettingView.swift */,
+				9373FACE25C682C900AC61C5 /* SignupView.swift */,
+				93C9F92625C1FCCC009B7394 /* ThemeView.swift */,
+				93D381FB25B8EAAB00BA98AC /* WeatherView.swift */,
+			);
+			name = Screens;
+			path = Screebs/Screens;
+			sourceTree = "<group>";
+		};
+		932DE79E25D2F7920005B5FA /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				938B37F025BA387600395BE2 /* FoodData.swift */,
+				93D381EC25B8EA7C00BA98AC /* GeocodingData.swift */,
+				93483B7F25C08E29008789E3 /* Location.swift */,
+				93C37B3A25BCC86F00D8FB29 /* PassVariables.swift */,
+				9383D32825C73625008C7991 /* UserData.swift */,
+				93D381F625B8EAA200BA98AC /* WeatherData.swift */,
+			);
+			path = Helper;
+			sourceTree = "<group>";
+		};
 		93D381AA25B8EA3000BA98AC = {
 			isa = PBXGroup;
 			children = (
@@ -127,22 +155,11 @@
 		93D381B525B8EA3000BA98AC /* StudentApp */ = {
 			isa = PBXGroup;
 			children = (
+				932DE79D25D2F7520005B5FA /* Screens */,
+				932DE79E25D2F7920005B5FA /* Helper */,
 				93D381B625B8EA3000BA98AC /* AppDelegate.swift */,
 				93D381B825B8EA3000BA98AC /* SceneDelegate.swift */,
 				93D381BA25B8EA3000BA98AC /* ContentView.swift */,
-				938B37F025BA387600395BE2 /* FoodData.swift */,
-				938B37F525BA38DE00395BE2 /* FoodView.swift */,
-				93D381EC25B8EA7C00BA98AC /* GeocodingData.swift */,
-				93483B7F25C08E29008789E3 /* Location.swift */,
-				9373FAC625C67CBC00AC61C5 /* LoginView.swift */,
-				93483B8425C08E43008789E3 /* MapView.swift */,
-				93C37B3A25BCC86F00D8FB29 /* PassVariables.swift */,
-				9373FACE25C682C900AC61C5 /* SignupView.swift */,
-				93C9F91B25C1C34D009B7394 /* SettingView.swift */,
-				93C9F92625C1FCCC009B7394 /* ThemeView.swift */,
-				9383D32825C73625008C7991 /* UserData.swift */,
-				93D381F625B8EAA200BA98AC /* WeatherData.swift */,
-				93D381FB25B8EAAB00BA98AC /* WeatherView.swift */,
 				93D381BF25B8EA3000BA98AC /* Assets.xcassets */,
 				93D381C425B8EA3000BA98AC /* LaunchScreen.storyboard */,
 				93D381C725B8EA3000BA98AC /* Info.plist */,

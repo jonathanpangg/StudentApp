@@ -2,13 +2,17 @@ var express = require('express')
 var app = express()
 var mongodb = require('mongodb')
 var assert = require('assert')
-var db = require('mongoose')  
-const url = process.env.mongodb_URI || 'mongodb+srv://StudentUsers:Jonathan3388@cluster0.xbzay.mongodb.net/StudentApp?retryWrites=true&w=majority'
+var db = require('./mongoose')  
+const mongodb_URI = process.env.mongodb_URI || 'mongodb+srv://StudentUsers:Jonathan3388@cluster0.xbzay.mongodb.net/StudentApp?retryWrites=true&w=majority'
 var users = []
 app.use(express.json())
 
+app.get('/test', (req, res) => {
+    res.send('Hello World')
+})
+
 app.get('/users', (req, res) => {
-    mongodb.connect(url, function (error, db) {
+    mongodb.connect(mongodb_URI, function (error, db) {
         if (error) throw error;
         var dbo = db.db('StudentApp')
         dbo.collection('Users').find({}).toArray(function(err, result) {
@@ -23,7 +27,7 @@ app.get('/users', (req, res) => {
 app.get('/users/:firstName/:lastName', (req, res) => {
     const first = req.params.firstName
     const last = req.params.lastName
-    mongodb.connect(url, function(error, db) {
+    mongodb.connect(mongodb_URI, function(error, db) {
         if (error) throw error
         var dbo = db.db('StudentApp')
         var query = { firstName: first, lastName: last }
@@ -37,7 +41,7 @@ app.get('/users/:firstName/:lastName', (req, res) => {
 })
 
 app.put('/users/:id/:date/:newDate', (req, res) => {
-    mongodb.connect(url, function(error, db) {
+    mongodb.connect(mongodb_URI, function(error, db) {
         if (error) throw error
         var dbo = db.db('StudentApp')
         var query = { date: req.params.date }
@@ -60,7 +64,7 @@ app.post('/users/:id/:firstName/:lastName/:username/:password/:date', (req, res)
         date: req.body.date
     };
 
-    mongodb.connect(url, function (error, db) {
+    mongodb.connect(mongodb_URI, function (error, db) {
         if (error) throw error;
         var dbo = db.db('StudentApp')
         dbo.collection('Users').insertOne(user, function(error, result) {
@@ -72,5 +76,5 @@ app.post('/users/:id/:firstName/:lastName/:username/:password/:date', (req, res)
     })
 })
 
-const port = process.env.PORT || 8080
+const port = process.env.PORT || 2000
 app.listen(port, () => console.log('Listening on ' + port + '...'))
