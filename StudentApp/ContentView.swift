@@ -19,10 +19,12 @@ struct ContentView: View {
             SettingView(pass: pass)
         case 3:
             ThemeView(pass: pass)
+        /*
         case 4:
             LoginView(pass: pass)
         case 5:
             SignupView(pass: pass)
+        */
         default:
             WeatherView(pass: pass)
         }

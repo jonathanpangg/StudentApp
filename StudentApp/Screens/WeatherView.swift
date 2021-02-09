@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UserNotifications
 
 struct WeatherView: View {
     @ObservedObject var pass: Pass
@@ -15,6 +16,7 @@ struct WeatherView: View {
     @State var statusImage = ""
     @State var isCity = true
     @State var location = ""
+    @State var message = ""
     let key = "4e28fd44172171a9678306f1648809fa"
     
     func getBackground() -> Color {
@@ -57,94 +59,6 @@ struct WeatherView: View {
                 }
             }
         }.resume()
-    }
-    
-    // gets weather data
-    func getData() {
-        var query = ""
-        if pass.location == "" {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.10) {
-                if isCity {
-                    query = "\(pass.location)&appid=\(key)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
-                }
-                else {
-                    query = "\(location)&appid=\(key)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
-                }
-                guard let url = URL(string: "https://api.openweathermap.org/data/2.5/weather?q=\(String(describing: query))") else { return }
-                var request = URLRequest(url: url)
-                request.allHTTPHeaderFields = [
-                    "application/json": "Content-Type",
-                    "Authorization": key
-                ]
-                URLSession.shared.dataTask(with: request) { data, response, error in
-                    guard let data = data else { return }
-                    if let decoded = try? JSONDecoder().decode(WeatherData.self, from: data) {
-                        DispatchQueue.main.async {
-                            weatherData = decoded
-                            switch decoded.weather[0].main {
-                            case "Thunderstorm":
-                                statusImage = "cloud.bolt.rain.fill"
-                            case "Drizzle":
-                                statusImage = "cloud.drizzle.fill"
-                            case "Rain":
-                                statusImage = "cloud.heavyrain.fill"
-                            case "Snow":
-                                statusImage = "snow"
-                            case "Atmosphere":
-                                statusImage = "smoke.fill"
-                            case "Clear":
-                                statusImage = "sun.max.fill"
-                            default:
-                                statusImage = "cloud.fill"
-                            }
-                        }
-                    }
-                }.resume()
-            }
-        }
-        else {
-            if isCity {
-                query = "\(pass.location)&appid=\(key)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
-            }
-            else {
-                query = "\(location)&appid=\(key)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
-            }
-            guard let url = URL(string: "https://api.openweathermap.org/data/2.5/weather?q=\(String(describing: query))") else { return }
-            var request = URLRequest(url: url)
-            request.allHTTPHeaderFields = [
-                "application/json": "Content-Type",
-                "Authorization": key
-            ]
-            URLSession.shared.dataTask(with: request) { data, response, error in
-                guard let data = data else { return }
-                if let decoded = try? JSONDecoder().decode(WeatherData.self, from: data) {
-                    DispatchQueue.main.async {
-                        isCity = true
-                        weatherData = decoded
-                        switch decoded.weather[0].main {
-                        case "Thunderstorm":
-                            statusImage = "cloud.bolt.rain.fill"
-                        case "Drizzle":
-                            statusImage = "cloud.drizzle.fill"
-                        case "Rain":
-                            statusImage = "cloud.heavyrain.fill"
-                        case "Snow":
-                            statusImage = "snow"
-                        case "Atmosphere":
-                            statusImage = "smoke.fill"
-                        case "Clear":
-                            statusImage = "sun.max.fill"
-                        default:
-                            statusImage = "cloud.fill"
-                        }
-                    }
-                }
-                else {
-                    isCity = false
-                    setGeocodingData()
-                }
-            }.resume()
-        }
     }
     
     // changes the temperature color
@@ -222,6 +136,145 @@ struct WeatherView: View {
         let formatter = DateFormatter()
         formatter.dateStyle = .short
         return String(formatter.string(from: date)[formatter.string(from: date).index(after: formatter.string(from: date).firstIndex(of: "/")!)..<(formatter.string(from: date).lastIndex(of: "/") ?? formatter.string(from: date).endIndex)])
+    }
+    
+    // gets weather data
+    func getData() {
+        var query = ""
+        if pass.location == "" {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.10) {
+                if isCity {
+                    query = "\(pass.location)&appid=\(key)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+                }
+                else {
+                    query = "\(location)&appid=\(key)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+                }
+                guard let url = URL(string: "https://api.openweathermap.org/data/2.5/weather?q=\(String(describing: query))") else { return }
+                var request = URLRequest(url: url)
+                request.allHTTPHeaderFields = [
+                    "application/json": "Content-Type",
+                    "Authorization": key
+                ]
+                URLSession.shared.dataTask(with: request) { data, response, error in
+                    guard let data = data else { return }
+                    if let decoded = try? JSONDecoder().decode(WeatherData.self, from: data) {
+                        DispatchQueue.main.async {
+                            weatherData = decoded
+                            setNotification()
+                            switch decoded.weather[0].main {
+                            case "Thunderstorm":
+                                statusImage = "cloud.bolt.rain.fill"
+                            case "Drizzle":
+                                statusImage = "cloud.drizzle.fill"
+                            case "Rain":
+                                statusImage = "cloud.heavyrain.fill"
+                            case "Snow":
+                                statusImage = "snow"
+                            case "Atmosphere":
+                                statusImage = "smoke.fill"
+                            case "Clear":
+                                statusImage = "sun.max.fill"
+                            default:
+                                statusImage = "cloud.fill"
+                            }
+                        }
+                    }
+                }.resume()
+            }
+        }
+        else {
+            if isCity {
+                query = "\(pass.location)&appid=\(key)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+            }
+            else {
+                query = "\(location)&appid=\(key)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+            }
+            guard let url = URL(string: "https://api.openweathermap.org/data/2.5/weather?q=\(String(describing: query))") else { return }
+            var request = URLRequest(url: url)
+            request.allHTTPHeaderFields = [
+                "application/json": "Content-Type",
+                "Authorization": key
+            ]
+            URLSession.shared.dataTask(with: request) { data, response, error in
+                guard let data = data else { return }
+                if let decoded = try? JSONDecoder().decode(WeatherData.self, from: data) {
+                    DispatchQueue.main.async {
+                        isCity = true
+                        weatherData = decoded
+                        setNotification()
+                        switch decoded.weather[0].main {
+                        case "Thunderstorm":
+                            statusImage = "cloud.bolt.rain.fill"
+                        case "Drizzle":
+                            statusImage = "cloud.drizzle.fill"
+                        case "Rain":
+                            statusImage = "cloud.heavyrain.fill"
+                        case "Snow":
+                            statusImage = "snow"
+                        case "Atmosphere":
+                            statusImage = "smoke.fill"
+                        case "Clear":
+                            statusImage = "sun.max.fill"
+                        default:
+                            statusImage = "cloud.fill"
+                        }
+                    }
+                }
+                else {
+                    isCity = false
+                    setGeocodingData()
+                }
+            }.resume()
+        }
+    }
+    
+    func getTimeInterval(_ hourComponent: Int, _ minuteComponent: Int) -> Int {
+        var endHour = hourComponent
+        let components = Calendar.current.dateComponents([.hour, .minute], from: Date())
+
+        while endHour < components.hour! {
+            endHour += 24
+        }
+        
+        if minuteComponent < 10 {
+            return (Int("\(endHour)0\(minuteComponent)")! - Int("\(components.hour!)\(components.minute!)")!) * 60
+        }
+        return (Int("\(endHour)\(minuteComponent)")! - Int("\(components.hour!)\(components.minute!)")!) * 60
+    }
+    
+    func setNotification() {
+        let content = UNMutableNotificationContent()
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+        content.title = "Weather Update"
+        if weatherData.weather.count > 0 {
+            content.subtitle = "Today there is \(weatherData.weather[0].weatherDescription) in \(pass.location)"
+        }
+        content.sound = UNNotificationSound.default
+        let firstTrigger = UNTimeIntervalNotificationTrigger(timeInterval: Double(getTimeInterval(6, 0)), repeats: false)
+        let secondTrigger = UNTimeIntervalNotificationTrigger(timeInterval: Double(getTimeInterval(12, 0)), repeats: false)
+        let thirdTrigger = UNTimeIntervalNotificationTrigger(timeInterval: Double(getTimeInterval(18, 0)), repeats: false)
+        let firstRequest = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: firstTrigger)
+        let secondRequest = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: secondTrigger)
+        let thirdRequest = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: thirdTrigger)
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            if settings.authorizationStatus == .authorized {
+                UNUserNotificationCenter.current().add(firstRequest)
+                UNUserNotificationCenter.current().add(secondRequest)
+                UNUserNotificationCenter.current().add(thirdRequest)
+            }
+            else {
+                UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
+                    if success {
+                        UNUserNotificationCenter.current().add(firstRequest)
+                        UNUserNotificationCenter.current().add(secondRequest)
+                        UNUserNotificationCenter.current().add(thirdRequest)
+                    }
+                }
+            }
+            UNUserNotificationCenter.current().add(firstRequest)
+            UNUserNotificationCenter.current().add(secondRequest)
+            UNUserNotificationCenter.current().add(thirdRequest)
+        }
     }
     
     var body: some View {
