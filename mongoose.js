@@ -1,7 +1,7 @@
 var mongoose = require('mongoose')
 
-const url = process.env.mongodb_URI || 'mongodb+srv://StudentUsers:Jonathan3388@cluster0.xbzay.mongodb.net/StudentApp?retryWrites=true&w=majority'
-mongoose.connect(url, {
+const mongodb_URI = process.env.mongodb_URI || 'mongodb+srv://StudentUsers:Jonathan3388@cluster0.xbzay.mongodb.net/StudentApp?retryWrites=true&w=majority'
+mongoose.connect(mongodb_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true
