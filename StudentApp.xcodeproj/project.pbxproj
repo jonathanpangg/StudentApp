@@ -104,21 +104,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		932DE79D25D2F7520005B5FA /* Screens */ = {
-			isa = PBXGroup;
-			children = (
-				938B37F525BA38DE00395BE2 /* FoodView.swift */,
-				9373FAC625C67CBC00AC61C5 /* LoginView.swift */,
-				93483B8425C08E43008789E3 /* MapView.swift */,
-				93C9F91B25C1C34D009B7394 /* SettingView.swift */,
-				9373FACE25C682C900AC61C5 /* SignupView.swift */,
-				93C9F92625C1FCCC009B7394 /* ThemeView.swift */,
-				93D381FB25B8EAAB00BA98AC /* WeatherView.swift */,
-			);
-			name = Screens;
-			path = Screebs/Screens;
-			sourceTree = "<group>";
-		};
 		932DE79E25D2F7920005B5FA /* Helper */ = {
 			isa = PBXGroup;
 			children = (
@@ -130,6 +115,20 @@
 				93D381F625B8EAA200BA98AC /* WeatherData.swift */,
 			);
 			path = Helper;
+			sourceTree = "<group>";
+		};
+		932DE7A425D2F8B20005B5FA /* Screens */ = {
+			isa = PBXGroup;
+			children = (
+				938B37F525BA38DE00395BE2 /* FoodView.swift */,
+				9373FAC625C67CBC00AC61C5 /* LoginView.swift */,
+				93483B8425C08E43008789E3 /* MapView.swift */,
+				93C9F91B25C1C34D009B7394 /* SettingView.swift */,
+				9373FACE25C682C900AC61C5 /* SignupView.swift */,
+				93C9F92625C1FCCC009B7394 /* ThemeView.swift */,
+				93D381FB25B8EAAB00BA98AC /* WeatherView.swift */,
+			);
+			path = Screens;
 			sourceTree = "<group>";
 		};
 		93D381AA25B8EA3000BA98AC = {
@@ -155,7 +154,7 @@
 		93D381B525B8EA3000BA98AC /* StudentApp */ = {
 			isa = PBXGroup;
 			children = (
-				932DE79D25D2F7520005B5FA /* Screens */,
+				932DE7A425D2F8B20005B5FA /* Screens */,
 				932DE79E25D2F7920005B5FA /* Helper */,
 				93D381B625B8EA3000BA98AC /* AppDelegate.swift */,
 				93D381B825B8EA3000BA98AC /* SceneDelegate.swift */,
