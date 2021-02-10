@@ -255,30 +255,20 @@ struct WeatherView: View {
             content.subtitle = "Today there is \(weatherData.weather[0].weatherDescription) in \(pass.location)"
         }
         content.sound = UNNotificationSound.default
-        let firstTrigger = UNTimeIntervalNotificationTrigger(timeInterval: Double(getTimeInterval(6, 0)), repeats: false)
-        let secondTrigger = UNTimeIntervalNotificationTrigger(timeInterval: Double(getTimeInterval(12, 0)), repeats: false)
-        let thirdTrigger = UNTimeIntervalNotificationTrigger(timeInterval: Double(getTimeInterval(18, 0)), repeats: false)
-        let firstRequest = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: firstTrigger)
-        let secondRequest = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: secondTrigger)
-        let thirdRequest = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: thirdTrigger)
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: Double(getTimeInterval(6, 0)), repeats: false)
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
         UNUserNotificationCenter.current().getNotificationSettings { settings in
             if settings.authorizationStatus == .authorized {
-                UNUserNotificationCenter.current().add(firstRequest)
-                UNUserNotificationCenter.current().add(secondRequest)
-                UNUserNotificationCenter.current().add(thirdRequest)
+                UNUserNotificationCenter.current().add(request)
             }
             else {
                 UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
                     if success {
-                        UNUserNotificationCenter.current().add(firstRequest)
-                        UNUserNotificationCenter.current().add(secondRequest)
-                        UNUserNotificationCenter.current().add(thirdRequest)
+                        UNUserNotificationCenter.current().add(request)
                     }
                 }
             }
-            UNUserNotificationCenter.current().add(firstRequest)
-            UNUserNotificationCenter.current().add(secondRequest)
-            UNUserNotificationCenter.current().add(thirdRequest)
+            UNUserNotificationCenter.current().add(request)
         }
     }
     
