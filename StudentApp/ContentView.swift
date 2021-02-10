@@ -15,6 +15,7 @@ struct ContentView: View {
         switch pass.currentScreen {
         case 1:
             FoodView(pass: pass)
+                .transition(AnyTransition.slide)
         case 2:
             SettingView(pass: pass)
         case 3:

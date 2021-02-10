@@ -18,7 +18,9 @@ struct WeatherView: View {
     @State var isCity = true
     @State var location = ""
     @State var message = ""
-    let key = "4e28fd44172171a9678306f1648809fa"
+    @State var swipping = false
+    @State var currentPos: CGPoint = .zero
+    let weatherKey = "4e28fd44172171a9678306f1648809fa"
     let geoKey = "698c43ba2eefbce9d798d13c1e6acc2f"
     
     func getForeground() -> Color {
@@ -150,16 +152,16 @@ struct WeatherView: View {
         var query = ""
         if pass.location == "" {
             if isCity {
-                query = "\(pass.location)&appid=\(key)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+                query = "\(pass.location)&appid=\(weatherKey)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
             }
             else {
-                query = "\(location)&appid=\(key)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+                query = "\(location)&appid=\(weatherKey)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
             }
             guard let url = URL(string: "https://api.openweathermap.org/data/2.5/weather?q=\(String(describing: query))") else { return }
             var request = URLRequest(url: url)
             request.allHTTPHeaderFields = [
                 "application/json": "Content-Type",
-                "Authorization": key
+                "Authorization": weatherKey
             ]
             URLSession.shared.dataTask(with: request) { data, response, error in
                 guard let data = data else { return }
@@ -189,16 +191,16 @@ struct WeatherView: View {
         }
         else {
             if isCity {
-                query = "\(pass.location)&appid=\(key)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+                query = "\(pass.location)&appid=\(weatherKey)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
             }
             else {
-                query = "\(location)&appid=\(key)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+                query = "\(location)&appid=\(weatherKey)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
             }
             guard let url = URL(string: "https://api.openweathermap.org/data/2.5/weather?q=\(String(describing: query))") else { return }
             var request = URLRequest(url: url)
             request.allHTTPHeaderFields = [
                 "application/json": "Content-Type",
-                "Authorization": key
+                "Authorization": weatherKey
             ]
             URLSession.shared.dataTask(with: request) { data, response, error in
                 guard let data = data else { return }
@@ -255,20 +257,22 @@ struct WeatherView: View {
             content.subtitle = "Today there is \(weatherData.weather[0].weatherDescription) in \(pass.location)"
         }
         content.sound = UNNotificationSound.default
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: Double(getTimeInterval(6, 0)), repeats: false)
-        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-        UNUserNotificationCenter.current().getNotificationSettings { settings in
-            if settings.authorizationStatus == .authorized {
-                UNUserNotificationCenter.current().add(request)
-            }
-            else {
-                UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
-                    if success {
-                        UNUserNotificationCenter.current().add(request)
+        if getTimeInterval(6, 0) > 0 {
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: Double(getTimeInterval(6, 0)), repeats: false)
+            let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+            UNUserNotificationCenter.current().getNotificationSettings { settings in
+                if settings.authorizationStatus == .authorized {
+                    UNUserNotificationCenter.current().add(request)
+                }
+                else {
+                    UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
+                        if success {
+                            UNUserNotificationCenter.current().add(request)
+                        }
                     }
                 }
+                UNUserNotificationCenter.current().add(request)
             }
-            UNUserNotificationCenter.current().add(request)
         }
     }
     
@@ -405,7 +409,7 @@ struct WeatherView: View {
                     .padding()
                 }
                 .background(getBackground())
-                .frame(height: UIScreen.main.bounds.height / 64 * 2)
+                .frame(height: UIScreen.main.bounds.height / 64 * 1)
                 .offset(y: UIScreen.main.bounds.height / 256 * -1)
             }
             .background(getBackground())

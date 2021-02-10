@@ -205,7 +205,7 @@ struct FoodView: View {
                             .padding()
                         }
                         .background(getBackground())
-                        .frame(height: UIScreen.main.bounds.height / 64 * 2)
+                        .frame(height: UIScreen.main.bounds.height / 64 * 1)
                         .offset(y: UIScreen.main.bounds.height / 256 * -1)
                     }
                 }
