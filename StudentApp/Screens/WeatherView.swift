@@ -124,7 +124,7 @@ struct WeatherView: View {
     
     // gets the location data
     func getLocation() {
-        DispatchQueue.main.async {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
             guard let url = URL(string: "https://developers.zomato.com/api/v2.1/geocode?lat=\(pass.lat)&lon=\(pass.lng)") else { return }
             var request = URLRequest(url: url)
             request.httpMethod = "GET"
@@ -279,71 +279,76 @@ struct WeatherView: View {
             getBackground()
                 .ignoresSafeArea(.all)
             VStack {
-                HStack {
-                    Text(pass.location)
-                        .font(.system(size: UIScreen.main.bounds.width / 8))
-                        .background(getBackground())
-                        .foregroundColor(getForeground())
-                        .padding(.leading)
-                    Spacer()
-                }
-                HStack {
-                    Text("\(getDayOfWeek(Date())) \(getMonth(Date())) \(getDay(Date()))")
-                        .font(.headline)
-                        .background(getBackground())
-                        .foregroundColor(getForeground())
-                        .padding(.leading)
-                    Spacer()
-                }
-                .background(getBackground())
-                ZStack {
+                VStack {
                     HStack {
-                        // temperature
-                        ZStack {
-                            Circle()
-                                .stroke(lineWidth: 0)
-                                .background(getBackground())
-                                .clipShape(Circle())
-                                .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)), radius: 10, x: 6, y: 4)
-                                .frame(width: UIScreen.main.bounds.width / 5, height: UIScreen.main.bounds.width / 5)
-                            Text("\((weatherData.main.temp - 273.15) * 1.8 + 32, specifier: "%.0f")°F")
-                                .foregroundColor(changeTempColor())
-                                .font(.system(size: UIScreen.main.bounds.width / 16))
-                        }
-                        .padding()
+                        Text(location)
+                            .font(.system(size: UIScreen.main.bounds.width / 8))
+                            .background(getBackground())
+                            .foregroundColor(getForeground())
+                            .padding(.leading)
                         Spacer()
-                        
-                        // weather condition image
-                        ZStack {
-                            Circle()
-                                .stroke(lineWidth: 0)
+                    }
+                    
+                    if statusImage != "" {
+                        HStack {
+                            Text("\(getDayOfWeek(Date())) \(getMonth(Date())) \(getDay(Date()))")
+                                .font(.headline)
                                 .background(getBackground())
-                                .clipShape(Circle())
-                                .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)), radius: 10, x: 6, y: 4)
-                                .frame(width: UIScreen.main.bounds.width / 5, height: UIScreen.main.bounds.width / 5)
-                            Image(systemName: statusImage)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: UIScreen.main.bounds.width / 10, height: UIScreen.main.bounds.width / 10)
-                                .foregroundColor(Color.lightBlue)
-                        }
-                        .padding()
-                        Spacer()
-                        
-                        // wind speed
-                        ZStack {
-                            Circle()
-                                .stroke(lineWidth: 0)
-                                .background(getBackground())
-                                .clipShape(Circle())
-                                .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)), radius: 10, x: 6, y: 4)
-                                .frame(width: UIScreen.main.bounds.width / 5, height: UIScreen.main.bounds.width / 5)
-                            Text("\(weatherData.wind.speed * 2.237, specifier: "%.0f") mph")
                                 .foregroundColor(getForeground())
+                                .padding(.leading)
+                            Spacer()
                         }
-                        .padding()
+                        .background(getBackground())
+                    
+                        HStack {
+                            // temperature
+                            ZStack {
+                                Circle()
+                                    .stroke(lineWidth: 0)
+                                    .background(getBackground())
+                                    .clipShape(Circle())
+                                    .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)), radius: 10, x: 6, y: 4)
+                                    .frame(width: UIScreen.main.bounds.width / 5, height: UIScreen.main.bounds.width / 5)
+                                Text("\((weatherData.main.temp - 273.15) * 1.8 + 32, specifier: "%.0f")°F")
+                                    .foregroundColor(changeTempColor())
+                                    .font(.system(size: UIScreen.main.bounds.width / 16))
+                            }
+                            .padding()
+                            Spacer()
+                            
+                            // weather condition image
+                            ZStack {
+                                Circle()
+                                    .stroke(lineWidth: 0)
+                                    .background(getBackground())
+                                    .clipShape(Circle())
+                                    .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)), radius: 10, x: 6, y: 4)
+                                    .frame(width: UIScreen.main.bounds.width / 5, height: UIScreen.main.bounds.width / 5)
+                                Image(systemName: statusImage)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: UIScreen.main.bounds.width / 10, height: UIScreen.main.bounds.width / 10)
+                                    .foregroundColor(Color.lightBlue)
+                            }
+                            .padding()
+                            Spacer()
+                            
+                            // wind speed
+                            ZStack {
+                                Circle()
+                                    .stroke(lineWidth: 0)
+                                    .background(getBackground())
+                                    .clipShape(Circle())
+                                    .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)), radius: 10, x: 6, y: 4)
+                                    .frame(width: UIScreen.main.bounds.width / 5, height: UIScreen.main.bounds.width / 5)
+                                Text("\(weatherData.wind.speed * 2.237, specifier: "%.0f") mph")
+                                    .foregroundColor(getForeground())
+                            }
+                            .padding()
+                        }
                     }
                 }
+                .animation(.linear)
                 Spacer()
                 
                 HStack(alignment: .center) {
