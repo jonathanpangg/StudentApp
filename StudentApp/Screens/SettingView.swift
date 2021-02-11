@@ -63,7 +63,6 @@ struct SettingView: View {
                             pass.currentScreen = 3
                         }
                     }
-                    Spacer()
                 }
                 .background(getBackground())
                 .padding()
