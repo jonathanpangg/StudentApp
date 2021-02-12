@@ -38,7 +38,7 @@ struct GeocodingData: Codable {
     }
 }
 
-struct RevserGeo: Codable {
+struct ReverseGeo: Codable {
     let location: Locations
     
     init() { self.location = Locations() }

@@ -12,7 +12,7 @@ struct FoodView: View {
     @ObservedObject var pass: Pass
     @Environment(\.colorScheme) var colorScheme
     @ObservedObject var mode = ThemeStatus()
-    @State var locationData = RevserGeo()
+    @State var locationData = ReverseGeo()
     @State var radius = "3218.69"
     @State var lat = ""
     @State var long = ""
@@ -54,7 +54,7 @@ struct FoodView: View {
         ]
         URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data else { return }
-            if let decoded = try? JSONDecoder().decode(RevserGeo.self, from: data) {
+            if let decoded = try? JSONDecoder().decode(ReverseGeo.self, from: data) {
                 locationData = decoded
                 getFoodData()
             }
@@ -140,11 +140,12 @@ struct FoodView: View {
                                     ForEach(0..<getArrayName(pass.foodData.restaurants ?? []).count, id: \.self) { index in
                                         VStack {
                                             FoodTile("\(getArrayName(pass.foodData.restaurants ?? [])[index])", StarRating(Int(String(format: "%.0f",  Double((pass.foodData.restaurants?[index].restaurant?.user_rating?.aggregate_rating!)!)!))!), "\(getArrayPhoneNumber(pass.foodData.restaurants ?? [])[index])", UIScreen.main.bounds.width / 8 * 3, UIScreen.main.bounds.width / 8 * 3, getBackground(), getForeground())
-                                                .padding()
+                                                .padding(.leading)
+                                                .padding(.trailing)
                                         }
                                     }
                                 }
-                                .offset(x: UIScreen.main.bounds.width / 32)
+                                .offset(x: UIScreen.main.bounds.width / 32, y: UIScreen.main.bounds.height / -64)
                             }
                         }
                         .opacity(listPressed ? 0.5 : 1)

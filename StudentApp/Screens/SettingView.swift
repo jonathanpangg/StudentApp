@@ -11,6 +11,9 @@ struct SettingView: View {
     @ObservedObject var pass: Pass
     @Environment(\.colorScheme) var colorScheme
     @ObservedObject var mode = ThemeStatus()
+    @ObservedObject var status = NotificationStatus()
+    @State var expandThemes = false
+    @State var expandNotification = false
     
     func getBackground() -> Color {
         if mode.mode.mode == "Default" {
@@ -41,31 +44,216 @@ struct SettingView: View {
             getBackground()
                 .ignoresSafeArea(.all)
             VStack(alignment: .center) {
-                HStack(alignment: .center) {
-                    ZStack {
-                        Text("")
-                            .multilineTextAlignment(.leading)
-                            .frame(width: UIScreen.main.bounds.width / 8 * 7, height: UIScreen.main.bounds.height / 16)
-                            .background(getBackground())
-                            .clipShape(RoundedRectangle(cornerRadius: 16.0, style: .continuous))
-                            .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)), radius: 10, x: 6, y: 4)
-                        HStack {
-                            Text("Themes")
-                                .foregroundColor(getForeground())
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .foregroundColor(getForeground())
+                HStack {
+                    Text("Themes")
+                        .foregroundColor(getForeground())
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .foregroundColor(getForeground())
+                        .rotationEffect(.degrees(expandThemes ? 90 : 0))
+                        .animation(.easeInOut)
+                }
+                .frame(width: UIScreen.main.bounds.width / 8 * 7 - UIScreen.main.bounds.width / 64 * 7)
+                .background(getBackground())
+                .onTapGesture {
+                    withAnimation {
+                        expandThemes.toggle()
+                    }
+                }
+                .padding(.top)
+                Divider()
+                    .frame(width: UIScreen.main.bounds.width / 8 * 7)
+                
+                if expandThemes {
+                    HStack {
+                        Spacer()
+                        VStack {
+                            HStack {
+                                Text("Light Mode")
+                                    .foregroundColor(getForeground())
+                                Spacer()
+                                ZStack {
+                                    if mode.mode.mode == "Light" {
+                                        Circle()
+                                            .fill()
+                                            .foregroundColor(Color.blue)
+                                            .frame(width: UIScreen.main.bounds.width / 16 - UIScreen.main.bounds.width / 32, height: UIScreen.main.bounds.width / 16 - UIScreen.main.bounds.width / 32)
+                                    }
+                                    Circle()
+                                        .stroke(getForeground(), lineWidth: 1)
+                                        .frame(width: UIScreen.main.bounds.width / 16, height: UIScreen.main.bounds.width / 16)
+                                }
+                            }
+                            .frame(width: UIScreen.main.bounds.width / 8 * 6 - UIScreen.main.bounds.width / 64 * 6)
+                            Divider()
+                                .frame(width: UIScreen.main.bounds.width / 8 * 6 - UIScreen.main.bounds.width / 64 * 6)
                         }
-                        .frame(width: UIScreen.main.bounds.width / 8 * 7 - UIScreen.main.bounds.width / 64 * 7, height: UIScreen.main.bounds.height / 16 - UIScreen.main.bounds.height / 16 / 8)
-                        .background(getBackground())
-                        .clipShape(RoundedRectangle(cornerRadius: 16.0, style: .continuous))
-                        .onTapGesture {
-                            pass.currentScreen = 3
+                    }
+                    .frame(width: UIScreen.main.bounds.width / 8 * 7 - UIScreen.main.bounds.width / 64 * 7)
+                    .background(getBackground())
+                    .onTapGesture {
+                        mode.mode.mode = "Light"
+                        if let encoded = try? JSONEncoder().encode(mode.mode) {
+                            UserDefaults.standard.set(encoded, forKey: "save")
+                        }
+                    }
+                    
+                    HStack {
+                        Spacer()
+                        VStack {
+                            HStack {
+                                Text("Dark Mode")
+                                    .foregroundColor(getForeground())
+                                Spacer()
+                                ZStack {
+                                    if mode.mode.mode == "Dark" {
+                                        Circle()
+                                            .fill()
+                                            .foregroundColor(Color.blue)
+                                            .frame(width: UIScreen.main.bounds.width / 16 - UIScreen.main.bounds.width / 32, height: UIScreen.main.bounds.width / 16 - UIScreen.main.bounds.width / 32)
+                                    }
+                                    Circle()
+                                        .stroke(getForeground(), lineWidth: 1)
+                                        .frame(width: UIScreen.main.bounds.width / 16, height: UIScreen.main.bounds.width / 16)
+                                }
+                            }
+                            .frame(width: UIScreen.main.bounds.width / 8 * 6 - UIScreen.main.bounds.width / 64 * 6)
+                            Divider()
+                                .frame(width: UIScreen.main.bounds.width / 8 * 6 - UIScreen.main.bounds.width / 64 * 6)
+                        }
+                        
+                    }
+                    .frame(width: UIScreen.main.bounds.width / 8 * 7 - UIScreen.main.bounds.width / 64 * 7)
+                    .background(getBackground())
+                    .onTapGesture {
+                        mode.mode.mode = "Dark"
+                        if let encoded = try? JSONEncoder().encode(mode.mode) {
+                            UserDefaults.standard.set(encoded, forKey: "save")
+                        }
+                    }
+                    
+                    HStack {
+                        Spacer()
+                        VStack {
+                            HStack {
+                                Text("System Mode")
+                                    .foregroundColor(getForeground())
+                                Spacer()
+                                ZStack {
+                                    if mode.mode.mode == "Default" {
+                                        Circle()
+                                            .fill()
+                                            .foregroundColor(Color.blue)
+                                            .frame(width: UIScreen.main.bounds.width / 16 - UIScreen.main.bounds.width / 32, height: UIScreen.main.bounds.width / 16 - UIScreen.main.bounds.width / 32)
+                                    }
+                                    Circle()
+                                        .stroke(getForeground(), lineWidth: 1)
+                                        .frame(width: UIScreen.main.bounds.width / 16, height: UIScreen.main.bounds.width / 16)
+                                }
+                            }
+                            .frame(width: UIScreen.main.bounds.width / 8 * 6 - UIScreen.main.bounds.width / 64 * 6)
+                            Divider()
+                                .frame(width: UIScreen.main.bounds.width / 8 * 6 - UIScreen.main.bounds.width / 64 * 6)
+                        }
+                    }
+                    .frame(width: UIScreen.main.bounds.width / 8 * 7 - UIScreen.main.bounds.width / 64 * 7)
+                    .background(getBackground())
+                    .onTapGesture {
+                        mode.mode.mode = "Default"
+                        if let encoded = try? JSONEncoder().encode(mode.mode) {
+                            UserDefaults.standard.set(encoded, forKey: "save")
                         }
                     }
                 }
+                
+                HStack {
+                    Text("Notifications")
+                        .foregroundColor(getForeground())
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .foregroundColor(getForeground())
+                        .rotationEffect(.degrees(expandNotification ? 90 : 0))
+                        .animation(.easeInOut)
+                    
+                }
+                .frame(width: UIScreen.main.bounds.width / 8 * 7 - UIScreen.main.bounds.width / 64 * 7)
                 .background(getBackground())
-                .padding()
+                .onTapGesture {
+                    withAnimation {
+                        expandNotification.toggle()
+                    }
+                }
+                Divider()
+                    .frame(width: UIScreen.main.bounds.width / 8 * 7)
+                
+                if expandNotification {
+                    HStack {
+                        Spacer()
+                        VStack {
+                            HStack {
+                                Text("Enable Notifications")
+                                    .foregroundColor(getForeground())
+                                Spacer()
+                                ZStack {
+                                    if status.status.status == "ON" {
+                                        Circle()
+                                            .fill()
+                                            .foregroundColor(Color.blue)
+                                            .frame(width: UIScreen.main.bounds.width / 16 - UIScreen.main.bounds.width / 32, height: UIScreen.main.bounds.width / 16 - UIScreen.main.bounds.width / 32)
+                                    }
+                                    Circle()
+                                        .stroke(getForeground(), lineWidth: 1)
+                                        .frame(width: UIScreen.main.bounds.width / 16, height: UIScreen.main.bounds.width / 16)
+                                }
+                            }
+                            .frame(width: UIScreen.main.bounds.width / 8 * 6 - UIScreen.main.bounds.width / 64 * 6)
+                            Divider()
+                                .frame(width: UIScreen.main.bounds.width / 8 * 6 - UIScreen.main.bounds.width / 64 * 6)
+                        }
+                    }
+                    .frame(width: UIScreen.main.bounds.width / 8 * 7 - UIScreen.main.bounds.width / 64 * 7)
+                    .background(getBackground())
+                    .onTapGesture {
+                        status.status.status = "ON"
+                        if let encoded = try? JSONEncoder().encode(status.status) {
+                            UserDefaults.standard.set(encoded, forKey: "status")
+                        }
+                    }
+                    
+                    HStack {
+                        Spacer()
+                        VStack {
+                            HStack {
+                                Text("Disable Notifications")
+                                    .foregroundColor(getForeground())
+                                Spacer()
+                                ZStack {
+                                    if status.status.status == "NO" {
+                                        Circle()
+                                            .fill()
+                                            .foregroundColor(Color.blue)
+                                            .frame(width: UIScreen.main.bounds.width / 16 - UIScreen.main.bounds.width / 32, height: UIScreen.main.bounds.width / 16 - UIScreen.main.bounds.width / 32)
+                                    }
+                                    Circle()
+                                        .stroke(getForeground(), lineWidth: 1)
+                                        .frame(width: UIScreen.main.bounds.width / 16, height: UIScreen.main.bounds.width / 16)
+                                }
+                            }
+                            .frame(width: UIScreen.main.bounds.width / 8 * 6 - UIScreen.main.bounds.width / 64 * 6)
+                            Divider()
+                                .frame(width: UIScreen.main.bounds.width / 8 * 6 - UIScreen.main.bounds.width / 64 * 6)
+                        }
+                        
+                    }
+                    .frame(width: UIScreen.main.bounds.width / 8 * 7 - UIScreen.main.bounds.width / 64 * 7)
+                    .background(getBackground())
+                    .onTapGesture {
+                        status.status.status = "NO"
+                        if let encoded = try? JSONEncoder().encode(status.status) {
+                            UserDefaults.standard.set(encoded, forKey: "status")
+                        }
+                    }
+                }
                 Spacer()
                 
                 HStack(alignment: .center) {
@@ -152,4 +340,23 @@ struct ThemeData: Codable {
     var mode: String
     
     init() { self.mode = "" }
+}
+
+class NotificationStatus: ObservableObject {
+    @Published var status = NotificationData()
+    
+    init() {
+        if let data = UserDefaults.standard.data(forKey: "status") {
+            if let decoded = try? JSONDecoder().decode(NotificationData.self, from: data) {
+                self.status = decoded
+                return
+            }
+        }
+    }
+}
+
+struct NotificationData: Codable {
+    var status: String
+    
+    init() { self.status = "" }
 }

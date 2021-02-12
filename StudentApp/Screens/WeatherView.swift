@@ -12,8 +12,9 @@ struct WeatherView: View {
     @ObservedObject var pass: Pass
     @Environment(\.colorScheme) var colorScheme
     @ObservedObject var mode = ThemeStatus()
+    @ObservedObject var status = NotificationStatus()
     @State var weatherData = WeatherData()
-    @State var locationData = RevserGeo()
+    @State var locationData = ReverseGeo()
     @State var statusImage = ""
     @State var isCity = true
     @State var location = ""
@@ -136,7 +137,7 @@ struct WeatherView: View {
             ]
             URLSession.shared.dataTask(with: request) { data, response, error in
                 guard let data = data else { return }
-                if let decoded = try? JSONDecoder().decode(RevserGeo.self, from: data) {
+                if let decoded = try? JSONDecoder().decode(ReverseGeo.self, from: data) {
                     DispatchQueue.main.async {
                         location = decoded.location.city_name
                         pass.location = location
@@ -235,6 +236,7 @@ struct WeatherView: View {
         }
     }
     
+    // returns the time interval for a notification
     func getTimeInterval(_ hourComponent: Int, _ minuteComponent: Int) -> Int {
         var endHour = hourComponent
         let components = Calendar.current.dateComponents([.hour, .minute], from: Date())
@@ -249,30 +251,36 @@ struct WeatherView: View {
         return (Int("\(endHour)\(minuteComponent)")! - Int("\(components.hour!)\(components.minute!)")!) * 60
     }
     
+    // sets a notification for the weather
     func setNotification() {
-        let content = UNMutableNotificationContent()
-        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
-        content.title = "Weather Update"
-        if weatherData.weather.count > 0 {
-            content.subtitle = "Today there is \(weatherData.weather[0].weatherDescription) in \(pass.location)"
-        }
-        content.sound = UNNotificationSound.default
-        if getTimeInterval(6, 0) > 0 {
-            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: Double(getTimeInterval(6, 0)), repeats: false)
-            let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-            UNUserNotificationCenter.current().getNotificationSettings { settings in
-                if settings.authorizationStatus == .authorized {
-                    UNUserNotificationCenter.current().add(request)
-                }
-                else {
-                    UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
-                        if success {
-                            UNUserNotificationCenter.current().add(request)
+        if status.status.status == "ON" {
+            let content = UNMutableNotificationContent()
+            UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+            content.title = "Weather Update"
+            if weatherData.weather.count > 0 {
+                content.subtitle = "Today there is \(weatherData.weather[0].weatherDescription) in \(pass.location)"
+            }
+            content.sound = UNNotificationSound.default
+            if getTimeInterval(6, 0) > 0 {
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: Double(getTimeInterval(6, 0)), repeats: false)
+                let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+                UNUserNotificationCenter.current().getNotificationSettings { settings in
+                    if settings.authorizationStatus == .authorized {
+                        UNUserNotificationCenter.current().add(request)
+                    }
+                    else {
+                        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
+                            if success {
+                                UNUserNotificationCenter.current().add(request)
+                            }
                         }
                     }
+                    UNUserNotificationCenter.current().add(request)
                 }
-                UNUserNotificationCenter.current().add(request)
             }
+        }
+        else {
+            UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
         }
     }
     
