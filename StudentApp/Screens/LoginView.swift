@@ -192,7 +192,7 @@ struct LoginView: View {
                     }
                     .onTapGesture {
                         getSpecificUser()
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                             if verifyUser() {
                                 if let encoded = try? JSONEncoder().encode(join.user) {
                                     UserDefaults.standard.setValue(encoded, forKey: "saveUser")
