@@ -24,13 +24,13 @@ app.get('/users', (req, res) => {
 })
 
 // /GET specific user 
-app.get('/users/:firstName/:lastName', (req, res) => {
-    const first = req.params.firstName
-    const last = req.params.lastName
+app.get('/users/:username/:password', (req, res) => {
+    const user = req.params.username
+    const pass = req.params.password
     mongodb.connect(mongodb_URI, function(error, db) {
         if (error) throw error
         var dbo = db.db('StudentApp')
-        var query = { firstName: first, lastName: last }
+        var query = { username: user, password: pass }
         dbo.collection('Users').find(query).toArray(function(error, result) { 
             if (error) throw error
             res.send(result)
