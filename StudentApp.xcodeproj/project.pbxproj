@@ -122,8 +122,8 @@
 				9373FAC625C67CBC00AC61C5 /* LoginView.swift */,
 				93483B8425C08E43008789E3 /* MapView.swift */,
 				93C9F91B25C1C34D009B7394 /* SettingView.swift */,
-				9373FACE25C682C900AC61C5 /* SignupView.swift */,
 				93D381FB25B8EAAB00BA98AC /* WeatherView.swift */,
+				9373FACE25C682C900AC61C5 /* SignupView.swift */,
 			);
 			path = Screens;
 			sourceTree = "<group>";

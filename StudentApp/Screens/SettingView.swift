@@ -12,8 +12,10 @@ struct SettingView: View {
     @Environment(\.colorScheme) var colorScheme
     @ObservedObject var mode = ThemeStatus()
     @ObservedObject var status = NotificationStatus()
+    @ObservedObject var join = joinUser()
     @State var expandThemes = false
     @State var expandNotification = false
+    @State var pressedSignOut = false
     
     func getBackground() -> Color {
         if mode.mode.mode == "Default" {
@@ -254,6 +256,22 @@ struct SettingView: View {
                         }
                     }
                 }
+                
+                HStack {
+                    Text("Sign Out")
+                        .foregroundColor(getForeground())
+                    Spacer()
+                }
+                .frame(width: UIScreen.main.bounds.width / 8 * 7 - UIScreen.main.bounds.width / 64 * 7)
+                .background(getBackground())
+                .onTapGesture {
+                    withAnimation {
+                        pressedSignOut = true
+                    }
+                }
+                Divider()
+                    .frame(width: UIScreen.main.bounds.width / 8 * 7)
+
                 Spacer()
                 
                 HStack(alignment: .center) {
@@ -313,10 +331,61 @@ struct SettingView: View {
                 .frame(height: UIScreen.main.bounds.height / 64 * 1)
                 .offset(y: UIScreen.main.bounds.height / 256 * -1)
             }
+            .opacity(pressedSignOut ? 0.5: 1)
+            .blur(radius: pressedSignOut ? 1: 0)
             .onAppear {
                 AppDelegate.orientationLock = UIInterfaceOrientationMask.portrait
                 UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
                 UIViewController.attemptRotationToDeviceOrientation()
+            }
+            if pressedSignOut {
+                ZStack {
+                    Text("")
+                        .multilineTextAlignment(.leading)
+                        .foregroundColor(getForeground())
+                        .frame(width: UIScreen.main.bounds.width / 2, height: UIScreen.main.bounds.width / 2)
+                        .background(getBackground())
+                        .clipShape(RoundedRectangle(cornerRadius: 16.0, style: .continuous))
+                        .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)), radius: 10, x: 6, y: 4)
+                    VStack {
+                        Text("Are you sure you want to sign out?")
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(getForeground())
+                        Spacer()
+                        Divider()
+                        HStack(alignment: .center) {
+                            HStack(alignment: .center) {
+                                Text("Yes")
+                                    .foregroundColor(getForeground())
+                            }
+                            .frame(width: (UIScreen.main.bounds.width / 2 - UIScreen.main.bounds.width / 16) / 2)
+                            .onTapGesture {
+                                withAnimation {
+                                    join.user = [User]()
+                                    if let encoded = try? JSONEncoder().encode(join.user) {
+                                        UserDefaults.standard.setValue(encoded, forKey: "saveUser")
+                                    }
+                                    pass.currentScreen = 4
+                                }
+                            }
+                            Spacer()
+                            
+                            HStack(alignment: .center) {
+                                Text("No")
+                                    .foregroundColor(getForeground())
+                            }
+                            .frame(width: (UIScreen.main.bounds.width / 2 - UIScreen.main.bounds.width / 16) / 2)
+                            .onTapGesture {
+                                withAnimation {
+                                    pressedSignOut = false
+                                }
+                            }
+                        }
+                    }
+                    .frame(width: UIScreen.main.bounds.width / 2 - UIScreen.main.bounds.width / 16, height: UIScreen.main.bounds.width / 2 - UIScreen.main.bounds.width / 16)
+                    .background(getBackground())
+                }
+                .background(getBackground())
             }
         }
     }

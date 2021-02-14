@@ -44,7 +44,7 @@ struct LoginView: View {
     }
     
     func autoLog() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        if join.user.count > 0 {
             if Double(Date().timeIntervalSince1970) - Double(join.user[0].date)! > 604800 {
                 pass.currentScreen = 5
             }
@@ -71,12 +71,17 @@ struct LoginView: View {
             if let decoded = try? JSONDecoder().decode([User].self, from: data) {
                 DispatchQueue.main.async {
                     users = decoded
+                    join.user = users
+                    if users.count > 0 {
+                        join.user[0].date = "\(Date().timeIntervalSince1970)"
+                        putUser(users[0].id, users[0].date, "\(Date().timeIntervalSince1970)")
+                    }
                 }
             }
         }.resume()
     }
     
-    func putUser(_ id: String, _ oldDate: String, newDate: String) {
+    func putUser(_ id: String, _ oldDate: String, _ newDate: String) {
         guard let url = URL(string: "https://heroku-student-app.herokuapp.com/users/\(id)/\(oldDate)/\(newDate)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
@@ -187,10 +192,10 @@ struct LoginView: View {
                     }
                     .onTapGesture {
                         getSpecificUser()
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
                             if verifyUser() {
                                 if let encoded = try? JSONEncoder().encode(join.user) {
-                                    UserDefaults.standard.set(encoded, forKey: "saveUser")
+                                    UserDefaults.standard.setValue(encoded, forKey: "saveUser")
                                 }
                                 pass.currentScreen = 0
                             }
@@ -201,17 +206,13 @@ struct LoginView: View {
                     }
                 }
                 .frame(width: UIScreen.main.bounds.width / 8 * 7)
-                
-                if join.user.count > 0 {
-                    Text("date: \(join.user[0].date)")
-                }
             }
             .onAppear {
                 AppDelegate.orientationLock = UIInterfaceOrientationMask.portrait
                 UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
                 UIViewController.attemptRotationToDeviceOrientation()
             }
-            // .onAppear(perform: autoLog)
+            .onAppear(perform: autoLog)
             .alert(isPresented: $alertStatus) {
                 Alert(title: Text("Unable to Login"), message: Text("Either your username or password is incorrect"), dismissButton: .default(Text("Retry")))
             }
