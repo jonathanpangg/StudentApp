@@ -147,6 +147,15 @@ struct SignupView: View {
             getBackground()
                 .ignoresSafeArea(.all)
             VStack {
+                HStack {
+                    Text("Signup")
+                        .font(.system(size: UIScreen.main.bounds.width / 8, weight: .bold, design: .default))
+                        .foregroundColor(getForeground())
+                        .padding(.leading)
+                    Spacer()
+                }
+                Spacer()
+                
                 ZStack {
                     LoginTile(UIScreen.main.bounds.width / 8 * 7, UIScreen.main.bounds.height / 16 * 7, getBackground())
                     VStack(alignment: .center, spacing: UIScreen.main.bounds.height / 48) {
@@ -305,6 +314,8 @@ struct SignupView: View {
                     }
                 }
                 .frame(width: UIScreen.main.bounds.width / 8 * 7, height: UIScreen.main.bounds.height / 24)
+                
+                Spacer()
             }
             .alert(isPresented: $alertStatus) {
                 Alert(title: Text("Unable to Signup"), message: nil, dismissButton: .default(Text("Try Again")))

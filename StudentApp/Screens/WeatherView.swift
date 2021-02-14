@@ -14,13 +14,9 @@ struct WeatherView: View {
     @ObservedObject var mode = ThemeStatus()
     @ObservedObject var status = NotificationStatus()
     @State var weatherData = WeatherData()
-    @State var locationData = ReverseGeo()
     @State var statusImage = ""
     @State var isCity = true
     @State var location = ""
-    @State var message = ""
-    @State var swipping = false
-    @State var currentPos: CGPoint = .zero
     let weatherKey = "4e28fd44172171a9678306f1648809fa"
     let geoKey = "698c43ba2eefbce9d798d13c1e6acc2f"
     
@@ -140,7 +136,8 @@ struct WeatherView: View {
                 if let decoded = try? JSONDecoder().decode(ReverseGeo.self, from: data) {
                     DispatchQueue.main.async {
                         location = decoded.location.city_name
-                        pass.location = location
+                        pass.lat = Double(decoded.location.latitude)!
+                        pass.lng = Double(decoded.location.longitude)!
                         getData()
                     }
                 }
@@ -191,6 +188,7 @@ struct WeatherView: View {
             }.resume()
         }
         else {
+            location = pass.location
             if isCity {
                 query = "\(pass.location)&appid=\(weatherKey)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
             }
@@ -300,7 +298,6 @@ struct WeatherView: View {
                             .padding(.leading)
                         Spacer()
                     }
-                    
                     if statusImage != "" {
                         HStack {
                             Text("\(getDayOfWeek(Date())) \(getMonth(Date())) \(getDay(Date()))")
@@ -358,6 +355,10 @@ struct WeatherView: View {
                             }
                             .padding()
                         }
+                    }
+                    else {
+                        EmptyView()
+                            .onAppear(perform: getLocation)
                     }
                 }
                 .animation(.linear)
@@ -421,7 +422,7 @@ struct WeatherView: View {
                 .offset(y: UIScreen.main.bounds.height / 256 * -1)
             }
             .background(getBackground())
-            .onAppear(perform: getLocation)
+            .onAppear(perform: getData)
             .onAppear {
                 AppDelegate.orientationLock = UIInterfaceOrientationMask.portrait
                 UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")

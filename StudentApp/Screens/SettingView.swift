@@ -360,13 +360,11 @@ struct SettingView: View {
                             }
                             .frame(width: (UIScreen.main.bounds.width / 2 - UIScreen.main.bounds.width / 16) / 2)
                             .onTapGesture {
-                                withAnimation {
-                                    join.user = [User]()
-                                    if let encoded = try? JSONEncoder().encode(join.user) {
-                                        UserDefaults.standard.setValue(encoded, forKey: "saveUser")
-                                    }
-                                    pass.currentScreen = 4
+                                join.user = [User]()
+                                if let encoded = try? JSONEncoder().encode(join.user) {
+                                    UserDefaults.standard.setValue(encoded, forKey: "saveUser")
                                 }
+                                pass.currentScreen = 4
                             }
                             Spacer()
                             

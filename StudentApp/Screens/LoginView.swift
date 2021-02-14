@@ -18,6 +18,7 @@ struct LoginView: View {
     @State var password = ""
     @State var secure = true
     @State var alertStatus = false
+    @State var screenAppear = false
     
     func getBackground() -> Color {
         if mode.mode.mode == "Default" {
@@ -44,13 +45,16 @@ struct LoginView: View {
     }
     
     func autoLog() {
-        if join.user.count > 0 {
-            if Double(Date().timeIntervalSince1970) - Double(join.user[0].date)! > 604800 {
-                pass.currentScreen = 5
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+            if join.user.count > 0 {
+                if Double(Date().timeIntervalSince1970) - Double(join.user[0].date)! > 604800 {
+                    pass.currentScreen = 5
+                }
+                else {
+                    pass.currentScreen = 0
+                }
             }
-            else {
-                pass.currentScreen = 0
-            }
+            screenAppear = true
         }
     }
     
@@ -100,112 +104,125 @@ struct LoginView: View {
         ZStack {
             getBackground()
                 .ignoresSafeArea(.all)
+            
             VStack {
-                ZStack {
-                    LoginTile(UIScreen.main.bounds.width / 8 * 7, UIScreen.main.bounds.height / 4, getBackground())
-                    VStack {
-                        HStack {
-                            Text("Username:")
-                                .foregroundColor(getForeground())
-                            Spacer()
-                        }
-                        .frame(width: UIScreen.main.bounds.width / 16 * 12, height: UIScreen.main.bounds.height / 48)
-                        
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 25)
-                                .stroke(getForeground(), lineWidth: 1)
-                                 .frame(width: UIScreen.main.bounds.width / 16 * 12, height: UIScreen.main.bounds.height / 24)
-                            TextField("", text: $username)
-                                .autocapitalization(.none)
-                                .font(.system(size: 16))
-                                .foregroundColor(getForeground())
-                                .multilineTextAlignment(.leading)
-                                .frame(width: UIScreen.main.bounds.width / 16 * 11, height: UIScreen.main.bounds.height / 24)
-                        }
-                        
-                        HStack {
-                            Text("Password:")
-                                .foregroundColor(getForeground())
-                            Spacer()
-                        }
-                        
-                        .frame(width: UIScreen.main.bounds.width / 16 * 12, height: UIScreen.main.bounds.height / 48)
-                        
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 25)
-                                .stroke(getForeground(), lineWidth: 1)
-                                .frame(width: UIScreen.main.bounds.width / 16 * 12, height: UIScreen.main.bounds.height / 24)
-                            HStack {
-                                if secure {
-                                    SecureField("", text: $password)
-                                        .autocapitalization(.none)
-                                        .font(.system(size: 16))
-                                        .foregroundColor(getForeground())
-                                        .multilineTextAlignment(.leading)
-                                        .frame(width: UIScreen.main.bounds.width / 64 * 33, height: UIScreen.main.bounds.height / 24)
-                                    Spacer()
-                                    Image(systemName: "eye.fill")
-                                        .foregroundColor(getForeground())
-                                        .onTapGesture {
-                                            withAnimation {
-                                                secure.toggle()
-                                            }
-                                        }
-                                }
-                                else {
-                                    TextField("Password: ", text: $password)
-                                        .autocapitalization(.none)
-                                        .font(.system(size: 16))
-                                        .foregroundColor(getForeground())
-                                        .multilineTextAlignment(.leading)
-                                        .frame(width: UIScreen.main.bounds.width / 16 * 9, height: UIScreen.main.bounds.height / 24)
-                                    Spacer()
-                                    Image(systemName: "eye.slash.fill")
-                                        .foregroundColor(getForeground())
-                                        .onTapGesture {
-                                            withAnimation {
-                                                secure.toggle()
-                                            }
-                                        }
-                                }
-                            }
-                            .frame(width: UIScreen.main.bounds.width / 16 * 11, height: UIScreen.main.bounds.height / 24)
-                        }
-                    }
-                }
-                
-                HStack(alignment: .center) {
-                    ZStack {
-                        LoginTile(UIScreen.main.bounds.width / 2, UIScreen.main.bounds.height / 30, getBackground())
-                        Text("Register an account")
+                if screenAppear {
+                    HStack {
+                        Text("Login")
+                            .font(.system(size: UIScreen.main.bounds.width / 8, weight: .bold, design: .default))
                             .foregroundColor(getForeground())
-                    }
-                    .onTapGesture {
-                        pass.currentScreen = 5
+                            .padding(.leading)
+                        Spacer()
                     }
                     Spacer()
                     
                     ZStack {
-                        LoginTile(UIScreen.main.bounds.width / 4, UIScreen.main.bounds.height / 30, getBackground())
-                        Text("Login")
-                            .foregroundColor(getForeground())
-                    }
-                    .onTapGesture {
-                        getSpecificUser()
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            if verifyUser() {
-                                if let encoded = try? JSONEncoder().encode(join.user) {
-                                    UserDefaults.standard.setValue(encoded, forKey: "saveUser")
-                                }
-                                pass.currentScreen = 0
+                        LoginTile(UIScreen.main.bounds.width / 8 * 7, UIScreen.main.bounds.height / 4, getBackground())
+                        VStack {
+                            HStack {
+                                Text("Username:")
+                                    .foregroundColor(getForeground())
+                                Spacer()
                             }
-                            else {
-                                alertStatus = true
+                            .frame(width: UIScreen.main.bounds.width / 16 * 12, height: UIScreen.main.bounds.height / 48)
+                            
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 25)
+                                    .stroke(getForeground(), lineWidth: 1)
+                                     .frame(width: UIScreen.main.bounds.width / 16 * 12, height: UIScreen.main.bounds.height / 24)
+                                TextField("", text: $username)
+                                    .autocapitalization(.none)
+                                    .font(.system(size: 16))
+                                    .foregroundColor(getForeground())
+                                    .multilineTextAlignment(.leading)
+                                    .frame(width: UIScreen.main.bounds.width / 16 * 11, height: UIScreen.main.bounds.height / 24)
+                            }
+                            
+                            HStack {
+                                Text("Password:")
+                                    .foregroundColor(getForeground())
+                                Spacer()
+                            }
+                            
+                            .frame(width: UIScreen.main.bounds.width / 16 * 12, height: UIScreen.main.bounds.height / 48)
+                            
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 25)
+                                    .stroke(getForeground(), lineWidth: 1)
+                                    .frame(width: UIScreen.main.bounds.width / 16 * 12, height: UIScreen.main.bounds.height / 24)
+                                HStack {
+                                    if secure {
+                                        SecureField("", text: $password)
+                                            .autocapitalization(.none)
+                                            .font(.system(size: 16))
+                                            .foregroundColor(getForeground())
+                                            .multilineTextAlignment(.leading)
+                                            .frame(width: UIScreen.main.bounds.width / 64 * 33, height: UIScreen.main.bounds.height / 24)
+                                        Spacer()
+                                        Image(systemName: "eye.fill")
+                                            .foregroundColor(getForeground())
+                                            .onTapGesture {
+                                                withAnimation {
+                                                    secure.toggle()
+                                                }
+                                            }
+                                    }
+                                    else {
+                                        TextField("Password: ", text: $password)
+                                            .autocapitalization(.none)
+                                            .font(.system(size: 16))
+                                            .foregroundColor(getForeground())
+                                            .multilineTextAlignment(.leading)
+                                            .frame(width: UIScreen.main.bounds.width / 16 * 9, height: UIScreen.main.bounds.height / 24)
+                                        Spacer()
+                                        Image(systemName: "eye.slash.fill")
+                                            .foregroundColor(getForeground())
+                                            .onTapGesture {
+                                                withAnimation {
+                                                    secure.toggle()
+                                                }
+                                            }
+                                    }
+                                }
+                                .frame(width: UIScreen.main.bounds.width / 16 * 11, height: UIScreen.main.bounds.height / 24)
                             }
                         }
                     }
+                    
+                    HStack(alignment: .center) {
+                        ZStack {
+                            LoginTile(UIScreen.main.bounds.width / 2, UIScreen.main.bounds.height / 30, getBackground())
+                            Text("Register an account")
+                                .foregroundColor(getForeground())
+                        }
+                        .onTapGesture {
+                            pass.currentScreen = 5
+                        }
+                        Spacer()
+                        
+                        ZStack {
+                            LoginTile(UIScreen.main.bounds.width / 4, UIScreen.main.bounds.height / 30, getBackground())
+                            Text("Login")
+                                .foregroundColor(getForeground())
+                        }
+                        .onTapGesture {
+                            getSpecificUser()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                                if verifyUser() {
+                                    if let encoded = try? JSONEncoder().encode(join.user) {
+                                        UserDefaults.standard.setValue(encoded, forKey: "saveUser")
+                                    }
+                                    pass.currentScreen = 0
+                                }
+                                else {
+                                    alertStatus = true
+                                }
+                            }
+                        }
+                    }
+                    .frame(width: UIScreen.main.bounds.width / 8 * 7)
+                    Spacer()
                 }
-                .frame(width: UIScreen.main.bounds.width / 8 * 7)
             }
             .onAppear {
                 AppDelegate.orientationLock = UIInterfaceOrientationMask.portrait

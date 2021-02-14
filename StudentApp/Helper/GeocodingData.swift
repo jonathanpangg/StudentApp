@@ -63,6 +63,5 @@ struct Locations: Codable {
         self.city_name = ""
         self.country_id = 0
         self.country_name = ""
-        
     }
 }
