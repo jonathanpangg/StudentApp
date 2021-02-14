@@ -47,7 +47,7 @@ struct SignupView: View {
     }
     
     func getUser() {
-        guard let url = URL(string: "http://localhost:1000/users") else { return }
+        guard let url = URL(string: "https://heroku-student-app.herokuapp.com/users") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         

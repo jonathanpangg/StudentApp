@@ -18,12 +18,10 @@ struct ContentView: View {
                 .transition(AnyTransition.slide)
         case 2:
             SettingView(pass: pass)
-        /*
         case 4:
             LoginView(pass: pass)
         case 5:
             SignupView(pass: pass)
-        */
         default:
             WeatherView(pass: pass)
         }

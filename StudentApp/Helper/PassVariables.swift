@@ -8,7 +8,7 @@
 import SwiftUI
 
 class Pass: ObservableObject {
-    @Published var currentScreen: Int = 10
+    @Published var currentScreen: Int = 4
     @Published var location: String = ""
     @Published var lat: Double = 0
     @Published var lng: Double = 0

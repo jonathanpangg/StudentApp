@@ -54,13 +54,25 @@ struct LoginView: View {
     }
     
     func getUser() {
-        guard let url = URL(string: "http://localhost:1000/users") else { return }
+        guard let url = URL(string: "https://heroku-student-app.herokuapp.com/users") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         
         URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data else { return }
-            print(data)
+            if let decoded = try? JSONDecoder().decode([User].self, from: data) {
+                users = decoded
+            }
+        }.resume()
+    }
+    
+    func putUser(_ id: String, _ oldDate: String, newDate: String) {
+        guard let url = URL(string: "https://heroku-student-app.herokuapp.com/users/\(id)/\(oldDate)/\(newDate)") else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data else { return }
             if let decoded = try? JSONDecoder().decode([User].self, from: data) {
                 users = decoded
             }
