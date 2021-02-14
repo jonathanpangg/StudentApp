@@ -62,7 +62,7 @@ struct SignupView: View {
     }
     
     func postUser() {
-        guard let url = URL(string: "http://localhost:1000/users/\(id)/\(firstName)/\(lastName)/\(username)/\(password)/\(Date().timeIntervalSince1970)") else { return }
+        guard let url = URL(string: "https://heroku-student-app.herokuapp.com/users/\(id)/\(firstName)/\(lastName)/\(username)/\(password)/\(Date().timeIntervalSince1970)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.allHTTPHeaderFields = [

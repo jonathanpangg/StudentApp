@@ -13,21 +13,11 @@ struct LoginView: View {
     @ObservedObject var mode = ThemeStatus()
     @ObservedObject var join = joinUser()
     @State var users = [User]()
+    @State var user = User()
     @State var username = ""
     @State var password = ""
     @State var secure = true
     @State var alertStatus = false
-
-    func autoLog() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            if Double(Date().timeIntervalSince1970) - Double(join.user.date)! > 604800 {
-                pass.currentScreen = 5
-            }
-            else {
-                pass.currentScreen = 0
-            }
-        }
-    }
     
     func getBackground() -> Color {
         if mode.mode.mode == "Default" {
@@ -53,15 +43,35 @@ struct LoginView: View {
         }
     }
     
-    func getUser() {
-        guard let url = URL(string: "https://heroku-student-app.herokuapp.com/users") else { return }
+    func autoLog() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            if Double(Date().timeIntervalSince1970) - Double(join.user[0].date)! > 604800 {
+                pass.currentScreen = 5
+            }
+            else {
+                pass.currentScreen = 0
+            }
+        }
+    }
+    
+    func verifyUser() -> Bool {
+        if users.count == 1 {
+            return true
+        }
+        return false
+    }
+    
+    func getSpecificUser() {
+        guard let url = URL(string: "https://heroku-student-app.herokuapp.com/users/\(username)/\(password)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         
         URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data else { return }
             if let decoded = try? JSONDecoder().decode([User].self, from: data) {
-                users = decoded
+                DispatchQueue.main.async {
+                    users = decoded
+                }
             }
         }.resume()
     }
@@ -74,18 +84,11 @@ struct LoginView: View {
         URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data else { return }
             if let decoded = try? JSONDecoder().decode([User].self, from: data) {
-                users = decoded
+                DispatchQueue.main.async {
+                    users = decoded
+                }
             }
         }.resume()
-    }
-    
-    func verifyUser() -> Bool {
-        for user in users {
-            if user.username == username && user.password == password {
-                return true
-            }
-        }
-        return false
     }
     
     var body: some View {
@@ -183,25 +186,31 @@ struct LoginView: View {
                             .foregroundColor(getForeground())
                     }
                     .onTapGesture {
-                        if verifyUser() {
-                            if let encoded = try? JSONEncoder().encode(join.user) {
-                                UserDefaults.standard.set(encoded, forKey: "saveUser")
+                        getSpecificUser()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            if verifyUser() {
+                                if let encoded = try? JSONEncoder().encode(join.user) {
+                                    UserDefaults.standard.set(encoded, forKey: "saveUser")
+                                }
+                                pass.currentScreen = 0
                             }
-                            pass.currentScreen = 0
-                        }
-                        else {
-                            alertStatus = true
+                            else {
+                                alertStatus = true
+                            }
                         }
                     }
                 }
                 .frame(width: UIScreen.main.bounds.width / 8 * 7)
+                
+                if join.user.count > 0 {
+                    Text("date: \(join.user[0].date)")
+                }
             }
             .onAppear {
                 AppDelegate.orientationLock = UIInterfaceOrientationMask.portrait
                 UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
                 UIViewController.attemptRotationToDeviceOrientation()
             }
-            .onAppear(perform: getUser)
             // .onAppear(perform: autoLog)
             .alert(isPresented: $alertStatus) {
                 Alert(title: Text("Unable to Login"), message: Text("Either your username or password is incorrect"), dismissButton: .default(Text("Retry")))

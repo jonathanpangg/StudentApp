@@ -16,7 +16,6 @@ struct FoodView: View {
     @State var radius = "3218.69"
     @State var lat = ""
     @State var long = ""
-    @State var listPressed = false
     let key = "698c43ba2eefbce9d798d13c1e6acc2f"
         
     func getBackground() -> Color {
@@ -107,21 +106,6 @@ struct FoodView: View {
             getBackground()
                 .ignoresSafeArea(.all)
             VStack {
-                HStack {
-                    Image(systemName: "line.horizontal.3")
-                        .resizable()
-                        .frame(width: UIScreen.main.bounds.width / 20, height: UIScreen.main.bounds.width / 24)
-                        .scaledToFit()
-                        .onTapGesture {
-                            withAnimation {
-                                listPressed.toggle()
-                            }
-                        }
-                        .foregroundColor(getForeground())
-                    Spacer()
-                }
-                .padding()
-                
                 ZStack {
                     getBackground()
                         .ignoresSafeArea(.all)
@@ -131,8 +115,6 @@ struct FoodView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 16.0, style: .continuous))
                             .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)), radius: 10, x: 6, y: 4)
                             .frame(width: UIScreen.main.bounds.width / 16 * 15)
-                            .opacity(listPressed ? 0.5 : 1)
-                            .blur(radius: listPressed ? 2 : 0)
                         
                         ZStack {
                             ScrollView(.horizontal, showsIndicators: false) {
@@ -148,8 +130,6 @@ struct FoodView: View {
                                 .offset(x: UIScreen.main.bounds.width / 32, y: UIScreen.main.bounds.height / -64)
                             }
                         }
-                        .opacity(listPressed ? 0.5 : 1)
-                        .blur(radius: listPressed ? 2 : 0)
                         Spacer()
                         
                         HStack(alignment: .center) {
@@ -189,7 +169,7 @@ struct FoodView: View {
                             Spacer()
                             
                             VStack {
-                                Image(systemName: "gear")
+                                Image(systemName: "line.horizontal.3")
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: UIScreen.main.bounds.width / 12, height: UIScreen.main.bounds.width / 12)
@@ -209,18 +189,6 @@ struct FoodView: View {
                         .frame(height: UIScreen.main.bounds.height / 64 * 1)
                         .offset(y: UIScreen.main.bounds.height / 256 * -1)
                     }
-                }
-            }
-            if listPressed {
-                VStack {
-                    HStack {}
-                        .frame(width: UIScreen.main.bounds.width / 24, height: UIScreen.main.bounds.width / 24)
-                        .padding()
-                    HStack {
-                        FunctionList("Radius:", textfieldString: $radius, UIScreen.main.bounds.width / 1.5, UIScreen.main.bounds.height / 16, getBackground(), getForeground(), 16)
-                        Spacer()
-                    }
-                    Spacer()
                 }
             }
         }

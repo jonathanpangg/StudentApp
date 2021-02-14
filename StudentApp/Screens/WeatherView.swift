@@ -400,7 +400,7 @@ struct WeatherView: View {
                     Spacer()
                     
                     VStack {
-                        Image(systemName: "gear")
+                        Image(systemName: "line.horizontal.3")
                             .resizable()
                             .scaledToFit()
                             .frame(width: UIScreen.main.bounds.width / 12, height: UIScreen.main.bounds.width / 12)
