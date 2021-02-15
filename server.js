@@ -37,21 +37,6 @@ app.get('/users/:username/:password', (req, res) => {
     })
 })
 
-// /PUT specific user 
-app.put('/users/:id/:date/:newDate', (req, res) => {
-    mongodb.connect(mongodb_URI, function(error, db) {
-        if (error) throw error
-        var dbo = db.db('StudentApp')
-        var query = { date: req.params.date }
-        var newQuery = { $set: { date: req.params.newDate } }
-        dbo.collection('Users').updateOne(query, newQuery, function(error, result) { 
-            if (error) throw error
-            console.log(result)
-            db.close()
-        })
-    })
-})
-
 // /POST new user
 app.post('/users/:id/:firstName/:lastName/:username/:password/:date', (req, res) => {
     const user = {
@@ -85,6 +70,21 @@ app.get('/gym/:id', (req, res) => {
         dbo.collection('GymInfo').find(query).toArray(function(error, result) { 
             if (error) throw error
             res.send(result)
+            console.log(result)
+            db.close()
+        })
+    })
+})
+
+// /PUT specific user 
+app.put('/users/:id/:date/:newDate', (req, res) => {
+    mongodb.connect(mongodb_URI, function(error, db) {
+        if (error) throw error
+        var dbo = db.db('StudentApp')
+        var query = { date: req.params.date }
+        var newQuery = { $set: { date: req.params.newDate } }
+        dbo.collection('Users').updateOne(query, newQuery, function(error, result) { 
+            if (error) throw error
             console.log(result)
             db.close()
         })
