@@ -102,7 +102,7 @@ app.post('/gym/:id/:activity/:completion', (req, res) => {
     mongodb.connect(mongodb_URI, function (error, db) {
         if (error) throw error;
         var dbo = db.db('StudentApp')
-        dbo.collection('GymInfo').insertOne(user, function(error, result) {
+        dbo.collection('GymInfo').insertOne(gym, function(error, result) {
             if (error) throw error;
             assert.equal(null, error)
             console.log('Item inserted')
