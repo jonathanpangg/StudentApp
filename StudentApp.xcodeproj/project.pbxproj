@@ -28,6 +28,7 @@
 		93D381ED25B8EA7C00BA98AC /* GeocodingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D381EC25B8EA7C00BA98AC /* GeocodingData.swift */; };
 		93D381F725B8EAA200BA98AC /* WeatherData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D381F625B8EAA200BA98AC /* WeatherData.swift */; };
 		93D381FC25B8EAAB00BA98AC /* WeatherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D381FB25B8EAAB00BA98AC /* WeatherView.swift */; };
+		93DD940E25DB124A00AAAEE3 /* GymView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DD940D25DB124A00AAAEE3 /* GymView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +76,7 @@
 		93D381EC25B8EA7C00BA98AC /* GeocodingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeocodingData.swift; sourceTree = "<group>"; };
 		93D381F625B8EAA200BA98AC /* WeatherData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherData.swift; sourceTree = "<group>"; };
 		93D381FB25B8EAAB00BA98AC /* WeatherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherView.swift; sourceTree = "<group>"; };
+		93DD940D25DB124A00AAAEE3 /* GymView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GymView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +121,7 @@
 			isa = PBXGroup;
 			children = (
 				938B37F525BA38DE00395BE2 /* FoodView.swift */,
+				93DD940D25DB124A00AAAEE3 /* GymView.swift */,
 				9373FAC625C67CBC00AC61C5 /* LoginView.swift */,
 				93483B8425C08E43008789E3 /* MapView.swift */,
 				93C9F91B25C1C34D009B7394 /* SettingView.swift */,
@@ -332,6 +335,7 @@
 				93D381BE25B8EA3000BA98AC /* StudentApp.xcdatamodeld in Sources */,
 				93C9F91C25C1C34D009B7394 /* SettingView.swift in Sources */,
 				938B37F625BA38DE00395BE2 /* FoodView.swift in Sources */,
+				93DD940E25DB124A00AAAEE3 /* GymView.swift in Sources */,
 				9373FACF25C682C900AC61C5 /* SignupView.swift in Sources */,
 				9383D32925C73625008C7991 /* UserData.swift in Sources */,
 				93D381ED25B8EA7C00BA98AC /* GeocodingData.swift in Sources */,
