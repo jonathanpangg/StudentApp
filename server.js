@@ -92,7 +92,7 @@ app.get('/gym/:id', (req, res) => {
 })
 
 // /POST gym info
-app.post('/users/:id/:activity/:completion', (req, res) => {
+app.post('/gym/:id/:activity/:completion', (req, res) => {
     const gym = {
         id: req.body.id,
         activity: req.body.activity,
