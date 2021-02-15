@@ -7,10 +7,7 @@ const mongodb_URI = process.env.mongodb_URI || 'mongodb+srv://StudentUsers:Jonat
 var users = []
 app.use(express.json())
 
-app.get('/test', (req, res) => {
-    res.send('Hello World')
-})
-
+// /GET all users
 app.get('/users', (req, res) => {
     mongodb.connect(mongodb_URI, function (error, db) {
         if (error) throw error;
@@ -40,6 +37,7 @@ app.get('/users/:username/:password', (req, res) => {
     })
 })
 
+// /PUT specific user 
 app.put('/users/:id/:date/:newDate', (req, res) => {
     mongodb.connect(mongodb_URI, function(error, db) {
         if (error) throw error
@@ -54,6 +52,7 @@ app.put('/users/:id/:date/:newDate', (req, res) => {
     })
 })
 
+// /POST new user
 app.post('/users/:id/:firstName/:lastName/:username/:password/:date', (req, res) => {
     const user = {
         id: req.body.id,
@@ -68,6 +67,42 @@ app.post('/users/:id/:firstName/:lastName/:username/:password/:date', (req, res)
         if (error) throw error;
         var dbo = db.db('StudentApp')
         dbo.collection('Users').insertOne(user, function(error, result) {
+            if (error) throw error;
+            assert.equal(null, error)
+            console.log('Item inserted')
+            db.close();
+        })
+    })
+})
+
+// /GET gym info
+app.get('/gym/:id', (req, res) => {
+    const ID = req.params.id
+    mongodb.connect(mongodb_URI, function(error, db) {
+        if (error) throw error
+        var dbo = db.db('StudentApp')
+        var query = { id: ID }
+        dbo.collection('GymInfo').find(query).toArray(function(error, result) { 
+            if (error) throw error
+            res.send(result)
+            console.log(result)
+            db.close()
+        })
+    })
+})
+
+// /POST gym info
+app.post('/users/:id/:activity/:completion', (req, res) => {
+    const gym = {
+        id: req.body.id,
+        activity: req.body.activity,
+        completion: req.body.completion
+    };
+
+    mongodb.connect(mongodb_URI, function (error, db) {
+        if (error) throw error;
+        var dbo = db.db('StudentApp')
+        dbo.collection('GymInfo').insertOne(user, function(error, result) {
             if (error) throw error;
             assert.equal(null, error)
             console.log('Item inserted')
