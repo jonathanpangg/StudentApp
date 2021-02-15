@@ -7,10 +7,7 @@ const mongodb_URI = process.env.mongodb_URI || 'mongodb+srv://StudentUsers:Jonat
 var users = []
 app.use(express.json())
 
-app.get('/test', (req, res) => {
-    res.send('Hello World')
-})
-
+// /GET all users
 app.get('/users', (req, res) => {
     mongodb.connect(mongodb_URI, function (error, db) {
         if (error) throw error;
@@ -24,13 +21,13 @@ app.get('/users', (req, res) => {
 })
 
 // /GET specific user 
-app.get('/users/:firstName/:lastName', (req, res) => {
-    const first = req.params.firstName
-    const last = req.params.lastName
+app.get('/users/:username/:password', (req, res) => {
+    const user = req.params.username
+    const pass = req.params.password
     mongodb.connect(mongodb_URI, function(error, db) {
         if (error) throw error
         var dbo = db.db('StudentApp')
-        var query = { firstName: first, lastName: last }
+        var query = { username: user, password: pass }
         dbo.collection('Users').find(query).toArray(function(error, result) { 
             if (error) throw error
             res.send(result)
@@ -40,20 +37,7 @@ app.get('/users/:firstName/:lastName', (req, res) => {
     })
 })
 
-app.put('/users/:id/:date/:newDate', (req, res) => {
-    mongodb.connect(mongodb_URI, function(error, db) {
-        if (error) throw error
-        var dbo = db.db('StudentApp')
-        var query = { date: req.params.date }
-        var newQuery = { $set: { date: req.params.newDate } }
-        dbo.collection('Users').updateOne(query, newQuery, function(error, result) { 
-            if (error) throw error
-            console.log(result)
-            db.close()
-        })
-    })
-})
-
+// /POST new user
 app.post('/users/:id/:firstName/:lastName/:username/:password/:date', (req, res) => {
     const user = {
         id: req.body.id,
@@ -72,6 +56,72 @@ app.post('/users/:id/:firstName/:lastName/:username/:password/:date', (req, res)
             assert.equal(null, error)
             console.log('Item inserted')
             db.close();
+        })
+    })
+})
+
+// /GET gym info
+app.get('/gym/:id', (req, res) => {
+    const ID = req.params.id
+    mongodb.connect(mongodb_URI, function(error, db) {
+        if (error) throw error
+        var dbo = db.db('StudentApp')
+        var query = { id: ID }
+        dbo.collection('GymInfo').find(query).toArray(function(error, result) { 
+            if (error) throw error
+            res.send(result)
+            console.log(result)
+            db.close()
+        })
+    })
+})
+
+// /PUT specific user 
+app.put('/users/:id/:date/:newDate', (req, res) => {
+    mongodb.connect(mongodb_URI, function(error, db) {
+        if (error) throw error
+        var dbo = db.db('StudentApp')
+        var query = { date: req.params.date }
+        var newQuery = { $set: { date: req.params.newDate } }
+        dbo.collection('Users').updateOne(query, newQuery, function(error, result) { 
+            if (error) throw error
+            console.log(result)
+            db.close()
+        })
+    })
+})
+
+// /POST gym info
+app.post('/gym/:id/:activity/:completion', (req, res) => {
+    const gym = {
+        id: req.body.id,
+        activity: req.body.activity,
+        completion: req.body.completion
+    };
+
+    mongodb.connect(mongodb_URI, function (error, db) {
+        if (error) throw error;
+        var dbo = db.db('StudentApp')
+        dbo.collection('GymInfo').insertOne(gym, function(error, result) {
+            if (error) throw error;
+            assert.equal(null, error)
+            console.log('Item inserted')
+            db.close();
+        })
+    })
+})
+
+// /PUT gym info
+app.put('/gym/:id/:oldActivity/:newActivity/:oldCompletion/:newCompletion', (req, res) => {
+    mongodb.connect(mongodb_URI, function(error, db) {
+        if (error) throw error
+        var dbo = db.db('StudentApp')
+        var query = { activity: req.params.oldActivity, completion: req.params.oldCompletion }
+        var newQuery = { $set: { activity: req.params.newActivity, completion: req.params.newCompletion } }
+        dbo.collection('GymInfo').updateOne(query, newQuery, function(error, result) { 
+            if (error) throw error
+            console.log(result)
+            db.close()
         })
     })
 })
