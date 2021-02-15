@@ -117,7 +117,7 @@ app.put('/gym/:id/:oldActivity/:newActivity/:oldCompletion/:newCompletion', (req
         if (error) throw error
         var dbo = db.db('StudentApp')
         var query = { id: req.params.id, activity: req.params.oldActivity, completion: req.params.oldCompletion }
-        var newQuery = { $set: { id: req.params.id, activity: req.params.newActivity, completion: req.params.newCompletion } }
+        var newQuery = { $set: { "id":"478304AB-FBEB-47F8-AB0A-676D1A1932D0","activity":req.params.newActivity,"completion":req.params.newCompletion } }
         dbo.collection('GymInfo').updateOne(query, newQuery, function(error, result) { 
             if (error) throw error
             console.log(result)
