@@ -75,6 +75,7 @@ app.post('/users/:id/:firstName/:lastName/:username/:password/:date', (req, res)
     })
 })
 
+/*
 // /GET gym info
 app.get('/gym/:id', (req, res) => {
     const ID = req.params.id
@@ -110,6 +111,7 @@ app.post('/gym/:id/:activity/:completion', (req, res) => {
         })
     })
 })
+*/
 
 const port = process.env.PORT || 2000
 app.listen(port, () => console.log('Listening on ' + port + '...'))
