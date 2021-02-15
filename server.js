@@ -116,8 +116,8 @@ app.put('/gym/:id/:oldActivity/:newActivity/:oldCompletion/:newCompletion', (req
     mongodb.connect(mongodb_URI, function(error, db) {
         if (error) throw error
         var dbo = db.db('StudentApp')
-        var query = { activity: req.params.oldActivity, completion: req.params.oldCompletion }
-        var newQuery = { $set: { activity: req.params.newActivity, completion: req.params.newCompletion } }
+        var query = { id: req.params.id, activity: req.params.oldActivity, completion: req.params.oldCompletion }
+        var newQuery = { $set: { id: req.params.id, activity: req.params.newActivity, completion: req.params.newCompletion } }
         dbo.collection('GymInfo').updateOne(query, newQuery, function(error, result) { 
             if (error) throw error
             console.log(result)
