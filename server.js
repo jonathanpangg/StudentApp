@@ -77,11 +77,11 @@ app.get('/gym/:id', (req, res) => {
 })
 
 // /PUT specific user 
-app.put('/users/:id/:date/:newDate', (req, res) => {
+app.put('/users/:id/:newDate', (req, res) => {
     mongodb.connect(mongodb_URI, function(error, db) {
         if (error) throw error
         var dbo = db.db('StudentApp')
-        var query = { date: req.params.date }
+        var query = { id: req.params.id }
         var newQuery = { $set: { date: req.params.newDate } }
         dbo.collection('Users').updateOne(query, newQuery, function(error, result) { 
             if (error) throw error
@@ -112,11 +112,11 @@ app.post('/gym/:id/:activity/:completion', (req, res) => {
 })
 
 // /PUT gym info
-app.put('/gym/:id/:oldActivity/:newActivity/:oldCompletion/:newCompletion', (req, res) => {
+app.put('/gym/:id/:newActivity/:newCompletion', (req, res) => {
     mongodb.connect(mongodb_URI, function(error, db) {
         if (error) throw error
         var dbo = db.db('StudentApp')
-        var query = { id: req.params.id, activity: req.params.oldActivity, completion: req.params.oldCompletion }
+        var query = { id: req.params.id }
         var newQuery = { $set: { "id": req.params.id, "activity":req.params.newActivity, "completion":req.params.newCompletion } }
         dbo.collection('GymInfo').updateOne(query, newQuery, function(error, result) { 
             if (error) throw error
