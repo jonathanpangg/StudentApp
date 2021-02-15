@@ -92,11 +92,15 @@ app.put('/users/:id/:newDate', (req, res) => {
 })
 
 // /POST gym info
-app.post('/gym/:id/:activity/:completion', (req, res) => {
+app.post('/gym/:id/:/date/:activity/:completion', (req, res) => {
     const gym = {
         id: req.body.id,
-        activity: req.body.activity,
-        completion: req.body.completion
+        data: {
+            date: req.body.date,
+            activity: req.body.activity,
+            completion: req.body.completion
+        }
+        
     };
 
     mongodb.connect(mongodb_URI, function (error, db) {
@@ -112,12 +116,12 @@ app.post('/gym/:id/:activity/:completion', (req, res) => {
 })
 
 // /PUT gym info
-app.put('/gym/:id/:newActivity/:newCompletion', (req, res) => {
+app.put('/gym/:id/:date/:newActivity/:newCompletion', (req, res) => {
     mongodb.connect(mongodb_URI, function(error, db) {
         if (error) throw error
         var dbo = db.db('StudentApp')
-        var query = { id: req.params.id }
-        var newQuery = { $set: { "id": req.params.id, "activity":req.params.newActivity, "completion":req.params.newCompletion } }
+        var query = { id: req.params.id, date: req.params.date }
+        var newQuery = { $set: { "activity": req.params.newActivity, "completion": req.params.newCompletion } }
         dbo.collection('GymInfo').updateOne(query, newQuery, function(error, result) { 
             if (error) throw error
             console.log(result)
