@@ -16,5 +16,5 @@ const gymSchema = new Schema ({
     }
 })
 
-const GymInfo = mongoose.model('Users', gymSchema)
+const GymInfo = mongoose.model('GymInfo', gymSchema)
 module.exports = GymInfo
