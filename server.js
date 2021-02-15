@@ -111,5 +111,20 @@ app.post('/gym/:id/:activity/:completion', (req, res) => {
     })
 })
 
+// /PUT gym info
+app.put('/gym/:id/:oldActivity/:newActivity/:oldCompletion/:newCompletion', (req, res) => {
+    mongodb.connect(mongodb_URI, function(error, db) {
+        if (error) throw error
+        var dbo = db.db('StudentApp')
+        var query = { activity: req.params.oldActivity, completion: req.params.oldCompletion }
+        var newQuery = { $set: { activity: req.params.newActivity, completion: req.params.newCompletion } }
+        dbo.collection('Users').updateOne(query, newQuery, function(error, result) { 
+            if (error) throw error
+            console.log(result)
+            db.close()
+        })
+    })
+})
+
 const port = process.env.PORT || 2000
 app.listen(port, () => console.log('Listening on ' + port + '...'))
