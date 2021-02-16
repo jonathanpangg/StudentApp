@@ -78,15 +78,15 @@ struct LoginView: View {
                     join.user = users
                     if users.count > 0 {
                         join.user[0].date = "\(Date().timeIntervalSince1970)"
-                        putUser(users[0].id, users[0].date, "\(Date().timeIntervalSince1970)")
+                        putUser(users[0].id, "\(Date().timeIntervalSince1970)")
                     }
                 }
             }
         }.resume()
     }
     
-    func putUser(_ id: String, _ oldDate: String, _ newDate: String) {
-        guard let url = URL(string: "https://heroku-student-app.herokuapp.com/users/\(id)/\(oldDate)/\(newDate)") else { return }
+    func putUser(_ id: String, _ newDate: String) {
+        guard let url = URL(string: "https://heroku-student-app.herokuapp.com/users/\(id)/\(newDate)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
         
