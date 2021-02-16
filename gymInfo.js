@@ -8,7 +8,7 @@ const gymSchema = new Schema ({
     },
     data: {
         date: {
-            type: [String],
+            type: String,
             require: true
         },
         activity: {
