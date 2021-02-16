@@ -100,7 +100,6 @@ app.post('/gym/:id/:/date/:activity/:completion', (req, res) => {
             activity: req.body.activity,
             completion: req.body.completion
         }
-        
     };
 
     mongodb.connect(mongodb_URI, function (error, db) {
@@ -132,3 +131,31 @@ app.put('/gym/:id/:date/:newActivity/:newCompletion', (req, res) => {
 
 const port = process.env.PORT || 2000
 app.listen(port, () => console.log('Listening on ' + port + '...'))
+
+/*
+{
+    "id": "478304AB-FBEB-47F8-AB0A-676D1A1932D0",
+    "data": [
+        {
+            "date": "1",
+            "activity": [
+                "Weights",
+                "Something"
+            ],
+            "completion": [
+                true,
+                false
+            ]
+        },
+        {
+                "date": "2",
+            "activity": [
+                "Weights"
+            ],
+            "completion": [
+                true
+            ]
+        }
+    ]
+} 
+*/
