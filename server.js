@@ -60,22 +60,6 @@ app.post('/users/:id/:firstName/:lastName/:username/:password/:date', (req, res)
     })
 })
 
-// /GET gym info
-app.get('/gym/:id', (req, res) => {
-    const ID = req.params.id
-    mongodb.connect(mongodb_URI, function(error, db) {
-        if (error) throw error
-        var dbo = db.db('StudentApp')
-        var query = { id: ID }
-        dbo.collection('GymInfo').find(query).toArray(function(error, result) { 
-            if (error) throw error
-            res.send(result)
-            console.log(result)
-            db.close()
-        })
-    })
-})
-
 // /PUT specific user 
 app.put('/users/:id/:newDate', (req, res) => {
     mongodb.connect(mongodb_URI, function(error, db) {
@@ -91,15 +75,28 @@ app.put('/users/:id/:newDate', (req, res) => {
     })
 })
 
+// /GET gym info
+app.get('/gym/:id/:date', (req, res) => {
+    mongodb.connect(mongodb_URI, function(error, db) {
+        if (error) throw error
+        var dbo = db.db('StudentApp')
+        var query = { id: req.params.id,  date: req.params.date}
+        dbo.collection('GymInfo').find(query).toArray(function(error, result) { 
+            if (error) throw error
+            res.send(result)
+            console.log(result)
+            db.close()
+        })
+    })
+})
+
 // /POST gym info
-app.post('/gym/:id/:/date/:activity/:completion', (req, res) => {
+app.post('/gym/:id/:date/:activity/:completion', (req, res) => {
     const gym = {
         id: req.body.id,
-        data: {
-            date: req.body.date,
-            activity: req.body.activity,
-            completion: req.body.completion
-        }
+        date: req.body.date,
+        activity: req.body.activity,
+        completion: req.body.completion
     };
 
     mongodb.connect(mongodb_URI, function (error, db) {
@@ -119,8 +116,8 @@ app.put('/gym/:id/:date/:newActivity/:newCompletion', (req, res) => {
     mongodb.connect(mongodb_URI, function(error, db) {
         if (error) throw error
         var dbo = db.db('StudentApp')
-        var query = { id: req.params.id, date: req.params.date }
-        var newQuery = { $set: { "activity": req.params.newActivity, "completion": req.params.newCompletion } }
+        var query = { date: req.params.date }
+        var newQuery = { $set: { activity: req.params.newActivity, completion: req.params.newCompletion } }
         dbo.collection('GymInfo').updateOne(query, newQuery, function(error, result) { 
             if (error) throw error
             console.log(result)
@@ -131,31 +128,3 @@ app.put('/gym/:id/:date/:newActivity/:newCompletion', (req, res) => {
 
 const port = process.env.PORT || 2000
 app.listen(port, () => console.log('Listening on ' + port + '...'))
-
-/*
-{
-    "id": "478304AB-FBEB-47F8-AB0A-676D1A1932D0",
-    "data": [
-        {
-            "date": "1",
-            "activity": [
-                "Weights",
-                "Something"
-            ],
-            "completion": [
-                true,
-                false
-            ]
-        },
-        {
-                "date": "2",
-            "activity": [
-                "Weights"
-            ],
-            "completion": [
-                true
-            ]
-        }
-    ]
-} 
-*/
