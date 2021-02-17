@@ -165,6 +165,7 @@ struct FoodView: View {
                             .onTapGesture {
                                 pass.currentScreen = 1
                             }
+                            .offset(x: UIScreen.main.bounds.width / 64 * 1)
                             .padding()
                             Spacer()
                             
@@ -182,6 +183,7 @@ struct FoodView: View {
                             .onTapGesture {
                                 pass.currentScreen = 6
                             }
+                            .offset(x: UIScreen.main.bounds.width / 64 * -1)
                             .padding()
                             Spacer()
                             

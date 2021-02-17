@@ -171,89 +171,102 @@ struct GymView: View {
     }
     
     var body: some View {
-        VStack(alignment: .center) {
-            ScrollView(.vertical) {
-                ForEach(gymList, id: \.self) { element in
-                    Text(element)
-                        .foregroundColor(getForeground())
-                    Rectangle()
-                        .fill(getForeground())
-                        .frame(height: 1)
-                        .edgesIgnoringSafeArea(.horizontal)
+        ZStack {
+            getBackground()
+                .ignoresSafeArea(.all)
+            VStack(alignment: .center) {
+                ScrollView(.vertical) {
+                    ForEach(gymList, id: \.self) { element in
+                        Text(element)
+                            .foregroundColor(getForeground())
+                        Rectangle()
+                            .fill(getForeground())
+                            .frame(height: 1)
+                            .edgesIgnoringSafeArea(.horizontal)
+                    }
                 }
+                HStack(alignment: .center) {
+                    VStack {
+                        Image(systemName: "cloud.sun.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: UIScreen.main.bounds.width / 12, height: UIScreen.main.bounds.width / 12)
+                            .foregroundColor(getForeground())
+                        Text("Weather")
+                            .multilineTextAlignment(.center)
+                            .font(.system(size: 12))
+                            .foregroundColor(getForeground())
+                    }
+                    .onTapGesture {
+                        pass.currentScreen = 0
+                    }
+                    .offset(x: UIScreen.main.bounds.width / 64 * 3)
+                    .padding()
+                    Spacer()
+                    
+                    VStack {
+                        Image(systemName: "bag.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: UIScreen.main.bounds.width / 12, height: UIScreen.main.bounds.width / 12)
+                            .foregroundColor(getForeground())
+                        Text("Restaurants")
+                            .multilineTextAlignment(.center)
+                            .font(.system(size: 12))
+                            .foregroundColor(getForeground())
+                    }
+                    .onTapGesture {
+                        pass.currentScreen = 1
+                    }
+                    .offset(x: UIScreen.main.bounds.width / 64 * 1)
+                    .padding()
+                    Spacer()
+                    
+                    VStack {
+                        Image(systemName: "figure.walk")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: UIScreen.main.bounds.width / 12, height: UIScreen.main.bounds.width / 12)
+                            .foregroundColor(getForeground())
+                        Text("Gym")
+                            .multilineTextAlignment(.center)
+                            .font(.system(size: 12))
+                            .foregroundColor(getForeground())
+                    }
+                    .onTapGesture {
+                        pass.currentScreen = 6
+                    }
+                    .offset(x: UIScreen.main.bounds.width / 64 * -1)
+                    .padding()
+                    Spacer()
+                    
+                    VStack {
+                        Image(systemName: "line.horizontal.3")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: UIScreen.main.bounds.width / 12, height: UIScreen.main.bounds.width / 12)
+                            .foregroundColor(getForeground())
+                        Text("Settings")
+                            .multilineTextAlignment(.center)
+                            .font(.system(size: 12))
+                            .foregroundColor(getForeground())
+                    }
+                    .onTapGesture {
+                        pass.currentScreen = 2
+                    }
+                    .offset(x: UIScreen.main.bounds.width / 64 * -3)
+                    .padding()
+                }
+                .background(getBackground())
+                .frame(height: UIScreen.main.bounds.height / 64 * 1)
+                .offset(y: UIScreen.main.bounds.height / 256 * -1)
             }
-            HStack(alignment: .center) {
-                VStack {
-                    Image(systemName: "cloud.sun.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: UIScreen.main.bounds.width / 12, height: UIScreen.main.bounds.width / 12)
-                        .foregroundColor(getForeground())
-                    Text("Weather")
-                        .multilineTextAlignment(.center)
-                        .font(.system(size: 12))
-                        .foregroundColor(getForeground())
-                }
-                .onTapGesture {
-                    pass.currentScreen = 0
-                }
-                .offset(x: UIScreen.main.bounds.width / 64 * 3)
-                .padding(.bottom)
-                Spacer()
-                
-                VStack {
-                    Image(systemName: "bag.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: UIScreen.main.bounds.width / 12, height: UIScreen.main.bounds.width / 12)
-                        .foregroundColor(getForeground())
-                    Text("Restaurants")
-                        .multilineTextAlignment(.center)
-                        .font(.system(size: 12))
-                        .foregroundColor(getForeground())
-                }
-                .onTapGesture {
-                    pass.currentScreen = 1
-                }
-                Spacer()
-                
-                VStack {
-                    Image(systemName: "figure.walk")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: UIScreen.main.bounds.width / 12, height: UIScreen.main.bounds.width / 12)
-                        .foregroundColor(getForeground())
-                    Text("Gym")
-                        .multilineTextAlignment(.center)
-                        .font(.system(size: 12))
-                        .foregroundColor(getForeground())
-                }
-                .onTapGesture {
-                    pass.currentScreen = 6
-                }
-                Spacer()
-                
-                VStack {
-                    Image(systemName: "line.horizontal.3")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: UIScreen.main.bounds.width / 12, height: UIScreen.main.bounds.width / 12)
-                        .foregroundColor(getForeground())
-                    Text("Settings")
-                        .multilineTextAlignment(.center)
-                        .font(.system(size: 12))
-                        .foregroundColor(getForeground())
-                }
-                .onTapGesture {
-                    pass.currentScreen = 2
-                }
-                .offset(x: UIScreen.main.bounds.width / 64 * -3)
-                .padding()
+            .onAppear(perform: getGym)
+            .onAppear {
+                AppDelegate.orientationLock = UIInterfaceOrientationMask.portrait
+                UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
+                UIViewController.attemptRotationToDeviceOrientation()
             }
-            .background(getBackground())
-            .frame(height: UIScreen.main.bounds.height / 64 * 1)
-            .offset(y: UIScreen.main.bounds.height / 256 * -1)
         }
-        .onAppear(perform: getGym)
     }
 }
