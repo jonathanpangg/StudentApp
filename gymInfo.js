@@ -6,19 +6,17 @@ const gymSchema = new Schema ({
         type: String,
         require: true 
     },
-    data: {
-        date: {
-            type: String,
-            require: true
-        },
-        activity: {
-            type: [String],
-            require: true
-        },
-        completion: {
-            type: [Boolean],
-            require: true
-        }
+    date: {
+        type: String,
+        require: true,
+    },
+    activity: {
+        type: String,
+        require: true,
+    },
+    completion: {
+        type: String,
+        require: true
     }
 })
 
