@@ -15,6 +15,7 @@
 		938B37F125BA387600395BE2 /* FoodData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938B37F025BA387600395BE2 /* FoodData.swift */; };
 		938B37F625BA38DE00395BE2 /* FoodView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938B37F525BA38DE00395BE2 /* FoodView.swift */; };
 		93C37B3B25BCC86F00D8FB29 /* PassVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C37B3A25BCC86F00D8FB29 /* PassVariables.swift */; };
+		93C73A0925DD7AB70054F910 /* SettingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C73A0825DD7AB70054F910 /* SettingData.swift */; };
 		93C9F91C25C1C34D009B7394 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C9F91B25C1C34D009B7394 /* SettingView.swift */; };
 		93D381B725B8EA3000BA98AC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D381B625B8EA3000BA98AC /* AppDelegate.swift */; };
 		93D381B925B8EA3000BA98AC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D381B825B8EA3000BA98AC /* SceneDelegate.swift */; };
@@ -57,6 +58,7 @@
 		938B37F025BA387600395BE2 /* FoodData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodData.swift; sourceTree = "<group>"; };
 		938B37F525BA38DE00395BE2 /* FoodView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodView.swift; sourceTree = "<group>"; };
 		93C37B3A25BCC86F00D8FB29 /* PassVariables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassVariables.swift; sourceTree = "<group>"; };
+		93C73A0825DD7AB70054F910 /* SettingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingData.swift; sourceTree = "<group>"; };
 		93C9F91B25C1C34D009B7394 /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
 		93D381B325B8EA3000BA98AC /* StudentApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StudentApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		93D381B625B8EA3000BA98AC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -111,6 +113,7 @@
 				93D381EC25B8EA7C00BA98AC /* GeocodingData.swift */,
 				93483B7F25C08E29008789E3 /* Location.swift */,
 				93C37B3A25BCC86F00D8FB29 /* PassVariables.swift */,
+				93C73A0825DD7AB70054F910 /* SettingData.swift */,
 				9383D32825C73625008C7991 /* UserData.swift */,
 				93D381F625B8EAA200BA98AC /* WeatherData.swift */,
 			);
@@ -328,6 +331,7 @@
 				93D381B725B8EA3000BA98AC /* AppDelegate.swift in Sources */,
 				93D381B925B8EA3000BA98AC /* SceneDelegate.swift in Sources */,
 				9373FAC725C67CBC00AC61C5 /* LoginView.swift in Sources */,
+				93C73A0925DD7AB70054F910 /* SettingData.swift in Sources */,
 				93D381F725B8EAA200BA98AC /* WeatherData.swift in Sources */,
 				93483B8525C08E43008789E3 /* MapView.swift in Sources */,
 				938B37F125BA387600395BE2 /* FoodData.swift in Sources */,

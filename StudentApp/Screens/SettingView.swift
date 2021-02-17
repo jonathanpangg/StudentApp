@@ -63,8 +63,10 @@ struct SettingView: View {
                     }
                 }
                 .padding(.top)
-                Divider()
-                    .frame(width: UIScreen.main.bounds.width / 8 * 7)
+                Rectangle()
+                    .fill(getForeground())
+                    .frame(width: UIScreen.main.bounds.width / 8 * 7, height: 1)
+                    .edgesIgnoringSafeArea(.horizontal)
                 
                 if expandThemes {
                     HStack {
@@ -73,6 +75,7 @@ struct SettingView: View {
                             HStack {
                                 Text("Light Mode")
                                     .foregroundColor(getForeground())
+                                    .offset(x: UIScreen.main.bounds.width / 16)
                                 Spacer()
                                 ZStack {
                                     if mode.mode.mode == "Light" {
@@ -85,13 +88,17 @@ struct SettingView: View {
                                         .stroke(getForeground(), lineWidth: 1)
                                         .frame(width: UIScreen.main.bounds.width / 16, height: UIScreen.main.bounds.width / 16)
                                 }
+                                .padding(.trailing)
                             }
-                            .frame(width: UIScreen.main.bounds.width / 8 * 6 - UIScreen.main.bounds.width / 64 * 6)
-                            Divider()
-                                .frame(width: UIScreen.main.bounds.width / 8 * 6 - UIScreen.main.bounds.width / 64 * 6)
+                            .frame(width: UIScreen.main.bounds.width / 8 * 6)
+                            
+                            Rectangle()
+                                .fill(getForeground())
+                                .frame(width: UIScreen.main.bounds.width / 8 * 6, height: 1)
+                                .edgesIgnoringSafeArea(.horizontal)
                         }
                     }
-                    .frame(width: UIScreen.main.bounds.width / 8 * 7 - UIScreen.main.bounds.width / 64 * 7)
+                    .frame(width: UIScreen.main.bounds.width / 8 * 7)
                     .background(getBackground())
                     .onTapGesture {
                         mode.mode.mode = "Light"
@@ -106,6 +113,7 @@ struct SettingView: View {
                             HStack {
                                 Text("Dark Mode")
                                     .foregroundColor(getForeground())
+                                    .offset(x: UIScreen.main.bounds.width / 16)
                                 Spacer()
                                 ZStack {
                                     if mode.mode.mode == "Dark" {
@@ -118,14 +126,18 @@ struct SettingView: View {
                                         .stroke(getForeground(), lineWidth: 1)
                                         .frame(width: UIScreen.main.bounds.width / 16, height: UIScreen.main.bounds.width / 16)
                                 }
+                                .padding(.trailing)
                             }
-                            .frame(width: UIScreen.main.bounds.width / 8 * 6 - UIScreen.main.bounds.width / 64 * 6)
-                            Divider()
-                                .frame(width: UIScreen.main.bounds.width / 8 * 6 - UIScreen.main.bounds.width / 64 * 6)
+                            .frame(width: UIScreen.main.bounds.width / 8 * 6)
+                            
+                            Rectangle()
+                                .fill(getForeground())
+                                .frame(width: UIScreen.main.bounds.width / 8 * 6, height: 1)
+                                .edgesIgnoringSafeArea(.horizontal)
                         }
                         
                     }
-                    .frame(width: UIScreen.main.bounds.width / 8 * 7 - UIScreen.main.bounds.width / 64 * 7)
+                    .frame(width: UIScreen.main.bounds.width / 8 * 7)
                     .background(getBackground())
                     .onTapGesture {
                         mode.mode.mode = "Dark"
@@ -140,6 +152,7 @@ struct SettingView: View {
                             HStack {
                                 Text("System Mode")
                                     .foregroundColor(getForeground())
+                                    .offset(x: UIScreen.main.bounds.width / 16)
                                 Spacer()
                                 ZStack {
                                     if mode.mode.mode == "Default" {
@@ -152,13 +165,17 @@ struct SettingView: View {
                                         .stroke(getForeground(), lineWidth: 1)
                                         .frame(width: UIScreen.main.bounds.width / 16, height: UIScreen.main.bounds.width / 16)
                                 }
+                                .padding(.trailing)
                             }
-                            .frame(width: UIScreen.main.bounds.width / 8 * 6 - UIScreen.main.bounds.width / 64 * 6)
-                            Divider()
-                                .frame(width: UIScreen.main.bounds.width / 8 * 6 - UIScreen.main.bounds.width / 64 * 6)
+                            .frame(width: UIScreen.main.bounds.width / 8 * 6)
+                            
+                            Rectangle()
+                                .fill(getForeground())
+                                .frame(width: UIScreen.main.bounds.width / 8 * 6, height: 1)
+                                .edgesIgnoringSafeArea(.horizontal)
                         }
                     }
-                    .frame(width: UIScreen.main.bounds.width / 8 * 7 - UIScreen.main.bounds.width / 64 * 7)
+                    .frame(width: UIScreen.main.bounds.width / 8 * 7)
                     .background(getBackground())
                     .onTapGesture {
                         mode.mode.mode = "Default"
@@ -185,8 +202,10 @@ struct SettingView: View {
                         expandNotification.toggle()
                     }
                 }
-                Divider()
-                    .frame(width: UIScreen.main.bounds.width / 8 * 7)
+                Rectangle()
+                    .fill(getForeground())
+                    .frame(width: UIScreen.main.bounds.width / 8 * 7, height: 1)
+                    .edgesIgnoringSafeArea(.horizontal)
                 
                 if expandNotification {
                     HStack {
@@ -195,6 +214,7 @@ struct SettingView: View {
                             HStack {
                                 Text("Enable Notifications")
                                     .foregroundColor(getForeground())
+                                    .offset(x: UIScreen.main.bounds.width / 16)
                                 Spacer()
                                 ZStack {
                                     if status.status.status == "ON" {
@@ -207,13 +227,17 @@ struct SettingView: View {
                                         .stroke(getForeground(), lineWidth: 1)
                                         .frame(width: UIScreen.main.bounds.width / 16, height: UIScreen.main.bounds.width / 16)
                                 }
+                                .padding(.trailing)
                             }
-                            .frame(width: UIScreen.main.bounds.width / 8 * 6 - UIScreen.main.bounds.width / 64 * 6)
-                            Divider()
-                                .frame(width: UIScreen.main.bounds.width / 8 * 6 - UIScreen.main.bounds.width / 64 * 6)
+                            .frame(width: UIScreen.main.bounds.width / 8 * 6)
+                            
+                            Rectangle()
+                                .fill(getForeground())
+                                .frame(width: UIScreen.main.bounds.width / 8 * 6, height: 1)
+                                .edgesIgnoringSafeArea(.horizontal)
                         }
                     }
-                    .frame(width: UIScreen.main.bounds.width / 8 * 7 - UIScreen.main.bounds.width / 64 * 7)
+                    .frame(width: UIScreen.main.bounds.width / 8 * 7)
                     .background(getBackground())
                     .onTapGesture {
                         status.status.status = "ON"
@@ -228,6 +252,7 @@ struct SettingView: View {
                             HStack {
                                 Text("Disable Notifications")
                                     .foregroundColor(getForeground())
+                                    .offset(x: UIScreen.main.bounds.width / 16)
                                 Spacer()
                                 ZStack {
                                     if status.status.status == "NO" {
@@ -240,14 +265,18 @@ struct SettingView: View {
                                         .stroke(getForeground(), lineWidth: 1)
                                         .frame(width: UIScreen.main.bounds.width / 16, height: UIScreen.main.bounds.width / 16)
                                 }
+                                .padding(.trailing)
                             }
-                            .frame(width: UIScreen.main.bounds.width / 8 * 6 - UIScreen.main.bounds.width / 64 * 6)
-                            Divider()
-                                .frame(width: UIScreen.main.bounds.width / 8 * 6 - UIScreen.main.bounds.width / 64 * 6)
+                            .frame(width: UIScreen.main.bounds.width / 8 * 6)
+                            
+                            Rectangle()
+                                .fill(getForeground())
+                                .frame(width: UIScreen.main.bounds.width / 8 * 6, height: 1)
+                                .edgesIgnoringSafeArea(.horizontal)
                         }
                         
                     }
-                    .frame(width: UIScreen.main.bounds.width / 8 * 7 - UIScreen.main.bounds.width / 64 * 7)
+                    .frame(width: UIScreen.main.bounds.width / 8 * 7)
                     .background(getBackground())
                     .onTapGesture {
                         status.status.status = "NO"
@@ -269,8 +298,10 @@ struct SettingView: View {
                         pressedSignOut = true
                     }
                 }
-                Divider()
-                    .frame(width: UIScreen.main.bounds.width / 8 * 7)
+                Rectangle()
+                    .fill(getForeground())
+                    .frame(width: UIScreen.main.bounds.width / 8 * 7, height: 1)
+                    .edgesIgnoringSafeArea(.horizontal)
 
                 Spacer()
                 
@@ -347,35 +378,48 @@ struct SettingView: View {
                         .background(getBackground())
                         .clipShape(RoundedRectangle(cornerRadius: 16.0, style: .continuous))
                         .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)), radius: 10, x: 6, y: 4)
-                    VStack {
-                        Text("Are you sure you want to sign out?")
-                            .multilineTextAlignment(.center)
-                            .foregroundColor(getForeground())
-                        Spacer()
-                        Divider()
-                        HStack(alignment: .center) {
-                            HStack(alignment: .center) {
-                                Text("Yes")
-                                    .foregroundColor(getForeground())
-                            }
-                            .frame(width: (UIScreen.main.bounds.width / 2 - UIScreen.main.bounds.width / 16) / 2)
-                            .onTapGesture {
-                                join.user = [User]()
-                                if let encoded = try? JSONEncoder().encode(join.user) {
-                                    UserDefaults.standard.setValue(encoded, forKey: "saveUser")
-                                }
-                                pass.currentScreen = 4
-                            }
+                    HStack {
+                        VStack(spacing: 0) {
+                            Text("Are you sure you want to sign out?")
+                                .multilineTextAlignment(.center)
+                                .foregroundColor(getForeground())
                             Spacer()
                             
+                            Rectangle()
+                                .fill(getForeground())
+                                .frame(height: 1)
+                                .edgesIgnoringSafeArea(.horizontal)
+                            
                             HStack(alignment: .center) {
-                                Text("No")
-                                    .foregroundColor(getForeground())
-                            }
-                            .frame(width: (UIScreen.main.bounds.width / 2 - UIScreen.main.bounds.width / 16) / 2)
-                            .onTapGesture {
-                                withAnimation {
-                                    pressedSignOut = false
+                                HStack(alignment: .center) {
+                                    Text("Yes")
+                                        .foregroundColor(getForeground())
+                                }
+                                .frame(width: (UIScreen.main.bounds.width / 2 - UIScreen.main.bounds.width / 16) / 2)
+                                .offset(x: UIScreen.main.bounds.width / 64)
+                                .onTapGesture {
+                                    join.user = [User]()
+                                    if let encoded = try? JSONEncoder().encode(join.user) {
+                                        UserDefaults.standard.setValue(encoded, forKey: "saveUser")
+                                    }
+                                    pass.currentScreen = 4
+                                }
+                                
+                                Rectangle()
+                                    .fill(getForeground())
+                                    .frame(width: 1, height: UIScreen.main.bounds.height / 24)
+                                    .edgesIgnoringSafeArea(.vertical)
+                                
+                                HStack(alignment: .center) {
+                                    Text("No")
+                                        .foregroundColor(getForeground())
+                                }
+                                .frame(width: (UIScreen.main.bounds.width / 2 - UIScreen.main.bounds.width / 16) / 2)
+                                .offset(x: UIScreen.main.bounds.width / -64)
+                                .onTapGesture {
+                                    withAnimation {
+                                        pressedSignOut = false
+                                    }
                                 }
                             }
                         }
@@ -387,43 +431,4 @@ struct SettingView: View {
             }
         }
     }
-}
-
-class ThemeStatus: ObservableObject {
-    @Published var mode = ThemeData()
-    
-    init() {
-        if let data = UserDefaults.standard.data(forKey: "save") {
-            if let decoded = try? JSONDecoder().decode(ThemeData.self, from: data) {
-                self.mode = decoded
-                return
-            }
-        }
-    }
-}
-
-
-struct ThemeData: Codable {
-    var mode: String
-    
-    init() { self.mode = "" }
-}
-
-class NotificationStatus: ObservableObject {
-    @Published var status = NotificationData()
-    
-    init() {
-        if let data = UserDefaults.standard.data(forKey: "status") {
-            if let decoded = try? JSONDecoder().decode(NotificationData.self, from: data) {
-                self.status = decoded
-                return
-            }
-        }
-    }
-}
-
-struct NotificationData: Codable {
-    var status: String
-    
-    init() { self.status = "" }
 }

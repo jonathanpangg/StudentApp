@@ -59,6 +59,12 @@ struct LoginView: View {
     }
     
     func verifyUser() -> Bool {
+        var count = 0
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            while (count < 5 || users.count != 1) {
+                count += 1
+            }
+        }
         if users.count == 1 {
             return true
         }
@@ -207,7 +213,7 @@ struct LoginView: View {
                         }
                         .onTapGesture {
                             getSpecificUser()
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                                 if verifyUser() {
                                     if let encoded = try? JSONEncoder().encode(join.user) {
                                         UserDefaults.standard.setValue(encoded, forKey: "saveUser")
