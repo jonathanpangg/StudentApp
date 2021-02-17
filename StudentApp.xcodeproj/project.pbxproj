@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		930460CB25DDAD0200B7F967 /* GymData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930460CA25DDAD0200B7F967 /* GymData.swift */; };
 		93483B8025C08E29008789E3 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483B7F25C08E29008789E3 /* Location.swift */; };
 		93483B8525C08E43008789E3 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483B8425C08E43008789E3 /* MapView.swift */; };
 		9373FAC725C67CBC00AC61C5 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9373FAC625C67CBC00AC61C5 /* LoginView.swift */; };
@@ -50,6 +51,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		930460CA25DDAD0200B7F967 /* GymData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GymData.swift; sourceTree = "<group>"; };
 		93483B7F25C08E29008789E3 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		93483B8425C08E43008789E3 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		9373FAC625C67CBC00AC61C5 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
@@ -111,6 +113,7 @@
 			children = (
 				938B37F025BA387600395BE2 /* FoodData.swift */,
 				93D381EC25B8EA7C00BA98AC /* GeocodingData.swift */,
+				930460CA25DDAD0200B7F967 /* GymData.swift */,
 				93483B7F25C08E29008789E3 /* Location.swift */,
 				93C37B3A25BCC86F00D8FB29 /* PassVariables.swift */,
 				93C73A0825DD7AB70054F910 /* SettingData.swift */,
@@ -336,6 +339,7 @@
 				93483B8525C08E43008789E3 /* MapView.swift in Sources */,
 				938B37F125BA387600395BE2 /* FoodData.swift in Sources */,
 				93D381BB25B8EA3000BA98AC /* ContentView.swift in Sources */,
+				930460CB25DDAD0200B7F967 /* GymData.swift in Sources */,
 				93D381BE25B8EA3000BA98AC /* StudentApp.xcdatamodeld in Sources */,
 				93C9F91C25C1C34D009B7394 /* SettingView.swift in Sources */,
 				938B37F625BA38DE00395BE2 /* FoodView.swift in Sources */,

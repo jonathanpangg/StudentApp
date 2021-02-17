@@ -169,6 +169,23 @@ struct FoodView: View {
                             Spacer()
                             
                             VStack {
+                                Image(systemName: "figure.walk")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: UIScreen.main.bounds.width / 12, height: UIScreen.main.bounds.width / 12)
+                                    .foregroundColor(getForeground())
+                                Text("Gym")
+                                    .multilineTextAlignment(.center)
+                                    .font(.system(size: 12))
+                                    .foregroundColor(getForeground())
+                            }
+                            .onTapGesture {
+                                pass.currentScreen = 6
+                            }
+                            .padding()
+                            Spacer()
+                            
+                            VStack {
                                 Image(systemName: "line.horizontal.3")
                                     .resizable()
                                     .scaledToFit()

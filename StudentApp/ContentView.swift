@@ -21,6 +21,8 @@ struct ContentView: View {
             LoginView(pass: pass)
         case 5:
             SignupView(pass: pass)
+        case 6:
+            GymView(pass: pass)
         default:
             WeatherView(pass: pass)
         }

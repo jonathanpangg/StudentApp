@@ -220,7 +220,17 @@ struct WeatherView: View {
                         case "Atmosphere":
                             statusImage = "smoke.fill"
                         case "Clear":
-                            statusImage = "sun.max.fill"
+                            if let time = getTimeComponents() {
+                                if time >= 6 && time < 18 {
+                                    statusImage = "sun.max.fill"
+                                }
+                                else {
+                                    statusImage = "moon.fill"
+                                }
+                            }
+                            else {
+                                statusImage = "sun.max.fill"
+                            }
                         default:
                             statusImage = "cloud.fill"
                         }
@@ -234,6 +244,10 @@ struct WeatherView: View {
         }
     }
     
+    func getTimeComponents() -> Int? {
+        return Calendar.current.dateComponents([.hour, .minute], from: Date()).hour
+    }
+
     // returns the time interval for a notification
     func getTimeInterval(_ hourComponent: Int, _ minuteComponent: Int) -> Int {
         var endHour = hourComponent
@@ -371,7 +385,7 @@ struct WeatherView: View {
                             .scaledToFit()
                             .frame(width: UIScreen.main.bounds.width / 12, height: UIScreen.main.bounds.width / 12)
                             .foregroundColor(getForeground())
-                        Text("Weather") 
+                        Text("Weather")
                             .multilineTextAlignment(.center)
                             .font(.system(size: 12))
                             .foregroundColor(getForeground())
@@ -396,6 +410,23 @@ struct WeatherView: View {
                     }
                     .onTapGesture {
                         pass.currentScreen = 1
+                    }
+                    .padding()
+                    Spacer()
+                    
+                    VStack {
+                        Image(systemName: "figure.walk")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: UIScreen.main.bounds.width / 12, height: UIScreen.main.bounds.width / 12)
+                            .foregroundColor(getForeground())
+                        Text("Gym")
+                            .multilineTextAlignment(.center)
+                            .font(.system(size: 12))
+                            .foregroundColor(getForeground())
+                    }
+                    .onTapGesture {
+                        pass.currentScreen = 6
                     }
                     .padding()
                     Spacer()
