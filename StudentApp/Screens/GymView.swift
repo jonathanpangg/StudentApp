@@ -13,7 +13,11 @@ struct GymView: View {
     @ObservedObject var mode = ThemeStatus()
     @ObservedObject var user = joinUser()
     @State var gymList = [Substring]()
-    @State var currDate = "1"
+    @State var currDate = Date()
+    @State var increment = 0
+    @State var editPressed = false
+    @State var addPressed = false
+    @State var activity = ""
     
     func getForeground() -> Color {
         if mode.mode.mode == "Default" {
@@ -43,7 +47,12 @@ struct GymView: View {
     func getDay(_ date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateStyle = .short
-        return String(formatter.string(from: date)[formatter.string(from: date).index(after: formatter.string(from: date).firstIndex(of: "/")!)..<(formatter.string(from: date).lastIndex(of: "/") ?? formatter.string(from: date).endIndex)])
+        if Int(String(formatter.string(from: date)[formatter.string(from: date).index(after: formatter.string(from: date).firstIndex(of: "/")!)..<(formatter.string(from: date).lastIndex(of: "/") ?? formatter.string(from: date).endIndex)]))! < 10 {
+            return "0" + String(formatter.string(from: date)[formatter.string(from: date).index(after: formatter.string(from: date).firstIndex(of: "/")!)..<(formatter.string(from: date).lastIndex(of: "/") ?? formatter.string(from: date).endIndex)])
+        }
+        else {
+            return String(formatter.string(from: date)[formatter.string(from: date).index(after: formatter.string(from: date).firstIndex(of: "/")!)..<(formatter.string(from: date).lastIndex(of: "/") ?? formatter.string(from: date).endIndex)])
+        }
     }
     
     // returns the day of the week
@@ -105,6 +114,12 @@ struct GymView: View {
         }
     }
     
+    func getDate(_ date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .short
+        return dateFormatter.string(from: date)
+    }
+    
     func getGym() {
         if user.user.count > 0 {
             guard let url = URL(string: "https://heroku-student-app.herokuapp.com/gym/\(user.user[0].id)/\(currDate)") else { return }
@@ -130,7 +145,7 @@ struct GymView: View {
         }
     }
     
-    func postGym(_ id: String, _ date: String, _ activites: [String], _ completion: [Bool]) {
+    func postGym(_ id: String, _ date: String, _ activites: String, _ completion: Bool) {
         let dateQuery = "\(date)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         let activityQuery = "\(activites)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         let completionQuery = "\(completion)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
@@ -148,10 +163,7 @@ struct GymView: View {
         ] as [String: Any]
         request.httpBody = try! JSONSerialization.data(withJSONObject: body, options: [])
         URLSession.shared.dataTask(with: request) { data, response, error in
-            guard let data = data else { return }
-            if let decoded = try? JSONDecoder().decode([GymData].self, from: data) {
-                print(decoded)
-            }
+            guard let _ = data else { return }
         }.resume()
     }
 
@@ -175,6 +187,51 @@ struct GymView: View {
             getBackground()
                 .ignoresSafeArea(.all)
             VStack(alignment: .center) {
+                HStack(alignment: .center) {
+                    Button(action: {
+                        editPressed.toggle()
+                    }, label: {
+                        Text(editPressed ? "Done": "Edit")
+                    })
+                    .foregroundColor(getForeground())
+                    .font(.system(size: UIScreen.main.bounds.width / 20))
+                    .offset(x: editPressed ? UIScreen.main.bounds.width / 13: UIScreen.main.bounds.width / 11)
+                        
+                    Spacer()
+                    Image(systemName: "plus")
+                        .foregroundColor(getForeground())
+                        .font(.system(size: UIScreen.main.bounds.width / 20))
+                        .offset(x: UIScreen.main.bounds.width / -10)
+                        .onTapGesture {
+                            addPressed = true
+                        }
+                }
+                .offset(x: UIScreen.main.bounds.width / -90)
+                
+                Rectangle()
+                    .fill(getForeground())
+                    .frame(height: 1)
+                    .edgesIgnoringSafeArea(.horizontal)
+                
+                HStack(alignment: .center) {
+                    Image(systemName: "chevron.left")
+                        .font(.headline)
+                        .onTapGesture {
+                            increment -= 1
+                            currDate = Date().addingTimeInterval(TimeInterval(86400 * increment))
+                        }
+                    Text("\(getDayOfWeek(currDate)) \(getDay(currDate))")
+                        .font(.title)
+                        .frame(width: UIScreen.main.bounds.width / 16 * 5)
+                    Image(systemName: "chevron.right")
+                        .font(.headline)
+                        .onTapGesture {
+                            increment += 1
+                            currDate = Date().addingTimeInterval(TimeInterval(86400 * increment))
+                        }
+                }
+                .foregroundColor(getForeground())
+                
                 ScrollView(.vertical) {
                     ForEach(gymList, id: \.self) { element in
                         Text(element)
@@ -261,11 +318,74 @@ struct GymView: View {
                 .frame(height: UIScreen.main.bounds.height / 64 * 1)
                 .offset(y: UIScreen.main.bounds.height / 256 * -1)
             }
+            .opacity(addPressed ? 0.5: 1)
+            .blur(radius: addPressed ? 1: 0)
             .onAppear(perform: getGym)
             .onAppear {
                 AppDelegate.orientationLock = UIInterfaceOrientationMask.portrait
                 UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
                 UIViewController.attemptRotationToDeviceOrientation()
+            }
+            
+            if addPressed {
+                ZStack {
+                    Text("")
+                        .multilineTextAlignment(.leading)
+                        .foregroundColor(getForeground())
+                        .frame(width: UIScreen.main.bounds.width / 2, height: UIScreen.main.bounds.width / 2)
+                        .background(getBackground())
+                        .clipShape(RoundedRectangle(cornerRadius: 16.0, style: .continuous))
+                        .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)), radius: 10, x: 6, y: 4)
+                    HStack {
+                        VStack(spacing: 0) {
+                            TextField("Gym Activity:", text: $activity)
+                                .multilineTextAlignment(.center)
+                                .foregroundColor(getForeground())
+                            Spacer()
+                            
+                            Rectangle()
+                                .fill(getForeground())
+                                .frame(height: 1)
+                                .edgesIgnoringSafeArea(.horizontal)
+                            
+                            HStack(alignment: .center) {
+                                HStack(alignment: .center) {
+                                    Text("Enter")
+                                        .foregroundColor(getForeground())
+                                }
+                                .frame(width: (UIScreen.main.bounds.width / 2 - UIScreen.main.bounds.width / 16) / 2)
+                                .offset(x: UIScreen.main.bounds.width / 64)
+                                .onTapGesture {
+                                    if gymList.count == 0 {
+                                        if user.user.count > 0 {
+                                            postGym(user.user[0].id, getDate(currDate), activity, true)
+                                        }
+                                    }
+                                }
+                                
+                                Rectangle()
+                                    .fill(getForeground())
+                                    .frame(width: 1, height: UIScreen.main.bounds.height / 24)
+                                    .edgesIgnoringSafeArea(.vertical)
+                                
+                                HStack(alignment: .center) {
+                                    Text("Cancel")
+                                        .foregroundColor(getForeground())
+                                }
+                                .frame(width: (UIScreen.main.bounds.width / 2 - UIScreen.main.bounds.width / 16) / 2)
+                                .offset(x: UIScreen.main.bounds.width / -64)
+                                .onTapGesture {
+                                    withAnimation {
+                                        addPressed = false
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    .frame(width: UIScreen.main.bounds.width / 2 - UIScreen.main.bounds.width / 16, height: UIScreen.main.bounds.width / 2 - UIScreen.main.bounds.width / 16)
+                    .background(getBackground())
+                }
+                .background(getBackground())
             }
         }
     }
