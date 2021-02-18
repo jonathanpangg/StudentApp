@@ -142,14 +142,12 @@ struct GymView: View {
                                 var complete = decoded[0].completion
                                 result = result.replacingOccurrences(of: "[", with: "")
                                 result = result.replacingOccurrences(of: "]", with: "")
-                                result = result.replacingOccurrences(of: ",", with: "")
                                 result = result.replacingOccurrences(of: "\"", with: "")
                                 complete = complete.replacingOccurrences(of: "[", with: "")
                                 complete = complete.replacingOccurrences(of: "]", with: "")
-                                complete = complete.replacingOccurrences(of: ",", with: "")
                                 complete = complete.replacingOccurrences(of: "\"", with: "")
-                                gymList = result.split(separator: " ")
-                                completionList = complete.split(separator: " ")
+                                gymList = result.split(separator: ",")
+                                completionList = complete.split(separator: ",")
                                 passed = true
                             }
                             else {
@@ -165,7 +163,8 @@ struct GymView: View {
     }
     
     func postGym(_ id: String, _ date: String, _ activites: String, _ completion: String) {
-        guard let url = URL(string: "https://heroku-student-app.herokuapp.com/gym/\(id)/\(String(describing: date))/\(activites)/\(completion)") else { return }
+        let activityQuery = activites.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+        guard let url = URL(string: "https://heroku-student-app.herokuapp.com/gym/\(id)/\(String(describing: date))/\(activityQuery)/\(completion)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.allHTTPHeaderFields = [
@@ -175,7 +174,7 @@ struct GymView: View {
             "id": id,
             "date": date,
             "activity": activites,
-            "completion": "\(completion)"
+            "completion": completion
         ] as [String: Any]
         request.httpBody = try! JSONSerialization.data(withJSONObject: body, options: [])
         URLSession.shared.dataTask(with: request) { data, response, error in
