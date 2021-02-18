@@ -199,6 +199,9 @@ struct GymView: View {
         
         URLSession.shared.dataTask(with: request) { data, response, error in
             guard let _ = data else { return }
+            DispatchQueue.main.async {
+                // deleteAllEmpties(id, date)
+            }
         }.resume()
     }
     
@@ -209,6 +212,21 @@ struct GymView: View {
         }
         putGym(id, date, gymList, completionList)
     }
+    
+    func deleteAllEmpties(_ id: String, _ date: String) {
+        let activityQuery = "\"\([])\"".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+        guard let url = URL(string: "https://heroku-student-app.herokuapp.com/gym/\(id)/\(date)/\(activityQuery)") else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "DELETE"
+        request.allHTTPHeaderFields = [
+            "Content-Type": "application/json"
+        ]
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let _ = data else { return }
+        }.resume()
+    }
+    
     var body: some View {
         ZStack {
             getBackground()
