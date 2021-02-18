@@ -202,6 +202,13 @@ struct GymView: View {
         }.resume()
     }
     
+    func deleteGym(_ id: String, _ date: String, _ deleteActivity: Substring, _ deleteCompletion: Substring) {
+        if let index = gymList.firstIndex(of: deleteActivity) {
+            gymList.remove(at: index)
+            completionList.remove(at: index)
+        }
+        putGym(id, date, gymList, completionList)
+    }
     var body: some View {
         ZStack {
             getBackground()
@@ -209,7 +216,9 @@ struct GymView: View {
             VStack(alignment: .center) {
                 HStack(alignment: .center) {
                     Button(action: {
-                        editPressed.toggle()
+                        withAnimation {
+                            editPressed.toggle()
+                        }
                     }, label: {
                         Text(editPressed ? "Done": "Edit")
                     })
@@ -223,7 +232,9 @@ struct GymView: View {
                         .font(.system(size: UIScreen.main.bounds.width / 20))
                         .offset(x: UIScreen.main.bounds.width / -10)
                         .onTapGesture {
-                            addPressed = true
+                            withAnimation {
+                                addPressed = true
+                            }
                         }
                 }
                 .offset(x: UIScreen.main.bounds.width / -90)
@@ -257,6 +268,22 @@ struct GymView: View {
                 ScrollView(.vertical, showsIndicators: false) {
                     ForEach(0..<gymList.count, id: \.self) { index in
                         HStack {
+                            if editPressed {
+                                ZStack {
+                                    Circle()
+                                        .fill(Color.red)
+                                        .frame(width: UIScreen.main.bounds.width / 18, height: UIScreen.main.bounds.width / 18)
+                                        .padding(.leading)
+                                    Image(systemName: "minus")
+                                        .foregroundColor(getForeground())
+                                        .frame(width: UIScreen.main.bounds.width / 18 - UIScreen.main.bounds.width / 18 / 2, height: UIScreen.main.bounds.width / 18 - UIScreen.main.bounds.width / 18 / 2)
+                                        .padding(.leading)
+                                        .onTapGesture {
+                                            deleteGym("\(user.user[0].id)", "\(Int(currDate.timeIntervalSince1970) / 86400)", gymList[index], completionList[index])
+                                        }
+                                }
+                            }
+
                             ZStack {
                                 RoundedRectangle(cornerRadius: 8)
                                     .stroke(getForeground())
@@ -270,13 +297,15 @@ struct GymView: View {
                                 }
                             }
                             .onTapGesture {
-                                if completionList[index] == "true" {
-                                    completionList[index] = "false"
+                                withAnimation {
+                                    if completionList[index] == "true" {
+                                        completionList[index] = "false"
+                                    }
+                                    else {
+                                        completionList[index] = "true"
+                                    }
+                                    putGym("\(user.user[0].id)", "\(Int(currDate.timeIntervalSince1970) / 86400)", gymList, completionList)
                                 }
-                                else {
-                                    completionList[index] = "true"
-                                }
-                                putGym("\(user.user[0].id)", "\(Int(currDate.timeIntervalSince1970) / 86400)", gymList, completionList)
                             }
                             .padding(.leading)
                             Spacer()
@@ -286,6 +315,7 @@ struct GymView: View {
                                 .padding(.trailing)
                         }
                         .frame(width: UIScreen.main.bounds.width / 8 * 7)
+                        .offset(y: UIScreen.main.bounds.height / 256)
                         
                         Rectangle()
                             .fill(getForeground())
