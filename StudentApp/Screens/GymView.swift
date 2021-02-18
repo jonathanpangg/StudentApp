@@ -122,8 +122,6 @@ struct GymView: View {
     }
     
     func getGym() {
-        gymList = []
-        completionList = []
         if user.user.count > 0 {
             guard let url = URL(string: "https://heroku-student-app.herokuapp.com/gym/\(user.user[0].id)/\(Int(currDate.timeIntervalSince1970) / 86400)") else { return }
             var request = URLRequest(url: url)
@@ -137,11 +135,11 @@ struct GymView: View {
                 if let decoded = try? JSONDecoder().decode([GymData].self, from: data) {
                     var count = 0
                     var passed = false
-                    while (count < 5 || passed) {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-                            for i in decoded {
-                                var result = i.activity
-                                var complete = i.completion
+                    while !(count >= 20 || passed) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            if decoded.count > 0 {
+                                var result = decoded[0].activity
+                                var complete = decoded[0].completion
                                 result = result.replacingOccurrences(of: "[", with: "")
                                 result = result.replacingOccurrences(of: "]", with: "")
                                 result = result.replacingOccurrences(of: ",", with: "")
@@ -153,6 +151,10 @@ struct GymView: View {
                                 gymList = result.split(separator: " ")
                                 completionList = complete.split(separator: " ")
                                 passed = true
+                            }
+                            else {
+                                gymList = []
+                                completionList = []
                             }
                         }
                         count += 1
@@ -291,6 +293,8 @@ struct GymView: View {
                             .edgesIgnoringSafeArea(.horizontal)
                     }
                 }
+                .padding(.top)
+                
                 HStack(alignment: .center) {
                     VStack {
                         Image(systemName: "cloud.sun.fill")
@@ -386,7 +390,7 @@ struct GymView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 16.0, style: .continuous))
                         .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)), radius: 10, x: 6, y: 4)
                     HStack {
-                        VStack(spacing: 0) {
+                        VStack(alignment: .center, spacing: 0) {
                             TextField("Gym Activity:", text: $activity)
                                 .multilineTextAlignment(.center)
                                 .foregroundColor(getForeground())
