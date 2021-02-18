@@ -121,8 +121,9 @@ struct GymView: View {
     }
     
     func getGym() {
+        gymList = []
         if user.user.count > 0 {
-            guard let url = URL(string: "https://heroku-student-app.herokuapp.com/gym/\(user.user[0].id)/\(currDate)") else { return }
+            guard let url = URL(string: "https://heroku-student-app.herokuapp.com/gym/\(user.user[0].id)/\(Int(currDate.timeIntervalSince1970) / 86400)") else { return }
             var request = URLRequest(url: url)
             request.httpMethod = "GET"
             request.allHTTPHeaderFields = [
@@ -132,13 +133,21 @@ struct GymView: View {
             URLSession.shared.dataTask(with: request) { data, response, error in
                 guard let data = data else { return }
                 if let decoded = try? JSONDecoder().decode([GymData].self, from: data) {
-                    for i in decoded {
-                        var result = i.activity
-                        result = result.replacingOccurrences(of: "[", with: "")
-                        result = result.replacingOccurrences(of: "]", with: "")
-                        result = result.replacingOccurrences(of: ",", with: "")
-                        result = result.replacingOccurrences(of: "\"", with: "")
-                        gymList = result.split(separator: " ")
+                    var count = 0
+                    var passed = false
+                    while (count < 5 && !passed) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                            for i in decoded {
+                                var result = i.activity
+                                result = result.replacingOccurrences(of: "[", with: "")
+                                result = result.replacingOccurrences(of: "]", with: "")
+                                result = result.replacingOccurrences(of: ",", with: "")
+                                result = result.replacingOccurrences(of: "\"", with: "")
+                                gymList = result.split(separator: " ")
+                                passed = true
+                            }
+                        }
+                        count += 1
                     }
                 }
             }.resume()
@@ -146,28 +155,28 @@ struct GymView: View {
     }
     
     func postGym(_ id: String, _ date: String, _ activites: String, _ completion: Bool) {
-        let dateQuery = "\(date)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
-        let activityQuery = "\(activites)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
-        let completionQuery = "\(completion)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
-        guard let url = URL(string: "https://heroku-student-app.herokuapp.com/gym/\(id)/\(dateQuery)/\(activityQuery)/\(completionQuery)") else { return }
+        guard let url = URL(string: "https://heroku-student-app.herokuapp.com/gym/\(id)/\(String(describing: date))/\(activites)/\(completion)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.allHTTPHeaderFields = [
             "Content-Type": "application/json"
         ]
         let body = [
-            "id": "478304AB-FBEB-47F8-AB0A-676D1A1932D0",
+            "id": id,
             "date": date,
-            "activity": "\(activites)",
+            "activity": activites,
             "completion": "\(completion)"
         ] as [String: Any]
         request.httpBody = try! JSONSerialization.data(withJSONObject: body, options: [])
         URLSession.shared.dataTask(with: request) { data, response, error in
             guard let _ = data else { return }
+            DispatchQueue.main.async {
+                gymList.append(Substring(activites))
+            }
         }.resume()
     }
 
-    func putGym(_ id: String, _ date: String, _ newActivities: [String], _ newCompletion: [Bool]) {
+    func putGym(_ id: String, _ date: String, _ newActivities: [Substring], _ newCompletion: [Bool]) {
         let newActivityQuery = "\(newActivities)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         let newCompletionQuery = "\(newCompletion)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         guard let url = URL(string: "https://heroku-student-app.herokuapp.com/gym/\(id)/\(date)/\(newActivityQuery)/\(newCompletionQuery)") else { return }
@@ -219,6 +228,7 @@ struct GymView: View {
                         .onTapGesture {
                             increment -= 1
                             currDate = Date().addingTimeInterval(TimeInterval(86400 * increment))
+                            getGym()
                         }
                     Text("\(getDayOfWeek(currDate)) \(getDay(currDate))")
                         .font(.title)
@@ -228,6 +238,7 @@ struct GymView: View {
                         .onTapGesture {
                             increment += 1
                             currDate = Date().addingTimeInterval(TimeInterval(86400 * increment))
+                            getGym()
                         }
                 }
                 .foregroundColor(getForeground())
@@ -358,7 +369,19 @@ struct GymView: View {
                                 .onTapGesture {
                                     if gymList.count == 0 {
                                         if user.user.count > 0 {
-                                            postGym(user.user[0].id, getDate(currDate), activity, true)
+                                            postGym("\(user.user[0].id)", "\(Int(currDate.timeIntervalSince1970) / 86400)", "\(activity)", true)
+                                            addPressed = false
+                                            activity = ""
+                                            getGym()
+                                        }
+                                    }
+                                    else {
+                                        if user.user.count > 0 {
+                                            gymList.append(Substring(activity))
+                                            putGym("\(user.user[0].id)", "\(Int(currDate.timeIntervalSince1970) / 86400)", gymList, [true, false])
+                                            addPressed = false
+                                            activity = ""
+                                            getGym()
                                         }
                                     }
                                 }
