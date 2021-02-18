@@ -126,5 +126,19 @@ app.put('/gym/:id/:date/:newActivity/:newCompletion', (req, res) => {
     })
 })
 
+// /DELETE gym info 
+app.delete('gym/:id/:date/:activity', (req, res) => {
+    mongodb.connect(mongodb_URI, function(error, db) {
+        if (error) throw error
+        var dbo = db.db('StudentApp')
+        var query = { date: req.params.date, activity: req.params.activity }
+        dbo.collection('GymInfo').deleteOne(query, function(error, result) {
+            if (err) throw err
+            console.log('deleted')
+            db.close()
+        })
+    })
+})
+
 const port = process.env.PORT || 2000
 app.listen(port, () => console.log('Listening on ' + port + '...'))
