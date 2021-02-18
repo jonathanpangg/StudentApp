@@ -13,6 +13,7 @@ struct GymView: View {
     @ObservedObject var mode = ThemeStatus()
     @ObservedObject var user = joinUser()
     @State var gymList = [Substring]()
+    @State var completionList = [Substring]()
     @State var currDate = Date()
     @State var increment = 0
     @State var editPressed = false
@@ -122,6 +123,7 @@ struct GymView: View {
     
     func getGym() {
         gymList = []
+        completionList = []
         if user.user.count > 0 {
             guard let url = URL(string: "https://heroku-student-app.herokuapp.com/gym/\(user.user[0].id)/\(Int(currDate.timeIntervalSince1970) / 86400)") else { return }
             var request = URLRequest(url: url)
@@ -135,15 +137,21 @@ struct GymView: View {
                 if let decoded = try? JSONDecoder().decode([GymData].self, from: data) {
                     var count = 0
                     var passed = false
-                    while (count < 5 && !passed) {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    while (count < 5 || passed) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
                             for i in decoded {
                                 var result = i.activity
+                                var complete = i.completion
                                 result = result.replacingOccurrences(of: "[", with: "")
                                 result = result.replacingOccurrences(of: "]", with: "")
                                 result = result.replacingOccurrences(of: ",", with: "")
                                 result = result.replacingOccurrences(of: "\"", with: "")
+                                complete = complete.replacingOccurrences(of: "[", with: "")
+                                complete = complete.replacingOccurrences(of: "]", with: "")
+                                complete = complete.replacingOccurrences(of: ",", with: "")
+                                complete = complete.replacingOccurrences(of: "\"", with: "")
                                 gymList = result.split(separator: " ")
+                                completionList = complete.split(separator: " ")
                                 passed = true
                             }
                         }
@@ -154,7 +162,7 @@ struct GymView: View {
         }
     }
     
-    func postGym(_ id: String, _ date: String, _ activites: String, _ completion: Bool) {
+    func postGym(_ id: String, _ date: String, _ activites: String, _ completion: String) {
         guard let url = URL(string: "https://heroku-student-app.herokuapp.com/gym/\(id)/\(String(describing: date))/\(activites)/\(completion)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -172,11 +180,12 @@ struct GymView: View {
             guard let _ = data else { return }
             DispatchQueue.main.async {
                 gymList.append(Substring(activites))
+                completionList.append(Substring(completion))
             }
         }.resume()
     }
 
-    func putGym(_ id: String, _ date: String, _ newActivities: [Substring], _ newCompletion: [Bool]) {
+    func putGym(_ id: String, _ date: String, _ newActivities: [Substring], _ newCompletion: [Substring]) {
         let newActivityQuery = "\(newActivities)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         let newCompletionQuery = "\(newCompletion)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         guard let url = URL(string: "https://heroku-student-app.herokuapp.com/gym/\(id)/\(date)/\(newActivityQuery)/\(newCompletionQuery)") else { return }
@@ -231,8 +240,8 @@ struct GymView: View {
                             getGym()
                         }
                     Text("\(getDayOfWeek(currDate)) \(getDay(currDate))")
-                        .font(.title)
-                        .frame(width: UIScreen.main.bounds.width / 16 * 5)
+                        .font(.largeTitle)
+                        .frame(width: UIScreen.main.bounds.width / 16 * 7)
                     Image(systemName: "chevron.right")
                         .font(.headline)
                         .onTapGesture {
@@ -243,13 +252,42 @@ struct GymView: View {
                 }
                 .foregroundColor(getForeground())
                 
-                ScrollView(.vertical) {
-                    ForEach(gymList, id: \.self) { element in
-                        Text(element)
-                            .foregroundColor(getForeground())
+                ScrollView(.vertical, showsIndicators: false) {
+                    ForEach(0..<gymList.count, id: \.self) { index in
+                        HStack {
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(getForeground())
+                                    .frame(width: UIScreen.main.bounds.width / 12, height: UIScreen.main.bounds.width / 12)
+                                if index <= completionList.count - 1 {
+                                    if completionList[index] == "true" {
+                                        Image(systemName: "checkmark")
+                                            .foregroundColor(Color.green)
+                                            .frame(width: UIScreen.main.bounds.width / 12 - UIScreen.main.bounds.width / 48, height: UIScreen.main.bounds.width / 12 - UIScreen.main.bounds.width / 48)
+                                    }
+                                }
+                            }
+                            .onTapGesture {
+                                if completionList[index] == "true" {
+                                    completionList[index] = "false"
+                                }
+                                else {
+                                    completionList[index] = "true"
+                                }
+                                putGym("\(user.user[0].id)", "\(Int(currDate.timeIntervalSince1970) / 86400)", gymList, completionList)
+                            }
+                            .padding(.leading)
+                            Spacer()
+                            Text(gymList[index])
+                                .foregroundColor(getForeground())
+                                .font(.system(size: UIScreen.main.bounds.width / 18))
+                                .padding(.trailing)
+                        }
+                        .frame(width: UIScreen.main.bounds.width / 8 * 7)
+                        
                         Rectangle()
                             .fill(getForeground())
-                            .frame(height: 1)
+                            .frame(width: UIScreen.main.bounds.width / 8 * 7, height: 1)
                             .edgesIgnoringSafeArea(.horizontal)
                     }
                 }
@@ -369,7 +407,7 @@ struct GymView: View {
                                 .onTapGesture {
                                     if gymList.count == 0 {
                                         if user.user.count > 0 {
-                                            postGym("\(user.user[0].id)", "\(Int(currDate.timeIntervalSince1970) / 86400)", "\(activity)", true)
+                                            postGym("\(user.user[0].id)", "\(Int(currDate.timeIntervalSince1970) / 86400)", "\(activity)", "false")
                                             addPressed = false
                                             activity = ""
                                             getGym()
@@ -378,7 +416,8 @@ struct GymView: View {
                                     else {
                                         if user.user.count > 0 {
                                             gymList.append(Substring(activity))
-                                            putGym("\(user.user[0].id)", "\(Int(currDate.timeIntervalSince1970) / 86400)", gymList, [true, false])
+                                            completionList.append(Substring("false"))
+                                            putGym("\(user.user[0].id)", "\(Int(currDate.timeIntervalSince1970) / 86400)", gymList, completionList)
                                             addPressed = false
                                             activity = ""
                                             getGym()
