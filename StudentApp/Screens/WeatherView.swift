@@ -61,8 +61,6 @@ struct WeatherView: View {
         let myCalendar = Calendar(identifier: .gregorian)
         let weekDay = myCalendar.component(.weekday, from: todayDate)
         switch weekDay {
-        case 0:
-            return "Sat"
         case 1:
             return "Sun"
         case 2:
@@ -73,8 +71,10 @@ struct WeatherView: View {
             return "Wed"
         case 5:
             return "Thurs"
-        default:
+        case 6:
             return "Fri"
+        default:
+            return "Sat"
         }
     }
     

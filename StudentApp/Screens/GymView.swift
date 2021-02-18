@@ -66,8 +66,6 @@ struct GymView: View {
         let myCalendar = Calendar(identifier: .gregorian)
         let weekDay = myCalendar.component(.weekday, from: todayDate)
         switch weekDay {
-        case 0:
-            return "Sat"
         case 1:
             return "Sun"
         case 2:
@@ -78,8 +76,10 @@ struct GymView: View {
             return "Wed"
         case 5:
             return "Thurs"
-        default:
+        case 6:
             return "Fri"
+        default:
+            return "Sat"
         }
     }
     
@@ -135,7 +135,7 @@ struct GymView: View {
                 if let decoded = try? JSONDecoder().decode([GymData].self, from: data) {
                     var count = 0
                     var passed = false
-                    while !(count >= 20 || passed) {
+                    while !(count >= 5 || passed) {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                             if decoded.count > 0 {
                                 var result = decoded[0].activity
@@ -148,6 +148,10 @@ struct GymView: View {
                                 complete = complete.replacingOccurrences(of: "\"", with: "")
                                 gymList = result.split(separator: ",")
                                 completionList = complete.split(separator: ",")
+                                for index in 0..<gymList.count {
+                                    gymList[index] = Substring(gymList[index].replacingOccurrences(of: " ", with: ""))
+                                    completionList[index] = Substring(completionList[index].replacingOccurrences(of: " ", with: ""))
+                                }
                                 passed = true
                             }
                             else {
@@ -180,8 +184,7 @@ struct GymView: View {
         URLSession.shared.dataTask(with: request) { data, response, error in
             guard let _ = data else { return }
             DispatchQueue.main.async {
-                gymList.append(Substring(activites))
-                completionList.append(Substring(completion))
+                getGym()
             }
         }.resume()
     }
@@ -199,6 +202,7 @@ struct GymView: View {
         URLSession.shared.dataTask(with: request) { data, response, error in
             guard let _ = data else { return }
             DispatchQueue.main.async {
+                getGym()
                 // deleteAllEmpties(id, date)
             }
         }.resume()
@@ -304,12 +308,12 @@ struct GymView: View {
                             ZStack {
                                 RoundedRectangle(cornerRadius: 8)
                                     .stroke(getForeground())
-                                    .frame(width: UIScreen.main.bounds.width / 12, height: UIScreen.main.bounds.width / 12)
+                                    .frame(width: UIScreen.main.bounds.width / 16, height: UIScreen.main.bounds.width / 16)
                                 if index <= completionList.count - 1 {
                                     if completionList[index] == "true" {
                                         Image(systemName: "checkmark")
                                             .foregroundColor(Color.green)
-                                            .frame(width: UIScreen.main.bounds.width / 12 - UIScreen.main.bounds.width / 48, height: UIScreen.main.bounds.width / 12 - UIScreen.main.bounds.width / 48)
+                                            .frame(width: UIScreen.main.bounds.width / 16 - UIScreen.main.bounds.width / 64, height: UIScreen.main.bounds.width / 16 - UIScreen.main.bounds.width / 64)
                                     }
                                 }
                             }
@@ -328,7 +332,7 @@ struct GymView: View {
                             Spacer()
                             Text(gymList[index])
                                 .foregroundColor(getForeground())
-                                .font(.system(size: UIScreen.main.bounds.width / 18))
+                                .font(.headline)
                                 .padding(.trailing)
                         }
                         .frame(width: UIScreen.main.bounds.width / 8 * 7)
