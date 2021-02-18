@@ -126,7 +126,7 @@ app.put('/gym/:id/:date/:newActivity/:newCompletion', (req, res) => {
     })
 })
 
-// /DELTE gym info 
+// /DELETE gym info 
 app.delete('gym/:id/:date/:activity', (req, res) => {
     mongodb.connect(mongodb_URI, function(error, db) {
         if (error) throw error
