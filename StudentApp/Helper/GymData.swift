@@ -10,6 +10,6 @@ import SwiftUI
 struct GymData: Codable {
     let id: String
     let date: String
-    let activity: String
-    let completion: String
+    var activity: [String]
+    var completion: [Bool]
 }
