@@ -126,15 +126,15 @@ app.put('/gym/:id/:date/:newActivity/:newCompletion', (req, res) => {
     })
 })
 
-// /PUT gym info
-app.delete('/gym/:id/:date/:activity', (req, res) => {
+// /DELETE gym info
+app.delete('/gym/:id/:date', (req, res) => {
     mongodb.connect(mongodb_URI, function(error, db) {
         if (error) throw error
         var dbo = db.db('StudentApp')
-        var query = { date: req.params.date, activity: activity }
-        dbo.collection('GymInfo').deleteMany(query, function(error, result) { 
-            if (error) throw error
-            console.log(result)
+        var query = { id: req.params.id, date: req.params.date }
+        dbo.collection('GymInfo').deleteOne(query, function(error, result) {
+            if (error) throw err
+            console.log('Deleted')
             db.close()
         })
     })
