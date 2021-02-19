@@ -127,7 +127,27 @@ struct GymView: View {
         return "\(month)\(day)\(year)"
     }
     
-    func getGym() {
+    func defaultGetGym() {
+        if user.user.count > 0 {
+            guard let url = URL(string: "https://heroku-student-app.herokuapp.com/gym/\(user.user[0].id)/\(getTimeComponents(currDate))") else { return }
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET"
+            request.allHTTPHeaderFields = [
+                "Content-Type": "application/json"
+            ]
+            
+            URLSession.shared.dataTask(with: request) { data, response, error in
+                guard let data = data else { return }
+                if let decoded = try? JSONDecoder().decode([GymData].self, from: data) {
+                    DispatchQueue.main.async {
+                        returnData = decoded
+                    }
+                }
+            }.resume()
+        }
+    }
+    
+    func dataGetGym() {
         if user.user.count > 0 {
             guard let url = URL(string: "https://heroku-student-app.herokuapp.com/gym/\(user.user[0].id)/\(getTimeComponents(currDate))") else { return }
             var request = URLRequest(url: url)
@@ -141,10 +161,11 @@ struct GymView: View {
                 if let decoded = try? JSONDecoder().decode([GymData].self, from: data) {
                     var count = 0
                     var passed = false
-                    while !(count >= 5 || passed) {
+                    let pastValue = returnData
+                    while !(count >= 10 || passed) {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            if decoded.count > 0 {
-                                returnData = decoded
+                            returnData = decoded
+                            if returnData != pastValue {
                                 passed = true
                             }
                         }
@@ -174,7 +195,7 @@ struct GymView: View {
         URLSession.shared.dataTask(with: request) { data, response, error in
             guard let _ = data else { return }
             DispatchQueue.main.async {
-                getGym()
+                dataGetGym()
             }
         }.resume()
     }
@@ -241,7 +262,7 @@ struct GymView: View {
                         .onTapGesture {
                             increment -= 1
                             currDate = Date().addingTimeInterval(TimeInterval(86400 * increment))
-                            getGym()
+                            dataGetGym()
                         }
                     Text("\(getDayOfWeek(currDate)) \(getDay(currDate))")
                         .font(.largeTitle)
@@ -251,7 +272,7 @@ struct GymView: View {
                         .onTapGesture {
                             increment += 1
                             currDate = Date().addingTimeInterval(TimeInterval(86400 * increment))
-                            getGym()
+                            dataGetGym()
                         }
                 }
                 .foregroundColor(getForeground())
@@ -393,7 +414,7 @@ struct GymView: View {
             }
             .opacity(addPressed ? 0.5: 1)
             .blur(radius: addPressed ? 1: 0)
-            .onAppear(perform: getGym)
+            .onAppear(perform: defaultGetGym)
             .onAppear {
                 AppDelegate.orientationLock = UIInterfaceOrientationMask.portrait
                 UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
@@ -435,7 +456,7 @@ struct GymView: View {
                                                 postGym("\(user.user[0].id)", getTimeComponents(currDate), ["\(activity)"], [false])
                                                 addPressed = false
                                                 activity = ""
-                                                getGym()
+                                                dataGetGym()
                                             }
                                         }
                                         else {
@@ -444,7 +465,7 @@ struct GymView: View {
                                             putGym("\(user.user[0].id)", getTimeComponents(currDate), returnData[0].activity, returnData[0].completion)
                                             addPressed = false
                                             activity = ""
-                                            getGym()
+                                            dataGetGym()
                                         }
                                     }
                                     

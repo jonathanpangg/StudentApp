@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct GymData: Codable {
+struct GymData: Codable, Equatable {
     let id: String
     let date: String
     var activity: [String]
