@@ -46,271 +46,278 @@ struct SettingView: View {
             getBackground()
                 .ignoresSafeArea(.all)
             VStack(alignment: .center) {
-                HStack {
-                    Text("Themes")
-                        .foregroundColor(getForeground())
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                        .foregroundColor(getForeground())
-                        .rotationEffect(.degrees(expandThemes ? 90 : 0))
-                        .animation(.easeInOut)
-                }
-                .frame(width: UIScreen.main.bounds.width / 8 * 7 - UIScreen.main.bounds.width / 64 * 7)
-                .background(getBackground())
-                .onTapGesture {
-                    withAnimation {
-                        expandThemes.toggle()
-                    }
-                }
-                .padding(.top)
-                Rectangle()
-                    .fill(getForeground())
-                    .frame(width: UIScreen.main.bounds.width / 8 * 7, height: 1)
-                    .edgesIgnoringSafeArea(.horizontal)
-                
-                if expandThemes {
+                VStack {
                     HStack {
+                        Text("Themes")
+                            .foregroundColor(getForeground())
                         Spacer()
-                        VStack {
-                            HStack {
-                                Text("Light Mode")
-                                    .foregroundColor(getForeground())
-                                    .offset(x: UIScreen.main.bounds.width / 16)
-                                Spacer()
-                                ZStack {
-                                    if mode.mode.mode == "Light" {
-                                        Circle()
-                                            .fill()
-                                            .foregroundColor(Color.blue)
-                                            .frame(width: UIScreen.main.bounds.width / 16 - UIScreen.main.bounds.width / 32, height: UIScreen.main.bounds.width / 16 - UIScreen.main.bounds.width / 32)
-                                    }
-                                    Circle()
-                                        .stroke(getForeground(), lineWidth: 1)
-                                        .frame(width: UIScreen.main.bounds.width / 16, height: UIScreen.main.bounds.width / 16)
-                                }
-                                .padding(.trailing)
-                            }
-                            .frame(width: UIScreen.main.bounds.width / 8 * 6)
-                            
-                            Rectangle()
-                                .fill(getForeground())
-                                .frame(width: UIScreen.main.bounds.width / 8 * 6, height: 1)
-                                .edgesIgnoringSafeArea(.horizontal)
-                        }
+                        Image(systemName: "chevron.right")
+                            .foregroundColor(getForeground())
+                            .rotationEffect(.degrees(expandThemes ? 90 : 0))
+                            .animation(.easeInOut)
                     }
-                    .frame(width: UIScreen.main.bounds.width / 8 * 7)
+                    .frame(width: UIScreen.main.bounds.width / 8 * 7 - UIScreen.main.bounds.width / 64 * 7)
                     .background(getBackground())
                     .onTapGesture {
-                        mode.mode.mode = "Light"
-                        if let encoded = try? JSONEncoder().encode(mode.mode) {
-                            UserDefaults.standard.set(encoded, forKey: "save")
+                        withAnimation {
+                            expandThemes.toggle()
                         }
                     }
+                    .padding(.top)
+                    Rectangle()
+                        .fill(getForeground())
+                        .frame(width: UIScreen.main.bounds.width / 8 * 7, height: 1)
+                        .edgesIgnoringSafeArea(.horizontal)
                     
-                    HStack {
-                        Spacer()
-                        VStack {
-                            HStack {
-                                Text("Dark Mode")
-                                    .foregroundColor(getForeground())
-                                    .offset(x: UIScreen.main.bounds.width / 16)
-                                Spacer()
-                                ZStack {
-                                    if mode.mode.mode == "Dark" {
+                    if expandThemes {
+                        HStack {
+                            Spacer()
+                            VStack {
+                                HStack {
+                                    Text("Light Mode")
+                                        .foregroundColor(getForeground())
+                                        .offset(x: UIScreen.main.bounds.width / 16)
+                                    Spacer()
+                                    ZStack {
+                                        if mode.mode.mode == "Light" {
+                                            Circle()
+                                                .fill()
+                                                .foregroundColor(Color.blue)
+                                                .frame(width: UIScreen.main.bounds.width / 16 - UIScreen.main.bounds.width / 32, height: UIScreen.main.bounds.width / 16 - UIScreen.main.bounds.width / 32)
+                                        }
                                         Circle()
-                                            .fill()
-                                            .foregroundColor(Color.blue)
-                                            .frame(width: UIScreen.main.bounds.width / 16 - UIScreen.main.bounds.width / 32, height: UIScreen.main.bounds.width / 16 - UIScreen.main.bounds.width / 32)
+                                            .stroke(getForeground(), lineWidth: 1)
+                                            .frame(width: UIScreen.main.bounds.width / 16, height: UIScreen.main.bounds.width / 16)
                                     }
-                                    Circle()
-                                        .stroke(getForeground(), lineWidth: 1)
-                                        .frame(width: UIScreen.main.bounds.width / 16, height: UIScreen.main.bounds.width / 16)
+                                    .padding(.trailing)
                                 }
-                                .padding(.trailing)
+                                .frame(width: UIScreen.main.bounds.width / 8 * 6)
+                                
+                                Rectangle()
+                                    .fill(getForeground())
+                                    .frame(width: UIScreen.main.bounds.width / 8 * 6, height: 1)
+                                    .edgesIgnoringSafeArea(.horizontal)
                             }
-                            .frame(width: UIScreen.main.bounds.width / 8 * 6)
-                            
-                            Rectangle()
-                                .fill(getForeground())
-                                .frame(width: UIScreen.main.bounds.width / 8 * 6, height: 1)
-                                .edgesIgnoringSafeArea(.horizontal)
+                        }
+                        .frame(width: UIScreen.main.bounds.width / 8 * 7)
+                        .background(getBackground())
+                        .onTapGesture {
+                            mode.mode.mode = "Light"
+                            if let encoded = try? JSONEncoder().encode(mode.mode) {
+                                UserDefaults.standard.set(encoded, forKey: "save")
+                            }
                         }
                         
-                    }
-                    .frame(width: UIScreen.main.bounds.width / 8 * 7)
-                    .background(getBackground())
-                    .onTapGesture {
-                        mode.mode.mode = "Dark"
-                        if let encoded = try? JSONEncoder().encode(mode.mode) {
-                            UserDefaults.standard.set(encoded, forKey: "save")
-                        }
-                    }
-                    
-                    HStack {
-                        Spacer()
-                        VStack {
-                            HStack {
-                                Text("System Mode")
-                                    .foregroundColor(getForeground())
-                                    .offset(x: UIScreen.main.bounds.width / 16)
-                                Spacer()
-                                ZStack {
-                                    if mode.mode.mode == "Default" {
+                        HStack {
+                            Spacer()
+                            VStack {
+                                HStack {
+                                    Text("Dark Mode")
+                                        .foregroundColor(getForeground())
+                                        .offset(x: UIScreen.main.bounds.width / 16)
+                                    Spacer()
+                                    ZStack {
+                                        if mode.mode.mode == "Dark" {
+                                            Circle()
+                                                .fill()
+                                                .foregroundColor(Color.blue)
+                                                .frame(width: UIScreen.main.bounds.width / 16 - UIScreen.main.bounds.width / 32, height: UIScreen.main.bounds.width / 16 - UIScreen.main.bounds.width / 32)
+                                        }
                                         Circle()
-                                            .fill()
-                                            .foregroundColor(Color.blue)
-                                            .frame(width: UIScreen.main.bounds.width / 16 - UIScreen.main.bounds.width / 32, height: UIScreen.main.bounds.width / 16 - UIScreen.main.bounds.width / 32)
+                                            .stroke(getForeground(), lineWidth: 1)
+                                            .frame(width: UIScreen.main.bounds.width / 16, height: UIScreen.main.bounds.width / 16)
                                     }
-                                    Circle()
-                                        .stroke(getForeground(), lineWidth: 1)
-                                        .frame(width: UIScreen.main.bounds.width / 16, height: UIScreen.main.bounds.width / 16)
+                                    .padding(.trailing)
                                 }
-                                .padding(.trailing)
+                                .frame(width: UIScreen.main.bounds.width / 8 * 6)
+                                
+                                Rectangle()
+                                    .fill(getForeground())
+                                    .frame(width: UIScreen.main.bounds.width / 8 * 6, height: 1)
+                                    .edgesIgnoringSafeArea(.horizontal)
                             }
-                            .frame(width: UIScreen.main.bounds.width / 8 * 6)
                             
-                            Rectangle()
-                                .fill(getForeground())
-                                .frame(width: UIScreen.main.bounds.width / 8 * 6, height: 1)
-                                .edgesIgnoringSafeArea(.horizontal)
                         }
-                    }
-                    .frame(width: UIScreen.main.bounds.width / 8 * 7)
-                    .background(getBackground())
-                    .onTapGesture {
-                        mode.mode.mode = "Default"
-                        if let encoded = try? JSONEncoder().encode(mode.mode) {
-                            UserDefaults.standard.set(encoded, forKey: "save")
-                        }
-                    }
-                }
-                
-                HStack {
-                    Text("Notifications")
-                        .foregroundColor(getForeground())
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                        .foregroundColor(getForeground())
-                        .rotationEffect(.degrees(expandNotification ? 90 : 0))
-                        .animation(.easeInOut)
-                    
-                }
-                .frame(width: UIScreen.main.bounds.width / 8 * 7 - UIScreen.main.bounds.width / 64 * 7)
-                .background(getBackground())
-                .onTapGesture {
-                    withAnimation {
-                        expandNotification.toggle()
-                    }
-                }
-                Rectangle()
-                    .fill(getForeground())
-                    .frame(width: UIScreen.main.bounds.width / 8 * 7, height: 1)
-                    .edgesIgnoringSafeArea(.horizontal)
-                
-                if expandNotification {
-                    HStack {
-                        Spacer()
-                        VStack {
-                            HStack {
-                                Text("Enable Notifications")
-                                    .foregroundColor(getForeground())
-                                    .offset(x: UIScreen.main.bounds.width / 16)
-                                Spacer()
-                                ZStack {
-                                    if status.status.status == "ON" {
-                                        Circle()
-                                            .fill()
-                                            .foregroundColor(Color.blue)
-                                            .frame(width: UIScreen.main.bounds.width / 16 - UIScreen.main.bounds.width / 32, height: UIScreen.main.bounds.width / 16 - UIScreen.main.bounds.width / 32)
-                                    }
-                                    Circle()
-                                        .stroke(getForeground(), lineWidth: 1)
-                                        .frame(width: UIScreen.main.bounds.width / 16, height: UIScreen.main.bounds.width / 16)
-                                }
-                                .padding(.trailing)
+                        .frame(width: UIScreen.main.bounds.width / 8 * 7)
+                        .background(getBackground())
+                        .onTapGesture {
+                            mode.mode.mode = "Dark"
+                            if let encoded = try? JSONEncoder().encode(mode.mode) {
+                                UserDefaults.standard.set(encoded, forKey: "save")
                             }
-                            .frame(width: UIScreen.main.bounds.width / 8 * 6)
-                            
-                            Rectangle()
-                                .fill(getForeground())
-                                .frame(width: UIScreen.main.bounds.width / 8 * 6, height: 1)
-                                .edgesIgnoringSafeArea(.horizontal)
-                        }
-                    }
-                    .frame(width: UIScreen.main.bounds.width / 8 * 7)
-                    .background(getBackground())
-                    .onTapGesture {
-                        status.status.status = "ON"
-                        if let encoded = try? JSONEncoder().encode(status.status) {
-                            UserDefaults.standard.set(encoded, forKey: "status")
-                        }
-                    }
-                    
-                    HStack {
-                        Spacer()
-                        VStack {
-                            HStack {
-                                Text("Disable Notifications")
-                                    .foregroundColor(getForeground())
-                                    .offset(x: UIScreen.main.bounds.width / 16)
-                                Spacer()
-                                ZStack {
-                                    if status.status.status == "NO" {
-                                        Circle()
-                                            .fill()
-                                            .foregroundColor(Color.blue)
-                                            .frame(width: UIScreen.main.bounds.width / 16 - UIScreen.main.bounds.width / 32, height: UIScreen.main.bounds.width / 16 - UIScreen.main.bounds.width / 32)
-                                    }
-                                    Circle()
-                                        .stroke(getForeground(), lineWidth: 1)
-                                        .frame(width: UIScreen.main.bounds.width / 16, height: UIScreen.main.bounds.width / 16)
-                                }
-                                .padding(.trailing)
-                            }
-                            .frame(width: UIScreen.main.bounds.width / 8 * 6)
-                            
-                            Rectangle()
-                                .fill(getForeground())
-                                .frame(width: UIScreen.main.bounds.width / 8 * 6, height: 1)
-                                .edgesIgnoringSafeArea(.horizontal)
                         }
                         
-                    }
-                    .frame(width: UIScreen.main.bounds.width / 8 * 7)
-                    .background(getBackground())
-                    .onTapGesture {
-                        status.status.status = "NO"
-                        if let encoded = try? JSONEncoder().encode(status.status) {
-                            UserDefaults.standard.set(encoded, forKey: "status")
+                        HStack {
+                            Spacer()
+                            VStack {
+                                HStack {
+                                    Text("System Mode")
+                                        .foregroundColor(getForeground())
+                                        .offset(x: UIScreen.main.bounds.width / 16)
+                                    Spacer()
+                                    ZStack {
+                                        if mode.mode.mode == "Default" {
+                                            Circle()
+                                                .fill()
+                                                .foregroundColor(Color.blue)
+                                                .frame(width: UIScreen.main.bounds.width / 16 - UIScreen.main.bounds.width / 32, height: UIScreen.main.bounds.width / 16 - UIScreen.main.bounds.width / 32)
+                                        }
+                                        Circle()
+                                            .stroke(getForeground(), lineWidth: 1)
+                                            .frame(width: UIScreen.main.bounds.width / 16, height: UIScreen.main.bounds.width / 16)
+                                    }
+                                    .padding(.trailing)
+                                }
+                                .frame(width: UIScreen.main.bounds.width / 8 * 6)
+                                
+                                Rectangle()
+                                    .fill(getForeground())
+                                    .frame(width: UIScreen.main.bounds.width / 8 * 6, height: 1)
+                                    .edgesIgnoringSafeArea(.horizontal)
+                            }
+                        }
+                        .frame(width: UIScreen.main.bounds.width / 8 * 7)
+                        .background(getBackground())
+                        .onTapGesture {
+                            mode.mode.mode = "Default"
+                            if let encoded = try? JSONEncoder().encode(mode.mode) {
+                                UserDefaults.standard.set(encoded, forKey: "save")
+                            }
                         }
                     }
-                }
-                
-                HStack {
-                    Text("Sign Out")
-                        .foregroundColor(getForeground())
-                    Spacer()
-                }
-                .frame(width: UIScreen.main.bounds.width / 8 * 7 - UIScreen.main.bounds.width / 64 * 7)
-                .background(getBackground())
-                .onTapGesture {
-                    withAnimation {
-                        pressedSignOut = true
+                    
+                    HStack {
+                        Text("Notifications")
+                            .foregroundColor(getForeground())
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .foregroundColor(getForeground())
+                            .rotationEffect(.degrees(expandNotification ? 90 : 0))
+                            .animation(.easeInOut)
+                        
                     }
+                    .frame(width: UIScreen.main.bounds.width / 8 * 7 - UIScreen.main.bounds.width / 64 * 7)
+                    .background(getBackground())
+                    .onTapGesture {
+                        withAnimation {
+                            expandNotification.toggle()
+                        }
+                    }
+                    Rectangle()
+                        .fill(getForeground())
+                        .frame(width: UIScreen.main.bounds.width / 8 * 7, height: 1)
+                        .edgesIgnoringSafeArea(.horizontal)
+                    
+                    if expandNotification {
+                        HStack {
+                            Spacer()
+                            VStack {
+                                HStack {
+                                    Text("Enable Notifications")
+                                        .foregroundColor(getForeground())
+                                        .offset(x: UIScreen.main.bounds.width / 16)
+                                    Spacer()
+                                    ZStack {
+                                        if status.status.status == "ON" {
+                                            Circle()
+                                                .fill()
+                                                .foregroundColor(Color.blue)
+                                                .frame(width: UIScreen.main.bounds.width / 16 - UIScreen.main.bounds.width / 32, height: UIScreen.main.bounds.width / 16 - UIScreen.main.bounds.width / 32)
+                                        }
+                                        Circle()
+                                            .stroke(getForeground(), lineWidth: 1)
+                                            .frame(width: UIScreen.main.bounds.width / 16, height: UIScreen.main.bounds.width / 16)
+                                    }
+                                    .padding(.trailing)
+                                }
+                                .frame(width: UIScreen.main.bounds.width / 8 * 6)
+                                
+                                Rectangle()
+                                    .fill(getForeground())
+                                    .frame(width: UIScreen.main.bounds.width / 8 * 6, height: 1)
+                                    .edgesIgnoringSafeArea(.horizontal)
+                            }
+                        }
+                        .frame(width: UIScreen.main.bounds.width / 8 * 7)
+                        .background(getBackground())
+                        .onTapGesture {
+                            status.status.status = "ON"
+                            if let encoded = try? JSONEncoder().encode(status.status) {
+                                UserDefaults.standard.set(encoded, forKey: "status")
+                            }
+                        }
+                        
+                        HStack {
+                            Spacer()
+                            VStack {
+                                HStack {
+                                    Text("Disable Notifications")
+                                        .foregroundColor(getForeground())
+                                        .offset(x: UIScreen.main.bounds.width / 16)
+                                    Spacer()
+                                    ZStack {
+                                        if status.status.status == "NO" {
+                                            Circle()
+                                                .fill()
+                                                .foregroundColor(Color.blue)
+                                                .frame(width: UIScreen.main.bounds.width / 16 - UIScreen.main.bounds.width / 32, height: UIScreen.main.bounds.width / 16 - UIScreen.main.bounds.width / 32)
+                                        }
+                                        Circle()
+                                            .stroke(getForeground(), lineWidth: 1)
+                                            .frame(width: UIScreen.main.bounds.width / 16, height: UIScreen.main.bounds.width / 16)
+                                    }
+                                    .padding(.trailing)
+                                }
+                                .frame(width: UIScreen.main.bounds.width / 8 * 6)
+                                
+                                Rectangle()
+                                    .fill(getForeground())
+                                    .frame(width: UIScreen.main.bounds.width / 8 * 6, height: 1)
+                                    .edgesIgnoringSafeArea(.horizontal)
+                            }
+                            
+                        }
+                        .frame(width: UIScreen.main.bounds.width / 8 * 7)
+                        .background(getBackground())
+                        .onTapGesture {
+                            status.status.status = "NO"
+                            if let encoded = try? JSONEncoder().encode(status.status) {
+                                UserDefaults.standard.set(encoded, forKey: "status")
+                            }
+                        }
+                    }
+                    
+                    HStack {
+                        Text("Sign Out")
+                            .foregroundColor(getForeground())
+                        Spacer()
+                    }
+                    .frame(width: UIScreen.main.bounds.width / 8 * 7 - UIScreen.main.bounds.width / 64 * 7)
+                    .background(getBackground())
+                    .onTapGesture {
+                        withAnimation {
+                            pressedSignOut = true
+                        }
+                    }
+                    Rectangle()
+                        .fill(getForeground())
+                        .frame(width: UIScreen.main.bounds.width / 8 * 7, height: 1)
+                        .edgesIgnoringSafeArea(.horizontal)
                 }
-                Rectangle()
-                    .fill(getForeground())
-                    .frame(width: UIScreen.main.bounds.width / 8 * 7, height: 1)
-                    .edgesIgnoringSafeArea(.horizontal)
-
                 Spacer()
                 
+                Rectangle()
+                    .fill(getForeground())
+                    .frame(width: UIScreen.main.bounds.width, height: 1)
+                    .offset(y: UIScreen.main.bounds.height / -28)
+                    .edgesIgnoringSafeArea(.horizontal)
+
                 HStack(alignment: .center) {
                     VStack {
                         Image(systemName: "cloud.sun.fill")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: UIScreen.main.bounds.width / 12, height: UIScreen.main.bounds.width / 12)
+                            .frame(width: UIScreen.main.bounds.width / 14, height: UIScreen.main.bounds.width / 14)
                             .foregroundColor(getForeground())
                         Text("Weather")
                             .multilineTextAlignment(.center)
@@ -328,7 +335,7 @@ struct SettingView: View {
                         Image(systemName: "bag.fill")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: UIScreen.main.bounds.width / 12, height: UIScreen.main.bounds.width / 12)
+                            .frame(width: UIScreen.main.bounds.width / 14, height: UIScreen.main.bounds.width / 14)
                             .foregroundColor(getForeground())
                         Text("Restaurants")
                             .multilineTextAlignment(.center)
@@ -346,7 +353,7 @@ struct SettingView: View {
                         Image(systemName: "figure.walk")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: UIScreen.main.bounds.width / 12, height: UIScreen.main.bounds.width / 12)
+                            .frame(width: UIScreen.main.bounds.width / 14, height: UIScreen.main.bounds.width / 14)
                             .foregroundColor(getForeground())
                         Text("Gym")
                             .multilineTextAlignment(.center)
@@ -364,7 +371,7 @@ struct SettingView: View {
                         Image(systemName: "line.horizontal.3")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: UIScreen.main.bounds.width / 12, height: UIScreen.main.bounds.width / 12)
+                            .frame(width: UIScreen.main.bounds.width / 14, height: UIScreen.main.bounds.width / 14)
                             .foregroundColor(getForeground())
                         Text("Settings")
                             .multilineTextAlignment(.center)
@@ -378,7 +385,7 @@ struct SettingView: View {
                     .padding()
                 }
                 .background(getBackground())
-                .frame(height: UIScreen.main.bounds.height / 64 * 1)
+                .frame(height: UIScreen.main.bounds.height / 64)
                 .offset(y: UIScreen.main.bounds.height / 256 * -1)
             }
             .opacity(pressedSignOut ? 0.5: 1)

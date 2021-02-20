@@ -378,12 +378,18 @@ struct WeatherView: View {
                 .animation(.linear)
                 Spacer()
                 
+                Rectangle()
+                    .fill(getForeground())
+                    .frame(width: UIScreen.main.bounds.width, height: 1)
+                    .offset(y: UIScreen.main.bounds.height / -28)
+                    .edgesIgnoringSafeArea(.horizontal)
+
                 HStack(alignment: .center) {
                     VStack {
                         Image(systemName: "cloud.sun.fill")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: UIScreen.main.bounds.width / 12, height: UIScreen.main.bounds.width / 12)
+                            .frame(width: UIScreen.main.bounds.width / 14, height: UIScreen.main.bounds.width / 14)
                             .foregroundColor(getForeground())
                         Text("Weather")
                             .multilineTextAlignment(.center)
@@ -401,7 +407,7 @@ struct WeatherView: View {
                         Image(systemName: "bag.fill")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: UIScreen.main.bounds.width / 12, height: UIScreen.main.bounds.width / 12)
+                            .frame(width: UIScreen.main.bounds.width / 14, height: UIScreen.main.bounds.width / 14)
                             .foregroundColor(getForeground())
                         Text("Restaurants")
                             .multilineTextAlignment(.center)
@@ -419,7 +425,7 @@ struct WeatherView: View {
                         Image(systemName: "figure.walk")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: UIScreen.main.bounds.width / 12, height: UIScreen.main.bounds.width / 12)
+                            .frame(width: UIScreen.main.bounds.width / 14, height: UIScreen.main.bounds.width / 14)
                             .foregroundColor(getForeground())
                         Text("Gym")
                             .multilineTextAlignment(.center)
@@ -437,7 +443,7 @@ struct WeatherView: View {
                         Image(systemName: "line.horizontal.3")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: UIScreen.main.bounds.width / 12, height: UIScreen.main.bounds.width / 12)
+                            .frame(width: UIScreen.main.bounds.width / 14, height: UIScreen.main.bounds.width / 14)
                             .foregroundColor(getForeground())
                         Text("Settings")
                             .multilineTextAlignment(.center)
@@ -451,7 +457,7 @@ struct WeatherView: View {
                     .padding()
                 }
                 .background(getBackground())
-                .frame(height: UIScreen.main.bounds.height / 64 * 1)
+                .frame(height: UIScreen.main.bounds.height / 64)
                 .offset(y: UIScreen.main.bounds.height / 256 * -1)
             }
             .background(getBackground())

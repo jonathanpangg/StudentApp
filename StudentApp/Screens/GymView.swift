@@ -159,17 +159,14 @@ struct GymView: View {
             URLSession.shared.dataTask(with: request) { data, response, error in
                 guard let data = data else { return }
                 if let decoded = try? JSONDecoder().decode([GymData].self, from: data) {
-                    var count = 0
-                    var passed = false
                     let pastValue = returnData
-                    while !(count >= 10 || passed) {
+                    for _ in 0..<10 {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                             returnData = decoded
                             if returnData != pastValue {
-                                passed = true
+                                return
                             }
                         }
-                        count += 1
                     }
                 }
             }.resume()
@@ -336,12 +333,18 @@ struct GymView: View {
                 }
                 .padding(.top)
                 
+                Rectangle()
+                    .fill(getForeground())
+                    .frame(width: UIScreen.main.bounds.width, height: 1)
+                    .offset(y: UIScreen.main.bounds.height / -28)
+                    .edgesIgnoringSafeArea(.horizontal)
+
                 HStack(alignment: .center) {
                     VStack {
                         Image(systemName: "cloud.sun.fill")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: UIScreen.main.bounds.width / 12, height: UIScreen.main.bounds.width / 12)
+                            .frame(width: UIScreen.main.bounds.width / 14, height: UIScreen.main.bounds.width / 14)
                             .foregroundColor(getForeground())
                         Text("Weather")
                             .multilineTextAlignment(.center)
@@ -359,7 +362,7 @@ struct GymView: View {
                         Image(systemName: "bag.fill")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: UIScreen.main.bounds.width / 12, height: UIScreen.main.bounds.width / 12)
+                            .frame(width: UIScreen.main.bounds.width / 14, height: UIScreen.main.bounds.width / 14)
                             .foregroundColor(getForeground())
                         Text("Restaurants")
                             .multilineTextAlignment(.center)
@@ -377,7 +380,7 @@ struct GymView: View {
                         Image(systemName: "figure.walk")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: UIScreen.main.bounds.width / 12, height: UIScreen.main.bounds.width / 12)
+                            .frame(width: UIScreen.main.bounds.width / 14, height: UIScreen.main.bounds.width / 14)
                             .foregroundColor(getForeground())
                         Text("Gym")
                             .multilineTextAlignment(.center)
@@ -395,7 +398,7 @@ struct GymView: View {
                         Image(systemName: "line.horizontal.3")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: UIScreen.main.bounds.width / 12, height: UIScreen.main.bounds.width / 12)
+                            .frame(width: UIScreen.main.bounds.width / 14, height: UIScreen.main.bounds.width / 14)
                             .foregroundColor(getForeground())
                         Text("Settings")
                             .multilineTextAlignment(.center)
@@ -409,7 +412,7 @@ struct GymView: View {
                     .padding()
                 }
                 .background(getBackground())
-                .frame(height: UIScreen.main.bounds.height / 64 * 1)
+                .frame(height: UIScreen.main.bounds.height / 64)
                 .offset(y: UIScreen.main.bounds.height / 256 * -1)
             }
             .opacity(addPressed ? 0.5: 1)
@@ -468,8 +471,6 @@ struct GymView: View {
                                             dataGetGym()
                                         }
                                     }
-                                    
-                                    
                                 }
                                 
                                 Rectangle()
