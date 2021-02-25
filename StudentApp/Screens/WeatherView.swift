@@ -393,7 +393,7 @@ struct WeatherView: View {
                             .foregroundColor(getForeground())
                         Text("Weather")
                             .multilineTextAlignment(.center)
-                            .font(.system(size: 12))
+                            .font(.caption)
                             .foregroundColor(getForeground())
                     }
                     .onTapGesture {
@@ -411,7 +411,7 @@ struct WeatherView: View {
                             .foregroundColor(getForeground())
                         Text("Restaurants")
                             .multilineTextAlignment(.center)
-                            .font(.system(size: 12))
+                            .font(.caption)
                             .foregroundColor(getForeground())
                     }
                     .onTapGesture {
@@ -429,7 +429,7 @@ struct WeatherView: View {
                             .foregroundColor(getForeground())
                         Text("Gym")
                             .multilineTextAlignment(.center)
-                            .font(.system(size: 12))
+                            .font(.caption)
                             .foregroundColor(getForeground())
                     }
                     .onTapGesture {
@@ -447,7 +447,7 @@ struct WeatherView: View {
                             .foregroundColor(getForeground())
                         Text("Settings")
                             .multilineTextAlignment(.center)
-                            .font(.system(size: 12))
+                            .font(.caption)
                             .foregroundColor(getForeground())
                     }
                     .onTapGesture {

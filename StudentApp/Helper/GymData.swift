@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct GymData: Codable, Equatable {
-    let id: String
-    let date: String
-    var activity: [String]
-    var completion: [Bool]
+    var id: String = ""
+    var date: String = ""
+    var activity: [String] = []
+    var completion: [Bool] = []
+    var completionPercentage: Double = 0
+    
 }

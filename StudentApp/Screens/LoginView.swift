@@ -48,7 +48,7 @@ struct LoginView: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
             if join.user.count > 0 {
                 if Double(Date().timeIntervalSince1970) - Double(join.user[0].date)! > 604800 {
-                    pass.currentScreen = 5
+                    pass.currentScreen = 4
                 }
                 else {
                     pass.currentScreen = 0

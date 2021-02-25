@@ -7,12 +7,15 @@
 
 import SwiftUI
 
+
 struct GymView: View {
     @Environment(\.colorScheme) var colorScheme
     @ObservedObject var pass: Pass
     @ObservedObject var mode = ThemeStatus()
     @ObservedObject var user = joinUser()
     @State var returnData = [GymData]()
+    @State var weekData = [GymData(), GymData(), GymData(), GymData(), GymData(), GymData(), GymData()]
+    @State var trend = false
     @State var currDate = Date()
     @State var increment = 0
     @State var editPressed = false
@@ -56,29 +59,29 @@ struct GymView: View {
     }
     
     // returns the day of the week
-    func getDayOfWeek(_ date: Date) -> String {
+    func getDayOfWeek(_ date: Date) -> (String, Int) {
         let toStringFormatter = DateFormatter()
         toStringFormatter.dateStyle = .short
         let toDayOfWeekFormatter = DateFormatter()
         toDayOfWeekFormatter.dateFormat = "MM/dd/yy"
-        guard let todayDate = toDayOfWeekFormatter.date(from: toStringFormatter.string(from: date)) else { return "" }
+        guard let todayDate = toDayOfWeekFormatter.date(from: toStringFormatter.string(from: date)) else { return ("", 10) }
         let myCalendar = Calendar(identifier: .gregorian)
         let weekDay = myCalendar.component(.weekday, from: todayDate)
         switch weekDay {
         case 1:
-            return "Sun"
+            return ("Sun", weekDay)
         case 2:
-            return "Mon"
+            return ("Mon", weekDay)
         case 3:
-            return "Tues"
+            return ("Tues", weekDay)
         case 4:
-            return "Wed"
+            return ("Wed", weekDay)
         case 5:
-            return "Thurs"
+            return ("Thurs", weekDay)
         case 6:
-            return "Fri"
+            return ("Fri", weekDay)
         default:
-            return "Sat"
+            return ("Sat", 0)
         }
     }
     
@@ -127,7 +130,48 @@ struct GymView: View {
         return "\(month)\(day)\(year)"
     }
     
+    func updateValues(_ currDay: Int) {
+        if currDay > 1 {
+            getValueGym(Date().addingTimeInterval(86400 * (Double(currDay) - 1)))
+        }
+        else {
+            getValueGym(Date().addingTimeInterval(86400 * (1 - Double(currDay))))
+        }
+        if currDay > 2 {
+            getValueGym(Date().addingTimeInterval(86400 * (Double(currDay) - 2)))
+        }
+        else {
+            getValueGym(Date().addingTimeInterval(86400 * (2 - Double(currDay))))
+        }
+        if currDay > 3 {
+            getValueGym(Date().addingTimeInterval(86400 * (Double(currDay) - 3)))
+        }
+        else {
+            getValueGym(Date().addingTimeInterval(86400 * (3 - Double(currDay))))
+        }
+        if currDay > 4 {
+            getValueGym(Date().addingTimeInterval(86400 * (Double(currDay) - 4)))
+        }
+        else {
+            getValueGym(Date().addingTimeInterval(86400 * (4 - Double(currDay))))
+        }
+        if currDay > 5 {
+            getValueGym(Date().addingTimeInterval(86400 * (Double(currDay) - 5)))
+        }
+        else {
+            getValueGym(Date().addingTimeInterval(86400 * (5 - Double(currDay))))
+        }
+        if currDay > 6 {
+            getValueGym(Date().addingTimeInterval(86400 * (Double(currDay) - 6)))
+        }
+        else {
+            getValueGym(Date().addingTimeInterval(86400 * (6 - Double(currDay))))
+        }
+        getValueGym(Date().addingTimeInterval(86400 * (7 - Double(currDay))))
+    }
+    
     func defaultGetGym() {
+        let (_, curr) = getDayOfWeek(Date())
         if user.user.count > 0 {
             guard let url = URL(string: "https://heroku-student-app.herokuapp.com/gym/\(user.user[0].id)/\(getTimeComponents(currDate))") else { return }
             var request = URLRequest(url: url)
@@ -141,6 +185,7 @@ struct GymView: View {
                 if let decoded = try? JSONDecoder().decode([GymData].self, from: data) {
                     DispatchQueue.main.async {
                         returnData = decoded
+                        updateValues(curr)
                     }
                 }
             }.resume()
@@ -148,6 +193,7 @@ struct GymView: View {
     }
     
     func dataGetGym() {
+        let (_, curr) = getDayOfWeek(Date())
         if user.user.count > 0 {
             guard let url = URL(string: "https://heroku-student-app.herokuapp.com/gym/\(user.user[0].id)/\(getTimeComponents(currDate))") else { return }
             var request = URLRequest(url: url)
@@ -164,6 +210,7 @@ struct GymView: View {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                             returnData = decoded
                             if returnData != pastValue {
+                                updateValues(curr)
                                 return
                             }
                         }
@@ -173,10 +220,36 @@ struct GymView: View {
         }
     }
     
-    func postGym(_ id: String, _ date: String, _ activites: [String], _ completion: [Bool]) {
+    func getValueGym(_ date: Date) {
+        if user.user.count > 0 {
+            let (_, currDay) = getDayOfWeek(date)
+            guard let url = URL(string: "https://heroku-student-app.herokuapp.com/gym/\(user.user[0].id)/\(getTimeComponents(date))") else { return }
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET"
+            request.allHTTPHeaderFields = [
+                "Content-Type": "application/json"
+            ]
+            
+            URLSession.shared.dataTask(with: request) { data, response, error in
+                guard let data = data else { return }
+                if let decoded = try? JSONDecoder().decode([GymData].self, from: data) {
+                    for _ in 0..<10 {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            if decoded.count > 0 {
+                                weekData[currDay] = decoded[0]
+                                return
+                            }
+                        }
+                    }
+                }
+            }.resume()
+        }
+    }
+    
+    func postGym(_ id: String, _ date: String, _ activites: [String], _ completion: [Bool], _ completionPercentage: Double) {
         let activityQuery = "\(activites)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         let completionQuery = "\(completion)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
-        guard let url = URL(string: "https://heroku-student-app.herokuapp.com/gym/\(id)/\(date)/\(activityQuery)/\(completionQuery)") else { return }
+        guard let url = URL(string: "https://heroku-student-app.herokuapp.com/gym/\(id)/\(date)/\(activityQuery)/\(completionQuery)/\(completionPercentage)") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.allHTTPHeaderFields = [
@@ -186,7 +259,8 @@ struct GymView: View {
             "id": id,
             "date": date,
             "activity": activites,
-            "completion": completion
+            "completion": completion,
+            "completionPercentage": completionPercentage
         ] as [String: Any]
         request.httpBody = try! JSONSerialization.data(withJSONObject: body, options: [])
         URLSession.shared.dataTask(with: request) { data, response, error in
@@ -198,10 +272,10 @@ struct GymView: View {
     }
     
     
-    func putGym(_ id: String, _ date: String, _ newActivities: [String], _ newCompletion: [Bool]) {
+    func putGym(_ id: String, _ date: String, _ newActivities: [String], _ newCompletion: [Bool], _ completionPercentage: Double) {
         deleteGym(id, date)
         if newActivities.count > 0 || newCompletion.count > 0 {
-            postGym(id, date, newActivities, newCompletion)
+            postGym(id, date, newActivities, newCompletion, completionPercentage)
         }
     }
     
@@ -223,6 +297,8 @@ struct GymView: View {
             getBackground()
                 .ignoresSafeArea(.all)
             VStack(alignment: .center) {
+                let (currDay, _) = getDayOfWeek(currDate)
+                let (_, curr) = getDayOfWeek(Date())
                 HStack(alignment: .center) {
                     Button(action: {
                         withAnimation {
@@ -241,8 +317,10 @@ struct GymView: View {
                         .font(.system(size: UIScreen.main.bounds.width / 20))
                         .offset(x: UIScreen.main.bounds.width / -10)
                         .onTapGesture {
-                            withAnimation {
-                                addPressed = true
+                            withAnimation(.linear) {
+                                if !trend {
+                                    addPressed = true
+                                }
                             }
                         }
                 }
@@ -261,7 +339,7 @@ struct GymView: View {
                             currDate = Date().addingTimeInterval(TimeInterval(86400 * increment))
                             dataGetGym()
                         }
-                    Text("\(getDayOfWeek(currDate)) \(getDay(currDate))")
+                    Text("\(currDay) \(getDay(currDate))")
                         .font(.largeTitle)
                         .frame(width: UIScreen.main.bounds.width / 16 * 7)
                     Image(systemName: "chevron.right")
@@ -291,7 +369,14 @@ struct GymView: View {
                                             .onTapGesture {
                                                 returnData[0].activity.remove(at: index)
                                                 returnData[0].completion.remove(at: index)
-                                                putGym("\(user.user[0].id)", getTimeComponents(currDate), returnData[0].activity, returnData[0].completion)
+                                                var amountOfTrue = 0
+                                                for value in returnData[0].completion {
+                                                    if value {
+                                                        amountOfTrue += 1
+                                                    }
+                                                }
+                                                returnData[0].completionPercentage = Double(amountOfTrue) / Double(returnData[0].completion.count)
+                                                putGym("\(user.user[0].id)", getTimeComponents(currDate), returnData[0].activity, returnData[0].completion, returnData[0].completionPercentage)
                                             }
                                     }
                                 }
@@ -311,7 +396,14 @@ struct GymView: View {
                                 .onTapGesture {
                                     withAnimation {
                                         returnData[0].completion[index].toggle()
-                                        putGym("\(user.user[0].id)", getTimeComponents(currDate), returnData[0].activity, returnData[0].completion)
+                                        var amountOfTrue = 0
+                                        for value in returnData[0].completion {
+                                            if value {
+                                                amountOfTrue += 1
+                                            }
+                                        }
+                                        returnData[0].completionPercentage = Double(amountOfTrue) / Double(returnData[0].completion.count)
+                                        putGym("\(user.user[0].id)", getTimeComponents(currDate), returnData[0].activity, returnData[0].completion, returnData[0].completionPercentage)
                                     }
                                 }
                                 .padding(.leading)
@@ -333,6 +425,33 @@ struct GymView: View {
                 }
                 .padding(.top)
                 
+                HStack {
+                    ZStack {
+                        Text("")
+                            .multilineTextAlignment(.leading)
+                            .frame(width: UIScreen.main.bounds.width / 4, height: UIScreen.main.bounds.height / 24)
+                            .background(getBackground())
+                            .clipShape(RoundedRectangle(cornerRadius: 16.0, style: .continuous))
+                            .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)), radius: 10, x: 6, y: 4)
+                        Text("Trends")
+                            .multilineTextAlignment(.leading)
+                            .foregroundColor(getForeground())
+                            .frame(width: UIScreen.main.bounds.width / 4 - UIScreen.main.bounds.width / 16, height: UIScreen.main.bounds.height / 24 - UIScreen.main.bounds.height / 24 / 4)
+                    }
+                    .onTapGesture {
+                        if !addPressed {
+                            withAnimation(.linear) {
+                                updateValues(curr)
+                                trend.toggle()
+                            }
+                        }
+                    }
+                    Spacer()
+                }
+                .offset(y: UIScreen.main.bounds.height / -24)
+                .padding(.top)
+                .padding(.leading)
+                
                 Rectangle()
                     .fill(getForeground())
                     .frame(width: UIScreen.main.bounds.width, height: 1)
@@ -348,7 +467,7 @@ struct GymView: View {
                             .foregroundColor(getForeground())
                         Text("Weather")
                             .multilineTextAlignment(.center)
-                            .font(.system(size: 12))
+                            .font(.caption)
                             .foregroundColor(getForeground())
                     }
                     .onTapGesture {
@@ -366,7 +485,7 @@ struct GymView: View {
                             .foregroundColor(getForeground())
                         Text("Restaurants")
                             .multilineTextAlignment(.center)
-                            .font(.system(size: 12))
+                            .font(.caption)
                             .foregroundColor(getForeground())
                     }
                     .onTapGesture {
@@ -384,7 +503,7 @@ struct GymView: View {
                             .foregroundColor(getForeground())
                         Text("Gym")
                             .multilineTextAlignment(.center)
-                            .font(.system(size: 12))
+                            .font(.caption)
                             .foregroundColor(getForeground())
                     }
                     .onTapGesture {
@@ -402,7 +521,7 @@ struct GymView: View {
                             .foregroundColor(getForeground())
                         Text("Settings")
                             .multilineTextAlignment(.center)
-                            .font(.system(size: 12))
+                            .font(.caption)
                             .foregroundColor(getForeground())
                     }
                     .onTapGesture {
@@ -416,7 +535,7 @@ struct GymView: View {
                 .offset(y: UIScreen.main.bounds.height / 256 * -1)
             }
             .opacity(addPressed ? 0.5: 1)
-            .blur(radius: addPressed ? 1: 0)
+            .blur(radius: addPressed || trend ? 1: 0)
             .onAppear(perform: defaultGetGym)
             .onAppear {
                 AppDelegate.orientationLock = UIInterfaceOrientationMask.portrait
@@ -456,8 +575,10 @@ struct GymView: View {
                                     if user.user.count > 0 {
                                         if returnData.count == 0 {
                                             if user.user.count > 0 {
-                                                postGym("\(user.user[0].id)", getTimeComponents(currDate), ["\(activity)"], [false])
-                                                addPressed = false
+                                                postGym("\(user.user[0].id)", getTimeComponents(currDate), ["\(activity)"], [false], 0)
+                                                withAnimation(.linear) {
+                                                    addPressed = false
+                                                }
                                                 activity = ""
                                                 dataGetGym()
                                             }
@@ -465,8 +586,17 @@ struct GymView: View {
                                         else {
                                             returnData[0].activity.append(activity)
                                             returnData[0].completion.append(false)
-                                            putGym("\(user.user[0].id)", getTimeComponents(currDate), returnData[0].activity, returnData[0].completion)
-                                            addPressed = false
+                                            var amountOfTrue = 0
+                                            for value in returnData[0].completion {
+                                                if value {
+                                                    amountOfTrue += 1
+                                                }
+                                            }
+                                            returnData[0].completionPercentage = Double(amountOfTrue) / Double(returnData[0].completion.count)
+                                            putGym("\(user.user[0].id)", getTimeComponents(currDate), returnData[0].activity, returnData[0].completion, returnData[0].completionPercentage)
+                                            withAnimation(.linear) {
+                                                addPressed = false
+                                            }
                                             activity = ""
                                             dataGetGym()
                                         }
@@ -496,6 +626,56 @@ struct GymView: View {
                     .background(getBackground())
                 }
                 .background(getBackground())
+            }
+            
+            if trend {
+                VStack {
+                    HStack {
+                        Text("Week of \(getMonth(Date())) \(getDay(Date()))")
+                            .foregroundColor(getForeground())
+                        Spacer()
+                    }
+                    .padding(.leading)
+                    .padding(.top)
+                    .padding(.bottom)
+                    
+                    HStack(spacing: UIScreen.main.bounds.width / 32) {
+                        Text("Sun")
+                        Text("Mon")
+                        Text("Tues")
+                        Text("Wed")
+                        Text("Thurs")
+                        Text("Fri")
+                        Text("Sat")
+                    }
+                    .font(.system(size: 12))
+                    .foregroundColor(getForeground())
+                    .padding(.leading)
+                    .padding(.trailing)
+                    
+                    HStack {
+                        Path { path in
+                            path.move(to: CGPoint(x: UIScreen.main.bounds.width / 150, y: CGFloat(175) - 175 * CGFloat(weekData[1].completionPercentage)))
+                            path.addLine(to: CGPoint(x: UIScreen.main.bounds.width / 9.8, y: CGFloat(175) - 175 * CGFloat(weekData[2].completionPercentage)))
+                            path.addLine(to: CGPoint(x: UIScreen.main.bounds.width / 5.1, y: CGFloat(175) - 175 * CGFloat(weekData[3].completionPercentage)))
+                            path.addLine(to: CGPoint(x: UIScreen.main.bounds.width / 3.31, y: CGFloat(175) - (175 * CGFloat(weekData[4].completionPercentage))))
+                            path.addLine(to: CGPoint(x: UIScreen.main.bounds.width / 2.45, y: CGFloat(175) - 175 * CGFloat(weekData[5].completionPercentage)))
+                            path.addLine(to: CGPoint(x: UIScreen.main.bounds.width / 1.975, y: CGFloat(175) - (175 * CGFloat(weekData[6].completionPercentage))))
+                            path.addLine(to: CGPoint(x: UIScreen.main.bounds.width / 1.725, y: CGFloat(175) - 175 * CGFloat(weekData[0].completionPercentage)))
+                        }
+                        .stroke(CGFloat(weekData[1].completionPercentage) > CGFloat(weekData[0].completionPercentage) ? Color.red: Color.green, lineWidth: 2)
+                        .padding(.leading)
+                    }
+                    .padding(.leading)
+                    .padding(.trailing)
+                    
+                    Spacer()
+                }
+                .background(getBackground())
+                .clipShape(RoundedRectangle(cornerRadius: 16.0, style: .continuous))
+                .shadow(color: Color(#colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)), radius: 10, x: 6, y: 4)
+                .frame(width: UIScreen.main.bounds.width / 4 * 3, height: UIScreen.main.bounds.width / 4 * 3)
+                .transition(.scale)
             }
         }
     }
