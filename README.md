@@ -25,6 +25,7 @@
             date: $DATE:STRING
           }
           ```
+          
   2. `POST /users/:id/:firstName/:lastName/:username/:password/:date`
       - request:
         - HTTP header: 
@@ -40,6 +41,55 @@
           password: $PASSWORD:STRING,
           date: $DATE:STRING
           ```
+          
+  3. `PUT /users/:id/:newDate`
+      - request:
+        - HTTP header: 
+          ```
+          "Content-Type": "application/json"
+          ``` 
+        - request body:
+          ```
+          id: $ID:STRING,
+          newDate: $NEWDATE:STRING
+          ```   
      
+## Activity Service
+
+  1. `GET /Activity/:id/:date`
+      - request:
+        - HTTP header: 
+          ```
+          "Content-Type": "application/json"
+          ``` 
+        - request body:
+          ```
+          id: $ID:STRING 
+          date: $DATE:STRING
+          ```
+      - response:
+        - Succeed:
+          ```
+          {
+            id: $ID:STRING,
+            date: $DATE:STRING,
+            activity: $ACTIVITY:[STRING],
+            completion: $COMPLETION:[BOOL],
+            completionPercentage: $COMPLETIONPERCENTAGE:DOUBLE
+          }
+          ```
      
-     
+  2. `POST /Activity/:id/:date/:activity/:completion/:completionPercentage`
+      - request:
+        - HTTP header: 
+          ```
+          "Content-Type": "application/json"
+          ``` 
+        - request body:
+          ```
+          id: $ID:STRING,
+          date: $DATE:STRING,
+          activity: $ACTIVITY:[STRING],
+          completion: $COMPLETION:[BOOL],
+          completionPercentage: $COMPLETIONPERCENTAGE:DOUBLE
+          ```   
