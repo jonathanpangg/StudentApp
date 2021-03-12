@@ -43,7 +43,7 @@ app.post('/users/:id/:firstName/:lastName/:username/:password/:date', (req, res)
         username: req.body.username,
         password: req.body.password,
         date: req.body.date
-    };
+    }
 
     mongodb.connect(mongodb_URI, function (error, db) {
         if (error) throw error;
@@ -95,7 +95,7 @@ app.post('/Activity/:id/:date/:activity/:completion/:completionPercentage', (req
         activity: req.body.activity,
         completion: req.body.completion,
         completionPercentage: req.body.completionPercentage
-    };
+    }
 
     mongodb.connect(mongodb_URI, function (error, db) {
         if (error) throw error;
