@@ -4,7 +4,6 @@ var mongodb = require('mongodb')
 var assert = require('assert')
 var db = require('./mongoose')  
 const mongodb_URI = process.env.mongodb_URI || 'mongodb+srv://StudentUsers:Jonathan3388@cluster0.xbzay.mongodb.net/StudentApp?retryWrites=true&w=majority'
-var users = []
 app.use(express.json())
 
 // /GET all users
@@ -12,7 +11,7 @@ app.get('/users/Jonathan338833&&', (req, res) => {
     mongodb.connect(mongodb_URI, function (error, db) {
         if (error) throw error;
         var dbo = db.db('StudentApp')
-        dbo.collection('Users').find({}).toArray(function(err, result) {
+        dbo.collection('Users').find({}).toArray(function(error, result) {
             if (error) throw error
             res.send(result)
             db.close()
@@ -22,12 +21,10 @@ app.get('/users/Jonathan338833&&', (req, res) => {
 
 // /GET specific user 
 app.get('/users/:username/:password', (req, res) => {
-    const user = req.params.username
-    const pass = req.params.password
     mongodb.connect(mongodb_URI, function(error, db) {
         if (error) throw error
         var dbo = db.db('StudentApp')
-        var query = { username: user, password: pass }
+        var query = { username: req.params.username, password: req.params.password }
         dbo.collection('Users').find(query).toArray(function(error, result) { 
             if (error) throw error
             res.send(result)
@@ -81,7 +78,7 @@ app.get('/gym/:id/:date', (req, res) => {
         if (error) throw error
         var dbo = db.db('StudentApp')
         var query = { id: req.params.id,  date: req.params.date}
-        dbo.collection('GymInfo').find(query).toArray(function(error, result) { 
+        dbo.collection('Info').find(query).toArray(function(error, result) { 
             if (error) throw error
             res.send(result)
             console.log(result)
@@ -91,12 +88,13 @@ app.get('/gym/:id/:date', (req, res) => {
 })
 
 // /POST gym info
-app.post('/gym/:id/:date/:activity/:completion', (req, res) => {
+app.post('/gym/:id/:date/:activity/:completion/:completionPercentage', (req, res) => {
     const gym = {
         id: req.body.id,
         date: req.body.date,
         activity: req.body.activity,
-        completion: req.body.completion
+        completion: req.body.completion,
+        completionPercentage: req.body.completionPercentage
     };
 
     mongodb.connect(mongodb_URI, function (error, db) {
@@ -111,30 +109,56 @@ app.post('/gym/:id/:date/:activity/:completion', (req, res) => {
     })
 })
 
-// /PUT gym info
-app.put('/gym/:id/:date/:newActivity/:newCompletion', (req, res) => {
+// /DELETE gym info
+app.delete('/gym/:id/:date', (req, res) => {
     mongodb.connect(mongodb_URI, function(error, db) {
         if (error) throw error
         var dbo = db.db('StudentApp')
-        var query = { date: req.params.date }
-        var newQuery = { $set: { activity: req.params.newActivity, completion: req.params.newCompletion } }
-        dbo.collection('GymInfo').updateOne(query, newQuery, function(error, result) { 
-            if (error) throw error
-            console.log(result)
+        var query = { id: req.params.id, date: req.params.date }
+        dbo.collection('GymInfo').deleteOne(query, function(error, result) {
+            if (error) throw err
+            console.log('Deleted')
             db.close()
         })
     })
 })
 
-// /DELETE gym info 
-app.delete('gym/:id/:date/:activity', (req, res) => {
+// /GET all restaurants
+app.get('/restaurants', (req, res) => {
+    mongodb.connect(mongodb_URI, function (error, db) {
+        if (error) throw error;
+        var dbo = db.db('StudentApp')
+        dbo.collection('Restaurants').find({}).toArray(function(error, result) {
+            if (error) throw error
+            res.send(result)
+            db.close()
+        })
+    })
+})
+
+// /GET restaurants based on cusisine
+app.get('/restaurants/:city', (req, res) => {
     mongodb.connect(mongodb_URI, function(error, db) {
         if (error) throw error
         var dbo = db.db('StudentApp')
-        var query = { date: req.params.date, activity: req.params.activity }
-        dbo.collection('GymInfo').deleteOne(query, function(error, result) {
-            if (err) throw err
-            console.log('deleted')
+        var query = { city: req.params.city }
+        dbo.collection('Restaurants').find(query).toArray(function(error, result) {
+            if (error) throw error
+            res.send(result)
+            db.close()
+        })
+    })
+})
+
+// /GET restaurants based on cusisine
+app.get('/restaurants/:cuisines', (req, res) => {
+    mongodb.connect(mongodb_URI, function(error, db) {
+        if (error) throw error
+        var dbo = db.db('StudentApp')
+        var query = { cuisines: req.params.cuisines }
+        dbo.collection('Restaurants').find(query).toArray(function(error, result) {
+            if (error) throw error
+            res.send(result)
             db.close()
         })
     })
