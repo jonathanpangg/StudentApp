@@ -73,12 +73,12 @@ app.put('/users/:id/:newDate', (req, res) => {
 })
 
 // /GET gym info
-app.get('/gym/:id/:date', (req, res) => {
+app.get('/Activity/:id/:date', (req, res) => {
     mongodb.connect(mongodb_URI, function(error, db) {
         if (error) throw error
         var dbo = db.db('StudentApp')
         var query = { id: req.params.id,  date: req.params.date}
-        dbo.collection('Info').find(query).toArray(function(error, result) { 
+        dbo.collection('Activity').find(query).toArray(function(error, result) { 
             if (error) throw error
             res.send(result)
             console.log(result)
@@ -88,7 +88,7 @@ app.get('/gym/:id/:date', (req, res) => {
 })
 
 // /POST gym info
-app.post('/gym/:id/:date/:activity/:completion/:completionPercentage', (req, res) => {
+app.post('/Activity/:id/:date/:activity/:completion/:completionPercentage', (req, res) => {
     const gym = {
         id: req.body.id,
         date: req.body.date,
@@ -100,7 +100,7 @@ app.post('/gym/:id/:date/:activity/:completion/:completionPercentage', (req, res
     mongodb.connect(mongodb_URI, function (error, db) {
         if (error) throw error;
         var dbo = db.db('StudentApp')
-        dbo.collection('GymInfo').insertOne(gym, function(error, result) {
+        dbo.collection('Activity').insertOne(gym, function(error, result) {
             if (error) throw error;
             assert.equal(null, error)
             console.log('Item inserted')
@@ -110,55 +110,14 @@ app.post('/gym/:id/:date/:activity/:completion/:completionPercentage', (req, res
 })
 
 // /DELETE gym info
-app.delete('/gym/:id/:date', (req, res) => {
+app.delete('/Activity/:id/:date', (req, res) => {
     mongodb.connect(mongodb_URI, function(error, db) {
         if (error) throw error
         var dbo = db.db('StudentApp')
         var query = { id: req.params.id, date: req.params.date }
-        dbo.collection('GymInfo').deleteOne(query, function(error, result) {
+        dbo.collection('Activity').deleteOne(query, function(error, result) {
             if (error) throw err
             console.log('Deleted')
-            db.close()
-        })
-    })
-})
-
-// /GET all restaurants
-app.get('/restaurants', (req, res) => {
-    mongodb.connect(mongodb_URI, function (error, db) {
-        if (error) throw error;
-        var dbo = db.db('StudentApp')
-        dbo.collection('Restaurants').find({}).toArray(function(error, result) {
-            if (error) throw error
-            res.send(result)
-            db.close()
-        })
-    })
-})
-
-// /GET restaurants based on cusisine
-app.get('/restaurants/:city', (req, res) => {
-    mongodb.connect(mongodb_URI, function(error, db) {
-        if (error) throw error
-        var dbo = db.db('StudentApp')
-        var query = { city: req.params.city }
-        dbo.collection('Restaurants').find(query).toArray(function(error, result) {
-            if (error) throw error
-            res.send(result)
-            db.close()
-        })
-    })
-})
-
-// /GET restaurants based on cusisine
-app.get('/restaurants/:cuisines', (req, res) => {
-    mongodb.connect(mongodb_URI, function(error, db) {
-        if (error) throw error
-        var dbo = db.db('StudentApp')
-        var query = { cuisines: req.params.cuisines }
-        dbo.collection('Restaurants').find(query).toArray(function(error, result) {
-            if (error) throw error
-            res.send(result)
             db.close()
         })
     })
