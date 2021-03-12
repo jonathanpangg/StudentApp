@@ -93,3 +93,15 @@
           completion: $COMPLETION:[BOOL],
           completionPercentage: $COMPLETIONPERCENTAGE:DOUBLE
           ```   
+        
+  3. `DELETE /Activity/:id/:date`
+      - request:
+        - HTTP header: 
+          ```
+          "Content-Type": "application/json"
+          ``` 
+        - request body:
+          ```
+          id: $ID:STRING,
+          date: $DATE:STRING
+          ```         
