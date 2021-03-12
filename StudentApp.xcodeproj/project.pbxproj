@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		930460CB25DDAD0200B7F967 /* GymData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930460CA25DDAD0200B7F967 /* GymData.swift */; };
 		93483B8025C08E29008789E3 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483B7F25C08E29008789E3 /* Location.swift */; };
 		93483B8525C08E43008789E3 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93483B8425C08E43008789E3 /* MapView.swift */; };
 		9373FAC725C67CBC00AC61C5 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9373FAC625C67CBC00AC61C5 /* LoginView.swift */; };
@@ -15,6 +14,8 @@
 		9383D32925C73625008C7991 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9383D32825C73625008C7991 /* UserData.swift */; };
 		938B37F125BA387600395BE2 /* FoodData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938B37F025BA387600395BE2 /* FoodData.swift */; };
 		938B37F625BA38DE00395BE2 /* FoodView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938B37F525BA38DE00395BE2 /* FoodView.swift */; };
+		93B928C025FB173800CFBC68 /* ActivitiesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93B928BF25FB173800CFBC68 /* ActivitiesView.swift */; };
+		93B928C825FB17BA00CFBC68 /* ActivityData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93B928C725FB17BA00CFBC68 /* ActivityData.swift */; };
 		93C37B3B25BCC86F00D8FB29 /* PassVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C37B3A25BCC86F00D8FB29 /* PassVariables.swift */; };
 		93C73A0925DD7AB70054F910 /* SettingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C73A0825DD7AB70054F910 /* SettingData.swift */; };
 		93C9F91C25C1C34D009B7394 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C9F91B25C1C34D009B7394 /* SettingView.swift */; };
@@ -30,7 +31,6 @@
 		93D381ED25B8EA7C00BA98AC /* GeocodingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D381EC25B8EA7C00BA98AC /* GeocodingData.swift */; };
 		93D381F725B8EAA200BA98AC /* WeatherData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D381F625B8EAA200BA98AC /* WeatherData.swift */; };
 		93D381FC25B8EAAB00BA98AC /* WeatherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D381FB25B8EAAB00BA98AC /* WeatherView.swift */; };
-		93DD940E25DB124A00AAAEE3 /* GymView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DD940D25DB124A00AAAEE3 /* GymView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,7 +51,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		930460CA25DDAD0200B7F967 /* GymData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GymData.swift; sourceTree = "<group>"; };
 		93483B7F25C08E29008789E3 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		93483B8425C08E43008789E3 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		9373FAC625C67CBC00AC61C5 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
@@ -59,6 +58,8 @@
 		9383D32825C73625008C7991 /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
 		938B37F025BA387600395BE2 /* FoodData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodData.swift; sourceTree = "<group>"; };
 		938B37F525BA38DE00395BE2 /* FoodView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodView.swift; sourceTree = "<group>"; };
+		93B928BF25FB173800CFBC68 /* ActivitiesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitiesView.swift; sourceTree = "<group>"; };
+		93B928C725FB17BA00CFBC68 /* ActivityData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityData.swift; sourceTree = "<group>"; };
 		93C37B3A25BCC86F00D8FB29 /* PassVariables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassVariables.swift; sourceTree = "<group>"; };
 		93C73A0825DD7AB70054F910 /* SettingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingData.swift; sourceTree = "<group>"; };
 		93C9F91B25C1C34D009B7394 /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
@@ -80,7 +81,6 @@
 		93D381EC25B8EA7C00BA98AC /* GeocodingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeocodingData.swift; sourceTree = "<group>"; };
 		93D381F625B8EAA200BA98AC /* WeatherData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherData.swift; sourceTree = "<group>"; };
 		93D381FB25B8EAAB00BA98AC /* WeatherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherView.swift; sourceTree = "<group>"; };
-		93DD940D25DB124A00AAAEE3 /* GymView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GymView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,9 +111,9 @@
 		932DE79E25D2F7920005B5FA /* Helper */ = {
 			isa = PBXGroup;
 			children = (
+				93B928C725FB17BA00CFBC68 /* ActivityData.swift */,
 				938B37F025BA387600395BE2 /* FoodData.swift */,
 				93D381EC25B8EA7C00BA98AC /* GeocodingData.swift */,
-				930460CA25DDAD0200B7F967 /* GymData.swift */,
 				93483B7F25C08E29008789E3 /* Location.swift */,
 				93C37B3A25BCC86F00D8FB29 /* PassVariables.swift */,
 				93C73A0825DD7AB70054F910 /* SettingData.swift */,
@@ -126,8 +126,8 @@
 		932DE7A425D2F8B20005B5FA /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				93B928BF25FB173800CFBC68 /* ActivitiesView.swift */,
 				938B37F525BA38DE00395BE2 /* FoodView.swift */,
-				93DD940D25DB124A00AAAEE3 /* GymView.swift */,
 				9373FAC625C67CBC00AC61C5 /* LoginView.swift */,
 				93483B8425C08E43008789E3 /* MapView.swift */,
 				93C9F91B25C1C34D009B7394 /* SettingView.swift */,
@@ -334,21 +334,21 @@
 				93D381B725B8EA3000BA98AC /* AppDelegate.swift in Sources */,
 				93D381B925B8EA3000BA98AC /* SceneDelegate.swift in Sources */,
 				9373FAC725C67CBC00AC61C5 /* LoginView.swift in Sources */,
+				93B928C825FB17BA00CFBC68 /* ActivityData.swift in Sources */,
 				93C73A0925DD7AB70054F910 /* SettingData.swift in Sources */,
 				93D381F725B8EAA200BA98AC /* WeatherData.swift in Sources */,
 				93483B8525C08E43008789E3 /* MapView.swift in Sources */,
 				938B37F125BA387600395BE2 /* FoodData.swift in Sources */,
 				93D381BB25B8EA3000BA98AC /* ContentView.swift in Sources */,
-				930460CB25DDAD0200B7F967 /* GymData.swift in Sources */,
 				93D381BE25B8EA3000BA98AC /* StudentApp.xcdatamodeld in Sources */,
 				93C9F91C25C1C34D009B7394 /* SettingView.swift in Sources */,
 				938B37F625BA38DE00395BE2 /* FoodView.swift in Sources */,
-				93DD940E25DB124A00AAAEE3 /* GymView.swift in Sources */,
 				9373FACF25C682C900AC61C5 /* SignupView.swift in Sources */,
 				9383D32925C73625008C7991 /* UserData.swift in Sources */,
 				93D381ED25B8EA7C00BA98AC /* GeocodingData.swift in Sources */,
 				93483B8025C08E29008789E3 /* Location.swift in Sources */,
 				93D381FC25B8EAAB00BA98AC /* WeatherView.swift in Sources */,
+				93B928C025FB173800CFBC68 /* ActivitiesView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

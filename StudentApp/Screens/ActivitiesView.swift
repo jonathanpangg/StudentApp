@@ -1,5 +1,5 @@
 //
-//  GymView.swift
+//  ActivitiesView.swift
 //  StudentApp
 //
 //  Created by Jonathan Pang on 2/15/21.
@@ -7,14 +7,13 @@
 
 import SwiftUI
 
-
-struct GymView: View {
+struct ActivitiesView: View {
     @Environment(\.colorScheme) var colorScheme
     @ObservedObject var pass: Pass
     @ObservedObject var mode = ThemeStatus()
     @ObservedObject var user = joinUser()
-    @State var returnData = [GymData]()
-    @State var weekData = [GymData(), GymData(), GymData(), GymData(), GymData(), GymData(), GymData()]
+    @State var returnData = [ActivityData]()
+    @State var weekData = [ActivityData(), ActivityData(), ActivityData(), ActivityData(), ActivityData(), ActivityData(), ActivityData()]
     @State var trend = false
     @State var currDate = Date()
     @State var increment = 0
@@ -131,43 +130,45 @@ struct GymView: View {
     }
     
     func updateValues(_ currDay: Int) {
-        if currDay > 1 {
-            getValueGym(Date().addingTimeInterval(86400 * (Double(currDay) - 1)))
+        DispatchQueue.main.async {
+            if currDay < 1 {
+                getValueGym(Date().addingTimeInterval(86400 * (Double(currDay) - 1)))
+            }
+            else {
+                getValueGym(Date().addingTimeInterval(86400 * (1 - Double(currDay))))
+            }
+            if currDay < 2 {
+                getValueGym(Date().addingTimeInterval(86400 * (Double(currDay) - 2)))
+            }
+            else {
+                getValueGym(Date().addingTimeInterval(86400 * (2 - Double(currDay))))
+            }
+            if currDay < 3 {
+                getValueGym(Date().addingTimeInterval(86400 * (Double(currDay) - 3)))
+            }
+            else {
+                getValueGym(Date().addingTimeInterval(86400 * (3 - Double(currDay))))
+            }
+            if currDay < 4 {
+                getValueGym(Date().addingTimeInterval(86400 * (Double(currDay) - 4)))
+            }
+            else {
+                getValueGym(Date().addingTimeInterval(86400 * (4 - Double(currDay))))
+            }
+            if currDay < 5 {
+                getValueGym(Date().addingTimeInterval(86400 * (Double(currDay) - 5)))
+            }
+            else {
+                getValueGym(Date().addingTimeInterval(86400 * (5 - Double(currDay))))
+            }
+            if currDay < 6 {
+                getValueGym(Date().addingTimeInterval(86400 * (Double(currDay) - 6)))
+            }
+            else {
+                getValueGym(Date().addingTimeInterval(86400 * (6 - Double(currDay))))
+            }
+            getValueGym(Date().addingTimeInterval(86400 * (7 - Double(currDay))))
         }
-        else {
-            getValueGym(Date().addingTimeInterval(86400 * (1 - Double(currDay))))
-        }
-        if currDay > 2 {
-            getValueGym(Date().addingTimeInterval(86400 * (Double(currDay) - 2)))
-        }
-        else {
-            getValueGym(Date().addingTimeInterval(86400 * (2 - Double(currDay))))
-        }
-        if currDay > 3 {
-            getValueGym(Date().addingTimeInterval(86400 * (Double(currDay) - 3)))
-        }
-        else {
-            getValueGym(Date().addingTimeInterval(86400 * (3 - Double(currDay))))
-        }
-        if currDay > 4 {
-            getValueGym(Date().addingTimeInterval(86400 * (Double(currDay) - 4)))
-        }
-        else {
-            getValueGym(Date().addingTimeInterval(86400 * (4 - Double(currDay))))
-        }
-        if currDay > 5 {
-            getValueGym(Date().addingTimeInterval(86400 * (Double(currDay) - 5)))
-        }
-        else {
-            getValueGym(Date().addingTimeInterval(86400 * (5 - Double(currDay))))
-        }
-        if currDay > 6 {
-            getValueGym(Date().addingTimeInterval(86400 * (Double(currDay) - 6)))
-        }
-        else {
-            getValueGym(Date().addingTimeInterval(86400 * (6 - Double(currDay))))
-        }
-        getValueGym(Date().addingTimeInterval(86400 * (7 - Double(currDay))))
     }
     
     func defaultGetGym() {
@@ -182,7 +183,7 @@ struct GymView: View {
             
             URLSession.shared.dataTask(with: request) { data, response, error in
                 guard let data = data else { return }
-                if let decoded = try? JSONDecoder().decode([GymData].self, from: data) {
+                if let decoded = try? JSONDecoder().decode([ActivityData].self, from: data) {
                     DispatchQueue.main.async {
                         returnData = decoded
                         updateValues(curr)
@@ -204,7 +205,7 @@ struct GymView: View {
             
             URLSession.shared.dataTask(with: request) { data, response, error in
                 guard let data = data else { return }
-                if let decoded = try? JSONDecoder().decode([GymData].self, from: data) {
+                if let decoded = try? JSONDecoder().decode([ActivityData].self, from: data) {
                     let pastValue = returnData
                     for _ in 0..<10 {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -232,7 +233,7 @@ struct GymView: View {
             
             URLSession.shared.dataTask(with: request) { data, response, error in
                 guard let data = data else { return }
-                if let decoded = try? JSONDecoder().decode([GymData].self, from: data) {
+                if let decoded = try? JSONDecoder().decode([ActivityData].self, from: data) {
                     for _ in 0..<10 {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                             if decoded.count > 0 {
